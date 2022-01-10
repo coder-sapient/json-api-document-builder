@@ -25,4 +25,6 @@ jobs:
         if: always()
         run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
 
-
+      - name: Run Unit tests
+        if: always()
+        run: ./vendor/bin/phpunit tests/
