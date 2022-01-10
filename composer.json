@@ -12,6 +12,7 @@
     ],
     "require": {
         "php": ">=8.0",
+        "ext-json": "*",
         "json-api-php/json-api": "^2.2"
     },
     "require-dev": {
