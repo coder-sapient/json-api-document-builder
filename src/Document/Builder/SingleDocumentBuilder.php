@@ -43,6 +43,8 @@ class SingleDocumentBuilder extends Builder
             throw new ResourceNotFoundException($key);
         }
 
+        $this->cache->set($resource);
+
         return $resource;
     }
 }
