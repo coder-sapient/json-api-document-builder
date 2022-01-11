@@ -102,19 +102,19 @@ class Builder
 
     protected function findByIdentifiers(array $identifiers): array
     {
-        $resolved = [];
+        $resources = [];
 
         foreach ($identifiers as $resourceType => $resourceIds) {
             $resolver = $this->registry->get($resourceType);
 
             foreach ($resolver->getByIds(...$resourceIds) as $resource) {
-                $resolved[$resource->key()] = $resource;
+                $resources[$resource->key()] = $resource;
             }
         }
 
-        $this->cache->set(...$resolved);
+        $this->cache->set(...$resources);
 
-        return $resolved;
+        return $resources;
     }
 
     protected function ensureAllResourcesAreFound(array $includeMap, ResourceObject ...$resources): void

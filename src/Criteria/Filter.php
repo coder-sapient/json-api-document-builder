@@ -15,7 +15,7 @@ final class Filter
         }
     }
 
-    public static function fromValues(string $field, string $operator, mixed $value, ): self
+    public static function fromValues(string $field, string $operator, mixed $value): self
     {
         return new self($field, new FilterOperator($operator), $value);
     }
