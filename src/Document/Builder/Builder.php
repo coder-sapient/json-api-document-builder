@@ -8,6 +8,8 @@ use CoderSapient\JsonApi\Cache\ResourceCache;
 use CoderSapient\JsonApi\Criteria\Includes;
 use CoderSapient\JsonApi\Exception\ResourceNotFoundException;
 use CoderSapient\JsonApi\Registry\ResourceResolverRegistry;
+use GuzzleHttp\Promise\Create;
+use GuzzleHttp\Promise\Utils;
 use JsonApiPhp\JsonApi\ResourceCollection;
 use JsonApiPhp\JsonApi\ResourceObject;
 use function JsonApiPhp\JsonApi\combine;
@@ -102,12 +104,20 @@ class Builder
 
     protected function findByIdentifiers(array $identifiers): array
     {
-        $resources = [];
+        $promises = [];
 
         foreach ($identifiers as $resourceType => $resourceIds) {
             $resolver = $this->registry->get($resourceType);
 
-            foreach ($resolver->getByIds(...$resourceIds) as $resource) {
+            $promises[] = Create::promiseFor(
+                $resolver->getByIds(...$resourceIds),
+            );
+        }
+
+        $resources = [];
+
+        foreach (Utils::all($promises)->wait() as $result) {
+            foreach ($result as $resource) {
                 $resources[$resource->key()] = $resource;
             }
         }

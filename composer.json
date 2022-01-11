@@ -13,7 +13,8 @@
     "require": {
         "php": ">=8.0",
         "ext-json": "*",
-        "json-api-php/json-api": "^2.2"
+        "json-api-php/json-api": "^2.2",
+        "guzzlehttp/promises": "^1.5"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.4",
