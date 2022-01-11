@@ -186,7 +186,7 @@ trait DocumentsRequest
                     || ! in_array($operator, $this->supportedFilters()[$field], true)
                 ) {
                     $this->throwBadRequestException(
-                        "Not allowed filter [{$operator}] for field [{$field}]",
+                        "Not supported filter [{$operator}] for field [{$field}]",
                         $this->queryFilter,
                     );
                 }

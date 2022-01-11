@@ -12,7 +12,8 @@ use PHPUnit\Framework\TestCase;
  */
 final class IncludesTest extends TestCase
 {
-    public function testIncludes(): void
+    /** @test */
+    public function it_should_create_includes(): void
     {
         $includes = new Includes([
             'articles',
