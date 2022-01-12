@@ -10,12 +10,12 @@ use JsonApiPhp\JsonApi\ResourceObject;
 
 interface ResourceResolver
 {
-    public function getById(string $id): ?ResourceObject;
+    public function getById(string $resourceId): ?ResourceObject;
 
     /**
      * @return ResourceObject[]|PromiseInterface
      */
-    public function getByIds(string ...$ids): array|PromiseInterface;
+    public function getByIds(string ...$resourceIds): array|PromiseInterface;
 
     /**
      * @return ResourceObject[]

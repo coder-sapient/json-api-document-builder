@@ -8,26 +8,26 @@ use CoderSapient\JsonApi\Criteria\FilterOperator;
 use CoderSapient\JsonApi\Examples\ResourceTypes;
 use CoderSapient\JsonApi\Http\Request\DocumentsRequest;
 
-final class GetArticlesRequest extends Request
+final class ListArticlesRequest extends Request
 {
     use DocumentsRequest;
 
-    public function resourceType(): string
+    protected function resourceType(): string
     {
         return ResourceTypes::ARTICLES;
     }
 
-    public function supportedIncludes(): array
+    protected function supportedIncludes(): array
     {
         return ['author'];
     }
 
-    public function supportedSorting(): array
+    protected function supportedSorting(): array
     {
         return ['title'];
     }
 
-    public function supportedFilters(): array
+    protected function supportedFilters(): array
     {
         return [
             'title' => [FilterOperator::EQUAL, FilterOperator::LIKE],

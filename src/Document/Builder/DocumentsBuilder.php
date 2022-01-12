@@ -12,27 +12,37 @@ use CoderSapient\JsonApi\Resolver\ResourceResolver;
 use JsonApiPhp\JsonApi\CompoundDocument;
 use JsonApiPhp\JsonApi\Included;
 use JsonApiPhp\JsonApi\JsonApi;
+use JsonApiPhp\JsonApi\Link\RelatedLink;
 use JsonApiPhp\JsonApi\Link\SelfLink;
 use JsonApiPhp\JsonApi\Meta;
 use JsonApiPhp\JsonApi\PaginatedCollection;
-use JsonApiPhp\JsonApi\Pagination;
 use JsonApiPhp\JsonApi\ResourceCollection;
 
 class DocumentsBuilder extends Builder
 {
-    public function build(DocumentsQuery $query, JsonApi|SelfLink|Meta ...$members): CompoundDocument
+    public function build(DocumentsQuery $query, JsonApi|RelatedLink|SelfLink|Meta ...$members): CompoundDocument
     {
         $resolver = $this->registry->get($query->resourceType());
         $criteria = $query->toCriteria();
 
         $resources = $this->getResources($query->resourceType(), $resolver, $criteria);
-
         $includes = $this->buildIncludes($query->includes(), $resources);
-        $pagination = $this->buildPagination($resolver, $criteria);
-        $members = array_merge($this->buildMetaMembers($resolver, $criteria), $members);
 
-        if (null !== $pagination) {
-            $resources = new PaginatedCollection($pagination, $resources);
+        if ($resolver instanceof PaginationResolver) {
+            $resources = new PaginatedCollection(
+                $resolver->pagination($criteria),
+                $resources,
+            );
+        }
+        if ($resolver instanceof CountableResolver) {
+            $members = array_merge(
+                $members,
+                CountableMember::members(
+                    $resolver->count($criteria),
+                    $criteria->chunk()->page(),
+                    $criteria->chunk()->perPage(),
+                )
+            );
         }
 
         return new CompoundDocument($resources, new Included(...$includes), ...$members);
@@ -52,22 +62,5 @@ class DocumentsBuilder extends Builder
         }
 
         return new ResourceCollection(...$resources);
-    }
-
-    protected function buildPagination(ResourceResolver $resolver, Criteria $criteria): ?Pagination
-    {
-        return $resolver instanceof PaginationResolver ? $resolver->pagination($criteria) : null;
-    }
-
-    /**
-     * @return Meta[]
-     */
-    protected function buildMetaMembers(ResourceResolver $resolver, Criteria $criteria): array
-    {
-        return $resolver instanceof CountableResolver ? CountableMember::members(
-            $resolver->count($criteria),
-            $criteria->chunk()->page(),
-            $criteria->chunk()->perPage(),
-        ) : [];
     }
 }
