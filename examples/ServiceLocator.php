@@ -7,8 +7,8 @@ namespace CoderSapient\JsonApi\Examples;
 use CoderSapient\JsonApi\Cache\InMemoryResourceCache;
 use CoderSapient\JsonApi\Document\Builder\DocumentsBuilder;
 use CoderSapient\JsonApi\Document\Builder\SingleDocumentBuilder;
-use CoderSapient\JsonApi\Examples\Action\GetArticleAction;
-use CoderSapient\JsonApi\Examples\Action\GetArticlesAction;
+use CoderSapient\JsonApi\Examples\Action\ShowArticleAction;
+use CoderSapient\JsonApi\Examples\Action\ListArticlesAction;
 use CoderSapient\JsonApi\Examples\Assembler\ArticleResourceAssembler;
 use CoderSapient\JsonApi\Examples\Assembler\UserResourceAssembler;
 use CoderSapient\JsonApi\Examples\Repository\ArticleRepository;
@@ -20,14 +20,14 @@ use CoderSapient\JsonApi\Registry\ResourceResolverRegistry;
 
 class ServiceLocator
 {
-    public static function getArticleAction(): GetArticleAction
+    public static function getArticleAction(): ShowArticleAction
     {
-        return new GetArticleAction(self::singleDocumentBuilder());
+        return new ShowArticleAction(self::singleDocumentBuilder());
     }
 
-    public static function getArticlesAction(): GetArticlesAction
+    public static function getArticlesAction(): ListArticlesAction
     {
-        return new GetArticlesAction(self::documentsBuilder());
+        return new ListArticlesAction(self::documentsBuilder());
     }
 
     public static function resourceResolverRegistry(): ResourceResolverRegistry

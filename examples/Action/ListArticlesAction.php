@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace CoderSapient\JsonApi\Examples\Action;
 
 use CoderSapient\JsonApi\Document\Builder\DocumentsBuilder;
-use CoderSapient\JsonApi\Examples\Request\GetArticlesRequest;
+use CoderSapient\JsonApi\Examples\Request\ListArticlesRequest;
 use CoderSapient\JsonApi\Exception\JsonApiException;
 
-final class GetArticlesAction
+final class ListArticlesAction
 {
     public function __construct(private DocumentsBuilder $builder)
     {
     }
 
-    public function __invoke(GetArticlesRequest $request): string
+    public function __invoke(ListArticlesRequest $request): string
     {
         try {
             $documents = $this->builder->build($request->toQuery());

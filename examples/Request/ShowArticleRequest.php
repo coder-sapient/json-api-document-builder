@@ -7,21 +7,21 @@ namespace CoderSapient\JsonApi\Examples\Request;
 use CoderSapient\JsonApi\Examples\ResourceTypes;
 use CoderSapient\JsonApi\Http\Request\SingleDocumentRequest;
 
-final class GetArticleRequest extends Request
+final class ShowArticleRequest extends Request
 {
     use SingleDocumentRequest;
 
-    public function resourceId(): string
+    protected function resourceId(): string
     {
-        return '1'; // /article/{id}
+        return '1'; // ~/articles/{resourceId}
     }
 
-    public function resourceType(): string
+    protected function resourceType(): string
     {
         return ResourceTypes::ARTICLES;
     }
 
-    public function supportedIncludes(): array
+    protected function supportedIncludes(): array
     {
         return ['author'];
     }

@@ -117,6 +117,7 @@ class Builder
         $resources = [];
 
         foreach (Utils::all($promises)->wait() as $result) {
+            /** @var ResourceObject $resource */
             foreach ($result as $resource) {
                 $resources[$resource->key()] = $resource;
             }
