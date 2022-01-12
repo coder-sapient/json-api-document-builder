@@ -41,7 +41,7 @@ class DocumentsBuilder extends Builder
                     $resolver->count($criteria),
                     $criteria->chunk()->page(),
                     $criteria->chunk()->perPage(),
-                )
+                ),
             );
         }
 
