@@ -1,10 +1,12 @@
 ## Json Api Document Builder
 
+This library uses immutable resource objects to efficiently build [Json Api Documents](https://jsonapi.org/format/#document-structure)
+
 ## Features
 
 - Supported filtering operators (`eq`, `neq`, `gt`, `lt`, `gte`, `lte`, `like`).
 - Supported sorting, pagination and search by phrase or prefix.
-- Multiple nested paths resource inclusion (e.g. `article, article.author, article.comments.user`), possibly async.
+- Multiple nested paths resource inclusion (e.g. `article, article.author, article.comments.user`), possibly async when using Guzzle Promise.
 - Caching resolved resources.
 
 ## Requirements
@@ -23,8 +25,8 @@ composer require coder-sapient/json-api-document-builder
 
 You can add the following traits to your request classes:
 
-- `SingleDocumentRequest`: For documents about a single top-level resource.
-- `DocumentsRequest`: For documents about a collection of top-level resources.
+- [SingleDocumentRequest](/src/Http/Request/SingleDocumentRequest.php): For documents about a single top-level resource.
+- [DocumentsRequest](/src/Http/Request/DocumentsRequest.php): For documents about a collection of top-level resources.
 
 ### SingleDocumentRequest
 
@@ -50,12 +52,12 @@ final class ShowArticleRequest extends Request
 }
 ```
 
-| Method                | Description                                                                                     |
-|-----------------------|-------------------------------------------------------------------------------------------------|
-| `resourceId()`        | Resource id must be taken from url                                                              |
-| `resourceType()`      | Resource type that defines the `ResourceResolver::class`                                        |
-| `supportedIncludes()` | List of supported resource types to include                                                     |
-| `toQuery()`           | Return `SingleDocumentQuery:class` object that can be handled by `SingleDocumentBuilder::class` |
+| Method                | Description                                                                                                                                     |
+|-----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
+| `resourceId()`        | Return the resource id that must be taken from url                                                                                              |
+| `resourceType()`      | Return the resource type that defines the [ResourceResolver](#ResourceResolver)                                                                 |
+| `supportedIncludes()` | Return the list of supported resource types to include                                                                                          |
+| `toQuery()`           | Return the [SingleDocumentQuery](/src/Document/Builder/SingleDocumentQuery.php) object that can be handled by [SingleDocumentBuilder](#Builder) |
 
 ### DocumentsRequest
 
@@ -89,18 +91,56 @@ final class ListArticlesRequest extends Request
 }
 ```
 
-| Method                | Description                                                                            |
-|-----------------------|----------------------------------------------------------------------------------------|
-| `resourceType()`      | Resource type that defines the `ResourceResolver::class`                               |
-| `supportedIncludes()` | List of supported resource types to include                                            |
-| `supportedSorting()`  | List of supported rows for sorting                                                     |
-| `supportedFilters()`  | List of supported filters that can be applied to resource collection                   |
-| `toQuery()`           | Return `DocumentsQuery:class` object that can be handled by `DocumentsBuilder::class`  |
+| Method                | Description                                                                                                                      |
+|-----------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| `resourceType()`      | Return the resource type that defines the [ResourceResolver](#ResourceResolver)                                                  |
+| `supportedIncludes()` | Return a list of supported resource types to include                                                                             |
+| `supportedSorting()`  | Return a list of supported rows for sorting                                                                                      |
+| `supportedFilters()`  | Return a list of supported filters that can be applied to resource collection                                                    |
+| `toQuery()`           | Return the [DocumentsQuery](/src/Document/Builder/DocumentsQuery.php) object that can be handled by [DocumentsBuilder](#Builder) |
+
+## Builder
+
+To initialize [Builder](/src/Document/Builder/Builder.php), you need to provide instances of [ResourceResolverRegistry](#ResourceResolverRegistry) and [ResourceCache](#ResourceCache):
+
+```php
+$builder = new Builder(
+    new InMemoryResourceResolverRegistry(),
+    new InMemoryResourceCache()
+);
+```
+
+| Method                                                             | Description                                        |
+|--------------------------------------------------------------------|----------------------------------------------------|
+| `buildIncludes(Includes $includes, ResourceCollection $resources)` | Return the included collection of resource objects |
+
+[SingleDocumentBuilder](/src/Document/Builder/SingleDocumentBuilder.php) extends `Builder`:
+
+```php
+
+$singleDocumentBuilder->build(new SingleDocumentQuery(), new JsonApi());
+```
+
+| Method                                                              | Description                                      |
+|---------------------------------------------------------------------|--------------------------------------------------|
+| `build(SingleDocumentQuery $query, DataDocumentMember ...$members)` | Return a document with single top-level resource |
+
+
+[DocumentsBuilder](/src/Document/Builder/DocumentsBuilder.php) extends `Builder`:
+
+```php
+$documentsBuilder->build(new DocumentsQuery(), new JsonApi());
+```
+
+| Method                                                           | Description                                |
+|------------------------------------------------------------------|--------------------------------------------|
+| `build(DocumentsQuery $query, DataDocumentMember ...$members)`   | Return a document with top-level resources |
+
+## Resolver
 
 ### ResourceResolverRegistry
 
-The `ResourceResolverRegistry::class` is a factory that return the corresponding `ResourceResolver::class` by resource
-type.
+The [ResourceResolverRegistry](/src/Registry/ResourceResolverRegistry.php) is a factory that return an associated [ResourceResolver](#ResourceResolver) by resource type.
 
 ```php
 interface ResourceResolverRegistry
@@ -112,7 +152,7 @@ interface ResourceResolverRegistry
 }
 ```
 
-There is a basic implementation `InMemoryResourceResolverRegistry::class`:
+There is a basic implementation [InMemoryResourceResolverRegistry](/src/Registry/InMemoryResourceResolverRegistry.php):
 
 ```php
 $registry = new InMemoryResourceResolverRegistry();
@@ -136,6 +176,8 @@ $singleDocument = $builder->build($request->toQuery());
 ```
 
 ### ResourceResolver
+ 
+[Builder](#Builder) use instances of [ResourceResolver](/src/Resolver/ResourceResolver.php) to find resources. 
 
 ```php
 interface ResourceResolver
@@ -154,13 +196,17 @@ interface ResourceResolver
 }
 ```
 
-| Method         | Description                                               |
-|----------------|-----------------------------------------------------------|
-| `getById()`    | Return resource object or null                            |
-| `getByIds()`   | Return collection of resource objects or Guzzle Promise   |
-| `matching()`   | Return collection of resource objects matched by Criteria |
+| Method         | Description                                                 |
+|----------------|-------------------------------------------------------------|
+| `getById()`    | Return the resource object or null                          |
+| `getByIds()`   | Return a collection of resource objects or Guzzle Promise   |
+| `matching()`   | Return a collection of resource objects matched by Criteria |
 
-Because resources in a relationship can belong to different services, etc., the Builder can accept Guzzle Promises when trying to include resources and load them async.
+
+When resolving a collection of top-level resources, it will provide a [Criteria](/src/Criteria/Criteria.php), consisting of filters, sorting, pagination, and search term.
+You need to match `Criteria` with your query builder (Doctrine, Eloquent, etc.).
+
+`Builder` can accept Guzzle Promises when trying to include resources and load them async, because resources in a relationship can belong to different services, etc.
 
 ### PaginationResolver
 
@@ -168,6 +214,19 @@ Because resources in a relationship can belong to different services, etc., the 
 interface PaginationResolver
 {
     public function pagination(Criteria $criteria): Pagination;
+}
+```
+
+If the `ResourceResolver` implements [PaginationResolver](/src/Resolver/PaginationResolver.php), `Builder` will add top-level links object to the resulting document.
+
+```
+{
+  "links": {
+    "first": "http://localhost/api/v1/articles?page=1&per_page=15",
+    "prev": "http://localhost/api/v1/articles?page=1&per_page=15",
+    "next": "http://localhost/api/v1/articles?page=2&per_page=15",
+    "last": "http://localhost/api/v1/articles?page=3&per_page=15",
+  }
 }
 ```
 
@@ -180,6 +239,21 @@ interface CountableResolver
 }
 ```
 
+If the `ResourceResolver` implements [CountableResolver](/src/Resolver/CountableResolver.php), `Builder` will add top-level meta objects to the resulting document.
+
+```
+{
+  "meta": {
+    "total": 2,
+    "page": 1,
+    "per_page": 1,
+    "last_page": 2
+  }
+}
+```
+
 ### ResourceCache
 
-### Builder
+`Builder` caches all resolved resources using instance of [ResourceCache](/src/Cache/ResourceCache.php)
+There is a basic implementation [InMemoryResourceCache](/src/Cache/InMemoryResourceCache.php).
+If you don't need caching, use [NullableResourceCache](/src/Cache/NullableResourceCache.php).
