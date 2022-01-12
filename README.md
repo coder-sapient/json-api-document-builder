@@ -1,7 +1,11 @@
+## Json Api Document Builder
+
 ## Features
-- Multiple nested paths resource inclusion (e.g. `article, article.author, article.comments.user`).
+
 - Supported filtering operators (`eq`, `neq`, `gt`, `lt`, `gte`, `lte`, `like`).
 - Supported sorting, pagination and search by phrase or prefix.
+- Multiple nested paths resource inclusion (e.g. `article, article.author, article.comments.user`), possibly async.
+- Caching resolved resources.
 
 ## Requirements
 
@@ -15,12 +19,12 @@ Use composer to install the package:
 composer require coder-sapient/json-api-document-builder
 ```
 
-## Usage
+## Basic Usage
 
-### Request Traits:
+You can add the following traits to your request classes:
 
-- `SingleDocumentRequest`: 
-- `DocumentsRequest`:
+- `SingleDocumentRequest`: For documents about a single top-level resource.
+- `DocumentsRequest`: For documents about a collection of top-level resources.
 
 ### SingleDocumentRequest
 
@@ -31,7 +35,7 @@ final class ShowArticleRequest extends Request
 
     protected function resourceId(): string
     {
-        return '1'; 
+        // return from url ~/articles/{resourceId}  
     }
 
     protected function resourceType(): string
@@ -41,17 +45,17 @@ final class ShowArticleRequest extends Request
 
     protected function supportedIncludes(): array
     {
-        return ['author', 'comments'];
+        return ['author', 'comments', 'comments.user'];
     }
 }
 ```
 
-You must define the following methods:
-- `resourceId()`: from url ~/articles/{resourceId}
-- `resourceType()`: defines the `ResourceResolver::class`
-- `supportedIncludes()`: list of supported resource types to include.
-
-`$request->toQuery()` method return `SingleDocumentQuery:class` object that can be handled by `SingleDocumentBuilder::class`
+| Method                | Description                                                                                     |
+|-----------------------|-------------------------------------------------------------------------------------------------|
+| `resourceId()`        | Resource id must be taken from url                                                              |
+| `resourceType()`      | Resource type that defines the `ResourceResolver::class`                                        |
+| `supportedIncludes()` | List of supported resource types to include                                                     |
+| `toQuery()`           | Return `SingleDocumentQuery:class` object that can be handled by `SingleDocumentBuilder::class` |
 
 ### DocumentsRequest
 
@@ -67,7 +71,7 @@ final class ListArticlesRequest extends Request
 
     protected function supportedIncludes(): array
     {
-        return ['author'];
+        return ['author', 'comments', 'comments.user'];
     }
 
     protected function supportedSorting(): array
@@ -85,15 +89,18 @@ final class ListArticlesRequest extends Request
 }
 ```
 
-You must define the following methods:
-- `resourceType()`: defines the `ResourceResolver::class`
-- `supportedIncludes()`: list of supported resource types to include.
-- `supportedSorting()`: list of supported rows for sorting.
-- `supportedFilters()`: list of supported filters that can be applied to resource collection
-
-`$request->toQuery()` method return `DocumentsQuery:class` object that can be handled by `DocumentsBuilder::class`
+| Method                | Description                                                                            |
+|-----------------------|----------------------------------------------------------------------------------------|
+| `resourceType()`      | Resource type that defines the `ResourceResolver::class`                               |
+| `supportedIncludes()` | List of supported resource types to include                                            |
+| `supportedSorting()`  | List of supported rows for sorting                                                     |
+| `supportedFilters()`  | List of supported filters that can be applied to resource collection                   |
+| `toQuery()`           | Return `DocumentsQuery:class` object that can be handled by `DocumentsBuilder::class`  |
 
 ### ResourceResolverRegistry
+
+The `ResourceResolverRegistry::class` is a factory that return the corresponding `ResourceResolver::class` by resource
+type.
 
 ```php
 interface ResourceResolverRegistry
@@ -105,11 +112,13 @@ interface ResourceResolverRegistry
 }
 ```
 
+There is a basic implementation `InMemoryResourceResolverRegistry::class`:
+
 ```php
 $registry = new InMemoryResourceResolverRegistry();
 
 $registry->add(
-    'articles', // resourceType
+    'articles', // resource type
     new ArticleResourceResolver()
 );
 $registry->add(
@@ -144,6 +153,14 @@ interface ResourceResolver
     public function matching(Criteria $criteria): array;
 }
 ```
+
+| Method         | Description                                               |
+|----------------|-----------------------------------------------------------|
+| `getById()`    | Return resource object or null                            |
+| `getByIds()`   | Return collection of resource objects or Guzzle Promise   |
+| `matching()`   | Return collection of resource objects matched by Criteria |
+
+Because resources in a relationship can belong to different services, etc., the Builder can accept Guzzle Promises when trying to include resources and load them async.
 
 ### PaginationResolver
 
