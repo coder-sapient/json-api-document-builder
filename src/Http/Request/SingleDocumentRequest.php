@@ -12,7 +12,7 @@ trait SingleDocumentRequest
 
     public function toQuery(): SingleDocumentQuery
     {
-        $this->ensureQueryParametersIsValid();
+        $this->ensureQueryParamsIsValid();
 
         return new SingleDocumentQuery(
             $this->resourceId(),

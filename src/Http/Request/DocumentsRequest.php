@@ -33,7 +33,7 @@ trait DocumentsRequest
 
     public function toQuery(): DocumentsQuery
     {
-        $this->ensureQueryParametersIsValid();
+        $this->ensureQueryParamsIsValid();
 
         return (new DocumentsQuery($this->resourceType(), $this->includes()))
             ->setFilters($this->filters())

@@ -45,7 +45,16 @@ trait JsonApiRequest
         return new Includes(Utils::explodeIfNotEmpty($includes), $this->includeDelimiter);
     }
 
-    protected function ensureQueryParametersIsValid(): void
+    protected function ensureIncludeIsValid($include): void
+    {
+        $this->ensureQueryParamIsString($this->queryInclude, $include);
+
+        $include = Utils::explodeIfNotEmpty($include, $this->includeDelimiter);
+
+        $this->ensureQueryParamIsSupported($this->queryInclude, $include, $this->supportedIncludes());
+    }
+
+    protected function ensureQueryParamsIsValid(): void
     {
         foreach ($this->queryParams() as $param => $value) {
             if (
@@ -55,15 +64,6 @@ trait JsonApiRequest
                 $this->throwBadRequestException("Invalid query parameter [{$param}]", $param);
             }
         }
-    }
-
-    protected function ensureIncludeIsValid($include): void
-    {
-        $this->ensureQueryParamIsString($this->queryInclude, $include);
-
-        $include = Utils::explodeIfNotEmpty($include, $this->includeDelimiter);
-
-        $this->ensureQueryParamIsSupported($this->queryInclude, $include, $this->supportedIncludes());
     }
 
     protected function ensureQueryParamIsString(string $param, mixed $value): void
