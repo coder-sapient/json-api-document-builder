@@ -23,6 +23,15 @@ composer require coder-sapient/json-api-document-builder
 
 ## Basic Usage
 
+Request examples:
+
+```
+GET /api/v1/articles/{id}?include=author
+GET /api/v1/articles?include=author,comments.user
+GET /api/v1/articles?sotr=id,-title // sort id in asc, title in desc 
+GET /api/v1/articles?filter[id]=100,101&filter[title][like]=value
+```
+
 You can add the following traits to your request classes:
 
 - [SingleDocumentRequest](/src/Http/Request/SingleDocumentRequest.php): For documents about a single top-level resource.
