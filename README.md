@@ -119,17 +119,17 @@ To initialize [Builder](/src/Document/Builder/Builder.php), you need to provide 
 The [SingleDocumentBuilder](/src/Document/Builder/SingleDocumentBuilder.php) extends `Builder`:
 
 
-| Method                                                              | Description                                       |
-|---------------------------------------------------------------------|---------------------------------------------------|
-| `build(SingleDocumentQuery $query, DataDocumentMember ...$members)` | Returns a document with single top-level resource |
+| Method                                | Description                                       |
+|---------------------------------------|---------------------------------------------------|
+| `build(SingleDocumentQuery $query)`   | Returns a document with single top-level resource |
 
 
 The [DocumentsBuilder](/src/Document/Builder/DocumentsBuilder.php) extends `Builder`:
 
 
-| Method                                                           | Description                                 |
-|------------------------------------------------------------------|---------------------------------------------|
-| `build(DocumentsQuery $query, DataDocumentMember ...$members)`   | Returns a document with top-level resources |
+| Method                             | Description                                 |
+|------------------------------------|---------------------------------------------|
+| `build(DocumentsQuery $query)`     | Returns a document with top-level resources |
 
 ## Resolver
 
