@@ -10,8 +10,6 @@ use CoderSapient\JsonApi\Criteria\Filters;
 use CoderSapient\JsonApi\Criteria\Order;
 use CoderSapient\JsonApi\Criteria\Orders;
 use CoderSapient\JsonApi\Criteria\OrderType;
-use CoderSapient\JsonApi\Criteria\Search;
-use CoderSapient\JsonApi\Criteria\SearchType;
 use CoderSapient\JsonApi\Document\Builder\DocumentsQuery;
 use CoderSapient\JsonApi\Utils;
 
@@ -22,33 +20,33 @@ trait DocumentsRequest
     protected string $queryPage = 'page';
     protected string $queryPerPage = 'per_page';
     protected string $queryFilter = 'filter';
-    protected string $querySearch = 'search';
     protected string $querySort = 'sort';
 
     protected string $filterDelimiter = ',';
     protected string $sortDelimiter = ',';
 
     protected string $sortPrefix = '-';
-    protected string $searchPrefix = '^';
 
     public function toQuery(): DocumentsQuery
     {
         $this->ensureQueryParamsIsValid();
 
-        return (new DocumentsQuery($this->resourceType(), $this->includes()))
+        return (new DocumentsQuery($this->resourceType()))
             ->setFilters($this->filters())
             ->setOrders($this->orders())
-            ->setSearch($this->search())
-            ->setPerPage($this->perPage())
-            ->setPage($this->page());
+            ->setIncludes($this->includes())
+            ->setPage($this->page())
+            ->setPerPage($this->perPage());
     }
 
     protected function supportedQueryParams(): array
     {
         return [
-            $this->queryPage, $this->queryPerPage,
-            $this->queryFilter, $this->querySearch,
-            $this->querySort, $this->queryInclude,
+            $this->queryPage,
+            $this->queryPerPage,
+            $this->queryFilter,
+            $this->querySort,
+            $this->queryInclude,
         ];
     }
 
@@ -82,27 +80,11 @@ trait DocumentsRequest
 
     protected function perPage(): int
     {
-        $perPage = $this->queryParam($this->queryPerPage, DocumentsQuery::DEFAULT_PAGE);
+        $perPage = $this->queryParam($this->queryPerPage, DocumentsQuery::DEFAULT_PER_PAGE);
 
         $this->ensurePerPageIsValid($perPage);
 
         return (int) $perPage;
-    }
-
-    protected function search(): ?Search
-    {
-        $search = $this->queryParam($this->querySearch, '');
-
-        $this->ensureSearchIsValid($search);
-
-        if ('' === $search) {
-            return null;
-        }
-
-        $query = Utils::subStrFirst($search, $this->searchPrefix);
-        $type = $search === $query ? SearchType::BY_PHRASE : SearchType::BY_PREFIX;
-
-        return Search::fromValues($query, $type);
     }
 
     protected function filters(): Filters
@@ -143,25 +125,29 @@ trait DocumentsRequest
     protected function ensurePageIsValid(mixed $page): void
     {
         if (! is_numeric($page) || (int) $page < 0) {
-            $this->throwBadRequestException('Page must be a non-negative integer', $this->queryPage);
+            $this->throwBadRequestException(
+                sprintf('%s must be a non-negative integer', $this->queryPage),
+                $this->queryPage,
+            );
         }
     }
 
     protected function ensurePerPageIsValid(mixed $perPage): void
     {
         if (! is_numeric($perPage) || (int) $perPage < 1) {
-            $this->throwBadRequestException('PerPage must be a positive integer', $this->queryPerPage);
+            $this->throwBadRequestException(
+                sprintf('%s must be a positive integer', $this->queryPerPage),
+                $this->queryPerPage,
+            );
         }
-    }
-
-    protected function ensureSearchIsValid(mixed $query): void
-    {
-        $this->ensureQueryParamIsString($this->querySearch, $query);
     }
 
     protected function ensureFilterIsValid(mixed $filter): void
     {
         $this->ensureQueryParamIsArray($this->queryFilter, $filter);
+
+        $this->ensureFilterHasAValidStructure($filter);
+
         $this->ensureFilterIsSupported($filter);
     }
 
@@ -177,6 +163,24 @@ trait DocumentsRequest
         $this->ensureQueryParamIsSupported($this->querySort, $sort, $this->supportedSorting());
     }
 
+    protected function ensureFilterHasAValidStructure(array $filter): void
+    {
+        foreach ($filter as $value) {
+            foreach ((array) $value as $item) {
+                if (is_array($item)) {
+                    $this->throwBadRequestException(
+                        sprintf(
+                            "%s should have the following structure [?%s[field][operator]=value]",
+                            $this->queryFilter,
+                            $this->queryFilter,
+                        ),
+                        $this->queryFilter,
+                    );
+                }
+            }
+        }
+    }
+
     protected function ensureFilterIsSupported(array $filter): void
     {
         foreach ($this->normalizeFilter($filter) as $field => $data) {
@@ -186,7 +190,12 @@ trait DocumentsRequest
                     || ! in_array($operator, $this->supportedFilters()[$field], true)
                 ) {
                     $this->throwBadRequestException(
-                        "Not supported filter [{$operator}] for field [{$field}]",
+                        sprintf(
+                            "Not supported %s operator [%s] for field [%s]",
+                            $this->queryFilter,
+                            $operator,
+                            $field,
+                        ),
                         $this->queryFilter,
                     );
                 }

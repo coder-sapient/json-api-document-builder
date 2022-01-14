@@ -58,10 +58,13 @@ trait JsonApiRequest
     {
         foreach ($this->queryParams() as $param => $value) {
             if (
-                ! preg_match('/[^a-z]/', $param)
-                && ! in_array($param, $this->supportedQueryParams(), true)
+                ! preg_match('/^[a-z_]+$/', $param)
+                || ! in_array($param, $this->supportedQueryParams(), true)
             ) {
-                $this->throwBadRequestException("Invalid query parameter [{$param}]", $param);
+                $this->throwBadRequestException(
+                    sprintf('Invalid query parameter [%s]', $param),
+                    $param,
+                );
             }
         }
     }
@@ -69,14 +72,20 @@ trait JsonApiRequest
     protected function ensureQueryParamIsString(string $param, mixed $value): void
     {
         if (! is_string($value)) {
-            $this->throwBadRequestException("Must be a string [?{$param}=value]", $param);
+            $this->throwBadRequestException(
+                sprintf('%s must be a string [?%s=value]', $param, $param),
+                $param,
+            );
         }
     }
 
     protected function ensureQueryParamIsArray(string $param, mixed $value): void
     {
         if (! is_array($value)) {
-            $this->throwBadRequestException('Must be an compound [?' . $param . '[field]=value]', $param);
+            $this->throwBadRequestException(
+                sprintf('%s must be a compound [?%s[field]=value]', $param, $param),
+                $param,
+            );
         }
     }
 
@@ -84,7 +93,7 @@ trait JsonApiRequest
     {
         if ([] !== $diff = array_diff($given, $allowed)) {
             $this->throwBadRequestException(
-                "Not allowed to {$param} [" . implode(',', $diff) . ']',
+                sprintf('Not allowed to `%s` [%s]', $param, implode(',', $diff)),
                 $param,
             );
         }

@@ -4,8 +4,7 @@ This library uses immutable resource objects to efficiently build [Json Api Docu
 
 ## Features
 
-- Filtering and next operators (`eq`, `neq`, `gt`, `lt`, `gte`, `lte`, `like`).
-- Sorting, pagination and search by phrase or prefix.
+- Pagination, sorting, filtering with the following operators (`eq`, `neq`, `gt`, `lt`, `gte`, `lte`, `like`).
 - Multiple nested paths resource inclusion (e.g. `article, article.author, article.comments.user`).
 - Async resource inclusion (Guzzle Promises/A+).
 - Caching resolved resources.

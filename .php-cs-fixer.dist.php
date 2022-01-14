@@ -13,14 +13,8 @@ $finder = \PhpCsFixer\Finder::create()
     ]);
 
 $rules = [
-    '@PHP80Migration' => true,
-    '@PHP80Migration:risky' => true,
-    '@PhpCsFixer' => true,
-    '@PhpCsFixer:risky' => true,
-    '@PHPUnit84Migration:risky' => true,
     '@PSR12' => true,
-    '@PSR12:risky' => true,
-    'binary_operator_spaces' => ['operators' => ['|' => null]],
+    'binary_operator_spaces' => true,
     'blank_line_before_statement' => [
         'statements' => [
             'case',
@@ -44,15 +38,11 @@ $rules = [
         'allow_single_line_anonymous_class_with_empty_body' => true,
         'allow_single_line_closure' => true,
     ],
+    'method_argument_space' => ['on_multiline' => 'ignore'],
     'concat_space' => ['spacing' => 'one'],
-    'comment_to_phpdoc' => ['ignored_tags' => ['fixme']],
-    'date_time_immutable' => true,
-    'fopen_flags' => ['b_mode' => true],
     'global_namespace_import' => true,
     'no_superfluous_phpdoc_tags' => ['allow_mixed' => false, 'allow_unused_params' => true, 'remove_inheritdoc' => true],
     'not_operator_with_successor_space' => true,
-    'native_function_invocation' => false,
-    'native_constant_invocation' => true,
     'nullable_type_declaration_for_default_null_value' => true,
     'multiline_whitespace_before_semicolons' => ['strategy' => 'no_multi_line'],
     'class_attributes_separation' => ['elements' => ['method' => 'one']],

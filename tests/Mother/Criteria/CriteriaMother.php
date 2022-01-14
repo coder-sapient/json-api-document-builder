@@ -16,13 +16,11 @@ final class CriteriaMother
         ?Filters $filters = null,
         ?Orders $orders = null,
         ?Chunk $chunk = null,
-        ?Search $search = null,
     ): Criteria {
         return new Criteria(
             $filters ?? new Filters(),
             $orders ?? new Orders(),
             $chunk ?? new Chunk(1, 1),
-            $search,
         );
     }
 }

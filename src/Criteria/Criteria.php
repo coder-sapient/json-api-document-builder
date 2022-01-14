@@ -10,7 +10,6 @@ final class Criteria
         private Filters $filters,
         private Orders $ordering,
         private Chunk $chunk,
-        private ?Search $search = null,
     ) {
     }
 
@@ -27,11 +26,6 @@ final class Criteria
     public function chunk(): Chunk
     {
         return $this->chunk;
-    }
-
-    public function search(): ?Search
-    {
-        return $this->search;
     }
 
     public function key(): string

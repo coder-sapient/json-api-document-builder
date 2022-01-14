@@ -9,7 +9,6 @@ use CoderSapient\JsonApi\Criteria\Criteria;
 use CoderSapient\JsonApi\Criteria\Filters;
 use CoderSapient\JsonApi\Criteria\Includes;
 use CoderSapient\JsonApi\Criteria\Orders;
-use CoderSapient\JsonApi\Criteria\Search;
 
 class DocumentsQuery
 {
@@ -21,12 +20,10 @@ class DocumentsQuery
 
     private ?Filters $filters = null;
     private ?Orders $orders = null;
-    private ?Search $search = null;
+    private ?Includes $includes = null;
 
-    public function __construct(
-        private string $resourceType,
-        private Includes $includes,
-    ) {
+    public function __construct(private string $resourceType)
+    {
     }
 
     public function resourceType(): string
@@ -44,14 +41,9 @@ class DocumentsQuery
         return $this->orders ?? new Orders();
     }
 
-    public function search(): ?Search
-    {
-        return $this->search;
-    }
-
     public function includes(): Includes
     {
-        return $this->includes;
+        return $this->includes ?? new Includes();
     }
 
     public function page(): int
@@ -78,9 +70,9 @@ class DocumentsQuery
         return $this;
     }
 
-    public function setSearch(?Search $search = null): self
+    public function setIncludes(Includes $includes): self
     {
-        $this->search = $search;
+        $this->includes = $includes;
 
         return $this;
     }
@@ -105,7 +97,6 @@ class DocumentsQuery
             $this->filters(),
             $this->orders(),
             new Chunk($this->page(), $this->perPage()),
-            $this->search(),
         );
     }
 }

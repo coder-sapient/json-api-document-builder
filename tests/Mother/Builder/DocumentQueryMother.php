@@ -7,7 +7,6 @@ namespace CoderSapient\JsonApi\Tests\Mother\Builder;
 use CoderSapient\JsonApi\Criteria\Filters;
 use CoderSapient\JsonApi\Criteria\Includes;
 use CoderSapient\JsonApi\Criteria\Orders;
-use CoderSapient\JsonApi\Criteria\Search;
 use CoderSapient\JsonApi\Document\Builder\DocumentsQuery;
 use CoderSapient\JsonApi\Document\Builder\SingleDocumentQuery;
 
@@ -18,11 +17,10 @@ final class DocumentQueryMother
         ?string $resourceId = null,
         array $includes = [],
     ): SingleDocumentQuery {
-        return new SingleDocumentQuery(
+        return (new SingleDocumentQuery(
             $resourceId ?? '1',
             $resourceType ?? 'article',
-            new Includes($includes),
-        );
+        ))->setIncludes(new Includes($includes));
     }
 
     public static function compound(
@@ -30,14 +28,13 @@ final class DocumentQueryMother
         array $includes = [],
         ?Filters $filters = null,
         ?Orders $orders = null,
-        ?Search $search = null,
         ?int $page = null,
         ?int $perPage = null,
     ): DocumentsQuery {
-        return (new DocumentsQuery($resourceType ?? 'article', new Includes($includes)))
+        return (new DocumentsQuery($resourceType ?? 'article'))
             ->setFilters($filters ?? new Filters())
             ->setOrders($orders ?? new Orders())
-            ->setSearch($search)
+            ->setIncludes(new Includes($includes))
             ->setPage($page ?? 1)
             ->setPerPage($perPage ?? 15);
     }
