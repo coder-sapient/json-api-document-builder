@@ -14,11 +14,10 @@ trait SingleDocumentRequest
     {
         $this->ensureQueryParamsIsValid();
 
-        return new SingleDocumentQuery(
+        return (new SingleDocumentQuery(
             $this->resourceId(),
             $this->resourceType(),
-            $this->includes(),
-        );
+        ))->setIncludes($this->includes());
     }
 
     abstract protected function resourceId(): string;

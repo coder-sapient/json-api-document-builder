@@ -8,10 +8,11 @@ use CoderSapient\JsonApi\Criteria\Includes;
 
 class SingleDocumentQuery
 {
+    private ?Includes $includes = null;
+
     public function __construct(
         private string $resourceId,
         private string $resourceType,
-        private Includes $includes,
     ) {
     }
 
@@ -27,6 +28,13 @@ class SingleDocumentQuery
 
     public function includes(): Includes
     {
-        return $this->includes;
+        return $this->includes ?? new Includes();
+    }
+
+    public function setIncludes(Includes $includes): self
+    {
+        $this->includes = $includes;
+
+        return $this;
     }
 }

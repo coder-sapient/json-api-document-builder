@@ -6,7 +6,6 @@ namespace CoderSapient\JsonApi\Tests\Unit\Http\Request;
 
 use CoderSapient\JsonApi\Criteria\Filter;
 use CoderSapient\JsonApi\Criteria\Order;
-use CoderSapient\JsonApi\Criteria\Search;
 use CoderSapient\JsonApi\Exception\BadRequestException;
 use CoderSapient\JsonApi\Tests\Fake\FakeDocumentsRequest;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +28,6 @@ final class DocumentsRequestTest extends TestCase
                     ],
                 ],
                 'sort' => '-title,published_at',
-                'search' => '^bo',
                 'include' => 'author,comments',
                 'page' => '2',
                 'per_page' => '20',
@@ -42,10 +40,6 @@ final class DocumentsRequestTest extends TestCase
         self::assertSame(2, $query->page());
         self::assertSame(20, $query->perPage());
 
-        /** @var Search $search */
-        $search = $query->search();
-        self::assertSame('bo', $search->query());
-        self::assertFalse($search->type()->isPhrase());
         self::assertTrue($query->includes()->hasInclude('author'));
         self::assertTrue($query->includes()->hasInclude('comments'));
 

@@ -77,15 +77,16 @@ class Builder
     protected function resolveIncludes(array $includeMap): array
     {
         $keys = $this->pluckKeys($includeMap);
+
         $resolved = $this->findInCache(...$keys);
 
         $missed = $this->toIdentifiers(
             array_diff($keys, array_keys($resolved)),
         );
         $resolved = array_merge(
-            $resolved,
-            $this->findByIdentifiers($missed),
+            $resolved, $this->findByIdentifiers($missed),
         );
+
         $this->ensureAllResourcesAreFound($includeMap, ...$resolved);
 
         return $resolved;
