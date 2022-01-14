@@ -8,7 +8,6 @@ use CoderSapient\JsonApi\Criteria\Chunk;
 use CoderSapient\JsonApi\Criteria\Criteria;
 use CoderSapient\JsonApi\Criteria\Filters;
 use CoderSapient\JsonApi\Criteria\Orders;
-use CoderSapient\JsonApi\Criteria\Search;
 
 final class CriteriaMother
 {
