@@ -64,7 +64,7 @@ final class ShowArticleRequest extends Request
 | Method                | Description                                                                                                                                      |
 |-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
 | `resourceId()`        | Returns the resource id, which should be taken from the URL, for example.                                                                        |
-| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](#ResourceResolver)                                                                 |
+| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](#Registry)                                                                         |
 | `supportedIncludes()` | Returns a list of supported relationship names to include                                                                                        |
 | `toQuery()`           | Returns the [SingleDocumentQuery](/src/Document/Builder/SingleDocumentQuery.php) object that can be handled by [SingleDocumentBuilder](#Builder) |
 
@@ -102,7 +102,7 @@ final class ListArticlesRequest extends Request
 
 | Method                | Description                                                                                                                       |
 |-----------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](#ResourceResolver)                                                  |
+| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](#Registry)                                                          |
 | `supportedIncludes()` | Returns a list of supported relationship names to include                                                                         |
 | `supportedSorting()`  | Returns a list of supported rows for sorting                                                                                      |
 | `supportedFilters()`  | Returns a list of supported filters that can be applied to resource collection                                                    |
