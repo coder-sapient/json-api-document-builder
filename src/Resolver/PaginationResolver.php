@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace CoderSapient\JsonApi\Resolver;
 
 use CoderSapient\JsonApi\Criteria\Criteria;
-use JsonApiPhp\JsonApi\Pagination;
+use CoderSapient\JsonApi\Resolver\Response\PaginationResponse;
 
 interface PaginationResolver
 {
-    public function pagination(Criteria $criteria): Pagination;
+    public function resolve(Criteria $criteria): PaginationResponse;
 }

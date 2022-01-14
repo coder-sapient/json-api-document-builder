@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoderSapient\JsonApi\Http\Request;
+namespace CoderSapient\JsonApi\Request;
 
 use CoderSapient\JsonApi\Criteria\Filter;
 use CoderSapient\JsonApi\Criteria\FilterOperator;
@@ -170,7 +170,7 @@ trait DocumentsRequest
                 if (is_array($item)) {
                     $this->throwBadRequestException(
                         sprintf(
-                            "%s should have the following structure [?%s[field][operator]=value]",
+                            "%s should have the following structure [%s[field][operator]=value]",
                             $this->queryFilter,
                             $this->queryFilter,
                         ),

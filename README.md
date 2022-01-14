@@ -34,8 +34,8 @@ GET /api/v1/articles?filter[id]=100,101&filter[title][like]=value
 
 You can add the following traits to your request classes:
 
-- [SingleDocumentRequest](/src/Http/Request/SingleDocumentRequest.php): For documents about a single top-level resource.
-- [DocumentsRequest](/src/Http/Request/DocumentsRequest.php): For documents about a collection of top-level resources.
+- [SingleDocumentRequest](/src/Request/SingleDocumentRequest.php): For documents about a single top-level resource.
+- [DocumentsRequest](/src/Request/DocumentsRequest.php): For documents about a collection of top-level resources.
 
 ### SingleDocumentRequest
 
@@ -46,7 +46,7 @@ final class ShowArticleRequest extends Request
 
     protected function resourceId(): string
     {
-        // return from url ~/articles/{resourceId}  
+        // return from URL ~/articles/{resourceId}  
     }
 
     protected function resourceType(): string
@@ -63,7 +63,7 @@ final class ShowArticleRequest extends Request
 
 | Method                | Description                                                                                                                                      |
 |-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| `resourceId()`        | Returns the resource id that must be taken from url                                                                                              |
+| `resourceId()`        | Returns the resource id, which should be taken from the URL, for example.                                                                        |
 | `resourceType()`      | Returns the resource type that defines the [ResourceResolver](#ResourceResolver)                                                                 |
 | `supportedIncludes()` | Returns a list of supported relationship names to include                                                                                        |
 | `toQuery()`           | Returns the [SingleDocumentQuery](/src/Document/Builder/SingleDocumentQuery.php) object that can be handled by [SingleDocumentBuilder](#Builder) |
@@ -205,7 +205,7 @@ interface PaginationResolver
 }
 ```
 
-If the `ResourceResolver` implements [PaginationResolver](/src/Resolver/PaginationResolver.php), the `Builder` will add top-level links object to the resulting document.
+If the `ResourceResolver` implements [PaginationResolver](/src/Resolver/PaginationResolver.php), the `Builder` will add top-level links object and meta objects to the resulting document.
 
 ```
 {
@@ -214,28 +214,12 @@ If the `ResourceResolver` implements [PaginationResolver](/src/Resolver/Paginati
     "prev": "http://localhost/api/v1/articles?page=1&per_page=15",
     "next": "http://localhost/api/v1/articles?page=2&per_page=15",
     "last": "http://localhost/api/v1/articles?page=3&per_page=15",
-  }
-}
-```
-
-### CountableResolver
-
-```php
-interface CountableResolver
-{
-    public function count(Criteria $criteria): int;
-}
-```
-
-If the `ResourceResolver` implements [CountableResolver](/src/Resolver/CountableResolver.php), the `Builder` will add top-level meta objects to the resulting document.
-
-```
-{
+  },
   "meta": {
-    "total": 2,
+    "total": 45,
     "page": 1,
-    "per_page": 1,
-    "last_page": 2
+    "per_page": 15,
+    "last_page": 3
   }
 }
 ```

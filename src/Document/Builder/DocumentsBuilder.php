@@ -6,7 +6,6 @@ namespace CoderSapient\JsonApi\Document\Builder;
 
 use CoderSapient\JsonApi\Criteria\Criteria;
 use CoderSapient\JsonApi\Document\Member\CountableMember;
-use CoderSapient\JsonApi\Resolver\CountableResolver;
 use CoderSapient\JsonApi\Resolver\PaginationResolver;
 use CoderSapient\JsonApi\Resolver\ResourceResolver;
 use JsonApiPhp\JsonApi\CompoundDocument;
@@ -24,20 +23,20 @@ class DocumentsBuilder extends Builder
         $resources = $this->getResources($query->resourceType(), $resolver, $criteria);
         $includes = $this->buildIncludes($query->includes(), $resources);
 
-        if ($resolver instanceof PaginationResolver) {
-            $resources = new PaginatedCollection(
-                $resolver->pagination($criteria),
-                $resources,
-            );
-        }
-
         $members = $this->members();
 
-        if ($resolver instanceof CountableResolver) {
+        if ($resolver instanceof PaginationResolver) {
+            $response = $resolver->resolve($criteria);
+
+            $resources = new PaginatedCollection(
+                $response->pagination(),
+                $resources,
+            );
+
             $members = array_merge(
                 $members,
                 CountableMember::members(
-                    $resolver->count($criteria),
+                    $response->total(),
                     $criteria->chunk()->page(),
                     $criteria->chunk()->perPage(),
                 ),

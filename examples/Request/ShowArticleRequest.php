@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace CoderSapient\JsonApi\Examples\Request;
 
 use CoderSapient\JsonApi\Examples\ResourceTypes;
-use CoderSapient\JsonApi\Http\Request\SingleDocumentRequest;
+use CoderSapient\JsonApi\Request\SingleDocumentRequest;
 
 final class ShowArticleRequest extends Request
 {

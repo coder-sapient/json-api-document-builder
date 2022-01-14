@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoderSapient\JsonApi\Tests\Unit\Http\Request;
+namespace CoderSapient\JsonApi\Tests\Unit\Request;
 
 use CoderSapient\JsonApi\Exception\BadRequestException;
 use CoderSapient\JsonApi\Tests\Fake\FakeSingleDocumentRequest;

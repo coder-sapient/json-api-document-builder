@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoderSapient\JsonApi\Http\Request;
+namespace CoderSapient\JsonApi\Request;
 
 use CoderSapient\JsonApi\Document\Builder\SingleDocumentQuery;
 

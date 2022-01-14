@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi\Tests\Fake;
 
-use CoderSapient\JsonApi\Http\Request\SingleDocumentRequest;
+use CoderSapient\JsonApi\Request\SingleDocumentRequest;
 
 final class FakeSingleDocumentRequest
 {

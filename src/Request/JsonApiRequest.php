@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoderSapient\JsonApi\Http\Request;
+namespace CoderSapient\JsonApi\Request;
 
 use CoderSapient\JsonApi\Criteria\Includes;
 use CoderSapient\JsonApi\Exception\BadRequestException;
@@ -73,7 +73,7 @@ trait JsonApiRequest
     {
         if (! is_string($value)) {
             $this->throwBadRequestException(
-                sprintf('%s must be a string [?%s=value]', $param, $param),
+                sprintf('%s must be a string [%s=value]', $param, $param),
                 $param,
             );
         }
@@ -83,7 +83,7 @@ trait JsonApiRequest
     {
         if (! is_array($value)) {
             $this->throwBadRequestException(
-                sprintf('%s must be a compound [?%s[field]=value]', $param, $param),
+                sprintf('%s must be a compound [%s[field]=value]', $param, $param),
                 $param,
             );
         }
