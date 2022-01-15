@@ -28,7 +28,7 @@ Request examples:
 ```
 GET /api/v1/articles/{id}?include=author
 GET /api/v1/articles?include=author,comments.user
-GET /api/v1/articles?sotr=id,-title // sort id in asc, title in desc 
+GET /api/v1/articles?sort=id,-title // sort id in asc, title in desc 
 GET /api/v1/articles?filter[id]=100,101&filter[title][like]=value
 ```
 
@@ -162,7 +162,7 @@ $registry->add(
 );
 $registry->add(
     'comments',
-    new CommentsResourceResolver()
+    new CommentResourceResolver()
 );
 
 $builder = new SingleDocumentBuilder($registry,  new InMemoryResourceCache());
