@@ -1,6 +1,6 @@
 ## Json Api Document Builder
 
-This library uses immutable resource objects to efficiently build [Json Api Documents](https://jsonapi.org/format/#document-structure)
+This framework-agnostic library uses immutable [Resource Objects](https://github.com/json-api-php/json-api) to efficiently build [Json Api Documents](https://jsonapi.org/format/#document-structure).
 
 ## Features
 
@@ -8,6 +8,7 @@ This library uses immutable resource objects to efficiently build [Json Api Docu
 - Multiple nested paths resource inclusion (e.g. `article, article.author, article.comments.user`).
 - Async resource inclusion (Guzzle Promises/A+).
 - Caching resolved resources.
+- Fully Unit tested
 
 ## Requirements
 
@@ -228,3 +229,6 @@ If the `ResourceResolver` implements [PaginationResolver](/src/Resolver/Paginati
 The `Builder` caches all resolved resources using instance of [ResourceCache](/src/Cache/ResourceCache.php)
 There is a basic implementation [InMemoryResourceCache](/src/Cache/InMemoryResourceCache.php).
 If you don't need caching, use [NullableResourceCache](/src/Cache/NullableResourceCache.php).
+
+## License
+The MIT License (MIT). Please see [LICENSE](LICENSE) for more information.
