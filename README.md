@@ -191,7 +191,7 @@ interface ResourceResolver
 }
 ```
 
-When resolving a collection of top-level resources, it will provide a [Criteria](/src/Criteria/Criteria.php), consisting of filters, sorting, pagination, and search term.
+When resolving a collection of top-level resources, it will provide a [Criteria](/src/Criteria/Criteria.php), consisting of filters, sorting, pagination.
 You need to match `Criteria` with your query builder (Doctrine, Eloquent, etc.).
 
 The `Builder` can accept Guzzle Promises when trying to include related resources and load them async.
@@ -205,7 +205,7 @@ interface PaginationResolver
 }
 ```
 
-If the `ResourceResolver` implements [PaginationResolver](/src/Resolver/PaginationResolver.php), the `Builder` will add top-level links object and meta objects to the resulting document.
+If the `ResourceResolver` implements [PaginationResolver](/src/Resolver/PaginationResolver.php), the `Builder` will add top-level `Links` object and `Meta` objects to the resulting document.
 
 ```
 {
