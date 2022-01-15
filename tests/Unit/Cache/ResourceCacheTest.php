@@ -9,9 +9,6 @@ use CoderSapient\JsonApi\Tests\Mother\Criteria\CriteriaMother;
 use CoderSapient\JsonApi\Tests\Mother\Resource\ResourceMother;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversNothing
- */
 final class ResourceCacheTest extends TestCase
 {
     /** @test */

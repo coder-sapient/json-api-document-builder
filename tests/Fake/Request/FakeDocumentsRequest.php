@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoderSapient\JsonApi\Tests\Fake;
+namespace CoderSapient\JsonApi\Tests\Fake\Request;
 
 use CoderSapient\JsonApi\Request\DocumentsRequest;
 

@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace CoderSapient\JsonApi\Tests\Unit\Request;
 
 use CoderSapient\JsonApi\Exception\BadRequestException;
-use CoderSapient\JsonApi\Tests\Fake\FakeSingleDocumentRequest;
+use CoderSapient\JsonApi\Tests\Fake\Request\FakeSingleDocumentRequest;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversNothing
- */
 final class SingleDocumentRequestTest extends TestCase
 {
     /** @test */

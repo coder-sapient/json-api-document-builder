@@ -9,9 +9,6 @@ use CoderSapient\JsonApi\Criteria\FilterOperator;
 use CoderSapient\JsonApi\Criteria\Filters;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversNothing
- */
 final class FilterTest extends TestCase
 {
     /**

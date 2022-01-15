@@ -7,12 +7,9 @@ namespace CoderSapient\JsonApi\Tests\Unit\Request;
 use CoderSapient\JsonApi\Criteria\Filter;
 use CoderSapient\JsonApi\Criteria\Order;
 use CoderSapient\JsonApi\Exception\BadRequestException;
-use CoderSapient\JsonApi\Tests\Fake\FakeDocumentsRequest;
+use CoderSapient\JsonApi\Tests\Fake\Request\FakeDocumentsRequest;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversNothing
- */
 final class DocumentsRequestTest extends TestCase
 {
     /** @test */

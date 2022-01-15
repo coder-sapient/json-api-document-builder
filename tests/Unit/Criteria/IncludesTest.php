@@ -7,9 +7,6 @@ namespace CoderSapient\JsonApi\Tests\Unit\Criteria;
 use CoderSapient\JsonApi\Criteria\Includes;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversNothing
- */
 final class IncludesTest extends TestCase
 {
     /** @test */

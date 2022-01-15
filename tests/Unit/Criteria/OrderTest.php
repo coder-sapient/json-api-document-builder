@@ -9,9 +9,6 @@ use CoderSapient\JsonApi\Criteria\Orders;
 use CoderSapient\JsonApi\Criteria\OrderType;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversNothing
- */
 final class OrderTest extends TestCase
 {
     /**

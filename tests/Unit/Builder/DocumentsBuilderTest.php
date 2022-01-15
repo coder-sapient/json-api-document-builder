@@ -13,15 +13,12 @@ use CoderSapient\JsonApi\Tests\Mother\Builder\DocumentQueryMother;
 use CoderSapient\JsonApi\Tests\Mother\Resource\ResourceMother;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversNothing
- */
 final class DocumentsBuilderTest extends TestCase
 {
     use AssertDocumentEquals;
 
     /** @test */
-    public function it_should_build_documents(): void
+    public function it_should_build_documents_with_included_relations(): void
     {
         $query = DocumentQueryMother::compound('articles', ['authors']);
 
