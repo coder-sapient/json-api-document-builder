@@ -50,7 +50,6 @@ final class DocumentsRequestTest extends TestCase
                     self::assertSame('title', $order->by());
                     self::assertFalse($order->type()->isAsc());
                     break;
-
                 case 1:
                     self::assertSame('published_at', $order->by());
                     self::assertTrue($order->type()->isAsc());
@@ -69,13 +68,11 @@ final class DocumentsRequestTest extends TestCase
                     self::assertTrue($filter->operator()->isEqual('eq'));
                     self::assertSame('Hello World', $filter->value());
                     break;
-
                 case 1:
                     self::assertSame('published_at', $filter->field());
                     self::assertTrue($filter->operator()->isEqual('gt'));
                     self::assertSame('2021-10-20', $filter->value());
                     break;
-
                 case 2:
                     self::assertSame('published_at', $filter->field());
                     self::assertTrue($filter->operator()->isEqual('lte'));

@@ -83,7 +83,7 @@ final class SingleDocumentBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_should_only_use_cache(): void
+    public function it_should_only_use_the_cache_to_build_single_document(): void
     {
         $query = DocumentQueryMother::single('articles', '1', ['authors']);
 

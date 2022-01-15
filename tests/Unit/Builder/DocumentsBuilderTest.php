@@ -117,7 +117,7 @@ final class DocumentsBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_should_only_use_cache(): void
+    public function it_should_only_use_the_cache_to_build_documents(): void
     {
         $query = DocumentQueryMother::compound('articles', ['authors']);
 
