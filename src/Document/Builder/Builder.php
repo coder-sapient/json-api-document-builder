@@ -10,6 +10,10 @@ use CoderSapient\JsonApi\Exception\ResourceNotFoundException;
 use CoderSapient\JsonApi\Registry\ResourceResolverRegistry;
 use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Promise\Utils;
+use JsonApiPhp\JsonApi\JsonApi;
+use JsonApiPhp\JsonApi\Link\RelatedLink;
+use JsonApiPhp\JsonApi\Link\SelfLink;
+use JsonApiPhp\JsonApi\Meta;
 use JsonApiPhp\JsonApi\ResourceCollection;
 use JsonApiPhp\JsonApi\ResourceObject;
 use function JsonApiPhp\JsonApi\combine;
@@ -17,10 +21,43 @@ use function JsonApiPhp\JsonApi\compositeKey;
 
 class Builder
 {
+    private ?JsonApi $jsonApi = null;
+    private ?SelfLink $selfLink = null;
+    private ?RelatedLink $relatedLink = null;
+    private ?Meta $meta = null;
+
     public function __construct(
         protected ResourceResolverRegistry $registry,
         protected ResourceCache $cache,
     ) {
+    }
+
+    public function withJsonApi(JsonApi $jsonApi): self
+    {
+        $this->jsonApi = $jsonApi;
+
+        return $this;
+    }
+
+    public function withSelfLink(SelfLink $selfLink): self
+    {
+        $this->selfLink = $selfLink;
+
+        return $this;
+    }
+
+    public function withRelatedLink(RelatedLink $relatedLink): self
+    {
+        $this->relatedLink = $relatedLink;
+
+        return $this;
+    }
+
+    public function withMeta(Meta $meta): self
+    {
+        $this->meta = $meta;
+
+        return $this;
     }
 
     /**
@@ -207,5 +244,18 @@ class Builder
     protected function compositeKey(string $resourceId, string $resourceType): string
     {
         return compositeKey($resourceType, $resourceId);
+    }
+
+    protected function members(): array
+    {
+        return array_filter([
+            $this->jsonApi, $this->selfLink,
+            $this->relatedLink, $this->meta,
+        ]);
+    }
+
+    protected function reset(): void
+    {
+        $this->jsonApi = $this->selfLink = $this->relatedLink = $this->meta = null;
     }
 }

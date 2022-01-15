@@ -23,16 +23,16 @@ final class ResourceMother
     {
         $members = [];
 
-        foreach ($relations as [$relationType, $relationName, $resourceType, $resourceIds]) {
-            if ('to_one' === $relationType) {
-                $members[] = new ToOne(
-                    $relationName,
-                    ResourceIdentifierMother::single($resourceType, $resourceIds),
-                );
-            } elseif ('to_many' === $relationType) {
+        foreach ($relations as [$relationName, $resourceType, $resourceIds]) {
+            if (is_array($resourceIds)) {
                 $members[] = new ToMany(
                     $relationName,
                     ResourceIdentifierMother::collection($resourceType, ...$resourceIds),
+                );
+            } else {
+                $members[] = new ToOne(
+                    $relationName,
+                    ResourceIdentifierMother::single($resourceType, $resourceIds),
                 );
             }
         }

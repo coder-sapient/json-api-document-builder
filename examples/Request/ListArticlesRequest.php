@@ -6,7 +6,7 @@ namespace CoderSapient\JsonApi\Examples\Request;
 
 use CoderSapient\JsonApi\Criteria\FilterOperator;
 use CoderSapient\JsonApi\Examples\ResourceTypes;
-use CoderSapient\JsonApi\Http\Request\DocumentsRequest;
+use CoderSapient\JsonApi\Request\DocumentsRequest;
 
 final class ListArticlesRequest extends Request
 {

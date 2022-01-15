@@ -7,6 +7,7 @@ namespace CoderSapient\JsonApi\Tests\Unit\Builder;
 use CoderSapient\JsonApi\Cache\InMemoryResourceCache;
 use CoderSapient\JsonApi\Criteria\Includes;
 use CoderSapient\JsonApi\Document\Builder\Builder;
+use CoderSapient\JsonApi\Exception\ResourceNotFoundException;
 use CoderSapient\JsonApi\Registry\InMemoryResourceResolverRegistry;
 use CoderSapient\JsonApi\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Tests\Assert\AssertDocumentEquals;
@@ -34,16 +35,16 @@ final class BuilderTest extends TestCase
             '1',
             'articles',
             [
-                ['to_many', 'author', 'users', ['10', '11']],
-                ['to_many', 'tags', 'tags', ['20', '21']],
+                ['author', 'users', ['10', '11']],
+                ['tags', 'tags', ['20', '21']],
             ],
         );
         $article2 = ResourceMother::create(
             '2',
             'articles',
             [
-                ['to_many', 'author', 'users', ['10', '11']],
-                ['to_many', 'tags', 'tags', ['20', '21']],
+                ['author', 'users', ['10', '11']],
+                ['tags', 'tags', ['20', '21']],
             ],
         );
 
@@ -168,12 +169,12 @@ final class BuilderTest extends TestCase
     /** @test */
     public function it_should_recursively_resolve_all_includes(): void
     {
-        $article1 = ResourceMother::create('1', 'articles', [['to_many', 'tags', 'tags', ['20']]]);
-        $article2 = ResourceMother::create('2', 'articles', [['to_many', 'tags', 'tags', ['21']]]);
-        $tag20 = ResourceMother::create('20', 'tags', [['to_many', 'related_tags', 'tags', ['22']]]);
-        $tag21 = ResourceMother::create('21', 'tags', [['to_many', 'related_tags', 'tags', ['23']]]);
-        $tag22 = ResourceMother::create('22', 'tags', [['to_many', 'related_tags', 'tags', []]]);
-        $tag23 = ResourceMother::create('23', 'tags', [['to_many', 'related_tags', 'tags', []]]);
+        $article1 = ResourceMother::create('1', 'articles', [['tags', 'tags', ['20']]]);
+        $article2 = ResourceMother::create('2', 'articles', [['tags', 'tags', ['21']]]);
+        $tag20 = ResourceMother::create('20', 'tags', [['related_tags', 'tags', ['22']]]);
+        $tag21 = ResourceMother::create('21', 'tags', [['related_tags', 'tags', ['23']]]);
+        $tag22 = ResourceMother::create('22', 'tags', [['related_tags', 'tags', []]]);
+        $tag23 = ResourceMother::create('23', 'tags', [['related_tags', 'tags', []]]);
 
         $resources = new ResourceCollection($article1, $article2);
 
@@ -275,5 +276,32 @@ final class BuilderTest extends TestCase
             }',
             $documents,
         );
+    }
+
+    /** @test */
+    public function it_should_throw_an_exception_when_not_all_resources_are_found(): void
+    {
+        $article1 = ResourceMother::create('1', 'articles', [['tags', 'tags', ['20', '21']]]);
+        $tag20 = ResourceMother::create('20', 'tags');
+
+        $resources = new ResourceCollection($article1);
+
+        $tagsResolver = $this->createMock(ResourceResolver::class);
+        $tagsResolver->expects(self::once())
+            ->method('getByIds')
+            ->with(
+                self::equalTo('20'),
+                self::equalTo('21'),
+            )
+            ->willReturnOnConsecutiveCalls([$tag20]);
+
+        $registry = new InMemoryResourceResolverRegistry();
+        $registry->add('tags', $tagsResolver);
+
+        $builder = new Builder($registry, new InMemoryResourceCache());
+
+        $this->expectException(ResourceNotFoundException::class);
+
+        $builder->buildIncludes(new Includes(['tags.related_tags']), $resources);
     }
 }

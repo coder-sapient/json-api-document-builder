@@ -24,8 +24,8 @@ final class DocumentsBuilderTest extends TestCase
     public function it_should_build_documents(): void
     {
         $query = DocumentQueryMother::compound('articles', ['author']);
-        $article1 = ResourceMother::create('1', 'articles', [['to_many', 'author', 'users', ['10', '11']]]);
-        $article2 = ResourceMother::create('2', 'articles', [['to_many', 'author', 'users', ['12', '13']]]);
+        $article1 = ResourceMother::create('1', 'articles', [['author', 'users', ['10', '11']]]);
+        $article2 = ResourceMother::create('2', 'articles', [['author', 'users', ['12', '13']]]);
         $user10 = ResourceMother::create('10', 'users');
         $user11 = ResourceMother::create('11', 'users');
         $user12 = ResourceMother::create('12', 'users');
@@ -122,8 +122,8 @@ final class DocumentsBuilderTest extends TestCase
     public function it_should_only_use_cache(): void
     {
         $query = DocumentQueryMother::compound('articles', ['author']);
-        $article1 = ResourceMother::create('1', 'articles', [['to_one', 'author', 'users', '10']]);
-        $article2 = ResourceMother::create('2', 'articles', [['to_one', 'author', 'users', '11']]);
+        $article1 = ResourceMother::create('1', 'articles', [['author', 'users', '10']]);
+        $article2 = ResourceMother::create('2', 'articles', [['author', 'users', '11']]);
         $user10 = ResourceMother::create('10', 'users');
         $user11 = ResourceMother::create('11', 'users');
 
