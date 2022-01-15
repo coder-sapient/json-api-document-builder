@@ -17,17 +17,8 @@ $rules = [
     'binary_operator_spaces' => true,
     'blank_line_before_statement' => [
         'statements' => [
-            'case',
-            'continue',
-            'declare',
-            'exit',
             'for',
             'foreach',
-            'default',
-            'include',
-            'include_once',
-            'require',
-            'require_once',
             'return',
             'throw',
             'try',
@@ -60,7 +51,6 @@ $rules = [
             'property_private',
             'construct',
             'destruct',
-            'phpunit',
             'method_public_abstract_static',
             'method_public_static',
             'method_protected_abstract_static',
@@ -74,11 +64,6 @@ $rules = [
         ],
     ],
     'ordered_imports' => ['imports_order' => ['class', 'function', 'const']],
-    'php_unit_strict' => true,
-    'php_unit_test_case_static_method_calls' => ['call_type' => 'self'],
-    'php_unit_internal_class' => false,
-    'php_unit_method_casing' => false,
-    'php_unit_test_annotation' => false,
     'phpdoc_add_missing_param_annotation' => false,
     'phpdoc_align' => ['align' => 'left'],
     'phpdoc_separation' => false,
@@ -93,8 +78,6 @@ $rules = [
     'static_lambda' => true,
     'increment_style' => ['style' => 'post'],
     'trailing_comma_in_multiline' => ['after_heredoc' => true, 'elements' => ['arrays', 'arguments', 'parameters']],
-    'void_return' => false,
-    'yoda_style' => false,
 ];
 
 return (new \PhpCsFixer\Config())
