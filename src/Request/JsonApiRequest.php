@@ -45,7 +45,7 @@ trait JsonApiRequest
         return new Includes(Utils::explodeIfNotEmpty($includes), $this->includeDelimiter);
     }
 
-    protected function ensureIncludeIsValid($include): void
+    protected function ensureIncludeIsValid(mixed $include): void
     {
         $this->ensureQueryParamIsString($this->queryInclude, $include);
 
