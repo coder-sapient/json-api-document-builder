@@ -7,9 +7,8 @@ namespace CoderSapient\JsonApi\Examples\Assembler;
 use CoderSapient\JsonApi\Examples\Model\Article;
 use JsonApiPhp\JsonApi\Attribute;
 use JsonApiPhp\JsonApi\ResourceIdentifier;
-use JsonApiPhp\JsonApi\ResourceIdentifierCollection;
 use JsonApiPhp\JsonApi\ResourceObject;
-use JsonApiPhp\JsonApi\ToMany;
+use JsonApiPhp\JsonApi\ToOne;
 
 final class ArticleResourceAssembler
 {
@@ -33,9 +32,9 @@ final class ArticleResourceAssembler
             'articles',
             $article->id(),
             new Attribute('title', $article->title()),
-            new ToMany(
+            new ToOne(
                 'author',
-                new ResourceIdentifierCollection(new ResourceIdentifier('users', $article->authorId())),
+                new ResourceIdentifier('users', $article->authorId()),
             ),
         );
     }

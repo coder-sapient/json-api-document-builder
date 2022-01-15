@@ -9,12 +9,13 @@ use CoderSapient\JsonApi\Resolver\ResourceResolver;
 
 final class InMemoryResourceResolverRegistry implements ResourceResolverRegistry
 {
-    private array $resolver = [];
+    /** @var ResourceResolver[] */
+    private array $resolvers = [];
 
     public function get(string $resourceType): ResourceResolver
     {
         if ($this->has($resourceType)) {
-            return $this->resolver[$resourceType];
+            return $this->resolvers[$resourceType];
         }
 
         throw new ResourceResolverNotFoundException($resourceType);
@@ -22,11 +23,11 @@ final class InMemoryResourceResolverRegistry implements ResourceResolverRegistry
 
     public function add(string $resourceType, ResourceResolver $resolver): void
     {
-        $this->resolver[$resourceType] = $resolver;
+        $this->resolvers[$resourceType] = $resolver;
     }
 
     public function has(string $resourceType): bool
     {
-        return isset($this->resolver[$resourceType]);
+        return isset($this->resolvers[$resourceType]);
     }
 }
