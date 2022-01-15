@@ -6,7 +6,7 @@ namespace CoderSapient\JsonApi\Criteria;
 
 use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 
-final class OrderType
+class OrderType
 {
     public const ASC = 'asc';
     public const DESC = 'desc';

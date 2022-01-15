@@ -9,5 +9,5 @@ use CoderSapient\JsonApi\Resolver\Response\PaginationResponse;
 
 interface PaginationResolver
 {
-    public function resolve(Criteria $criteria): PaginationResponse;
+    public function paginate(Criteria $criteria): PaginationResponse;
 }

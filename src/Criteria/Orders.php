@@ -8,7 +8,7 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 
-final class Orders implements IteratorAggregate, Countable
+class Orders implements IteratorAggregate, Countable
 {
     /** @var Order[] */
     private array $orders = [];

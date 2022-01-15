@@ -201,7 +201,7 @@ The `Builder` can accept Guzzle Promises when trying to include related resource
 ```php
 interface PaginationResolver
 {
-    public function pagination(Criteria $criteria): Pagination;
+    public function pagination(Criteria $criteria): PaginationResponse;
 }
 ```
 
