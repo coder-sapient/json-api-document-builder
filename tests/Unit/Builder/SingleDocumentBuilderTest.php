@@ -15,15 +15,12 @@ use CoderSapient\JsonApi\Tests\Mother\Builder\DocumentQueryMother;
 use CoderSapient\JsonApi\Tests\Mother\Resource\ResourceMother;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversNothing
- */
 final class SingleDocumentBuilderTest extends TestCase
 {
     use AssertDocumentEquals;
 
     /** @test */
-    public function it_should_build_single_document(): void
+    public function it_should_build_single_document_with_included_relations(): void
     {
         $query = DocumentQueryMother::single('articles', '1', ['authors']);
 
@@ -86,7 +83,7 @@ final class SingleDocumentBuilderTest extends TestCase
     }
 
     /** @test */
-    public function it_should_only_use_cache(): void
+    public function it_should_only_use_the_cache_to_build_single_document(): void
     {
         $query = DocumentQueryMother::single('articles', '1', ['authors']);
 

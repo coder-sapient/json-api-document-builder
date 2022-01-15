@@ -17,9 +17,6 @@ use JsonApiPhp\JsonApi\Included;
 use JsonApiPhp\JsonApi\ResourceCollection;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @coversNothing
- */
 final class BuilderTest extends TestCase
 {
     use AssertDocumentEquals;
