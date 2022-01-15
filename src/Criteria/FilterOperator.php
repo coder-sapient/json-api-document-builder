@@ -6,7 +6,7 @@ namespace CoderSapient\JsonApi\Criteria;
 
 use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 
-final class FilterOperator
+class FilterOperator
 {
     public const EQUAL = 'eq';
     public const NOT_EQUAL = 'neq';

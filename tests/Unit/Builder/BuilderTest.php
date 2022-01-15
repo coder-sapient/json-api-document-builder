@@ -35,7 +35,7 @@ final class BuilderTest extends TestCase
             '1',
             'articles',
             [
-                ['author', 'users', ['10', '11']],
+                ['authors', 'users', ['10', '11']],
                 ['tags', 'tags', ['20', '21']],
             ],
         );
@@ -43,7 +43,7 @@ final class BuilderTest extends TestCase
             '2',
             'articles',
             [
-                ['author', 'users', ['10', '11']],
+                ['authors', 'users', ['10', '11']],
                 ['tags', 'tags', ['20', '21']],
             ],
         );
@@ -74,7 +74,7 @@ final class BuilderTest extends TestCase
 
         $builder = new Builder($registry, new InMemoryResourceCache());
 
-        $includes = $builder->buildIncludes(new Includes(['author', 'tags']), $resources);
+        $includes = $builder->buildIncludes(new Includes(['authors', 'tags']), $resources);
 
         $documents = new CompoundDocument($resources, new Included(...$includes));
 
@@ -86,7 +86,7 @@ final class BuilderTest extends TestCase
                         "id": "1",
                         "type": "articles",
                         "relationships": {
-                            "author": {
+                            "authors": {
                                 "data": [
                                     {
                                         "type": "users",
@@ -116,7 +116,7 @@ final class BuilderTest extends TestCase
                         "id": "2",
                         "type": "articles",
                         "relationships": {
-                            "author": {
+                            "authors": {
                                 "data": [
                                     {
                                         "type": "users",
@@ -283,6 +283,7 @@ final class BuilderTest extends TestCase
     {
         $article1 = ResourceMother::create('1', 'articles', [['tags', 'tags', ['20', '21']]]);
         $tag20 = ResourceMother::create('20', 'tags');
+        $tagDummy = ResourceMother::create('dummy', 'tags');
 
         $resources = new ResourceCollection($article1);
 
@@ -293,7 +294,7 @@ final class BuilderTest extends TestCase
                 self::equalTo('20'),
                 self::equalTo('21'),
             )
-            ->willReturnOnConsecutiveCalls([$tag20]);
+            ->willReturn([$tag20, $tagDummy]);
 
         $registry = new InMemoryResourceResolverRegistry();
         $registry->add('tags', $tagsResolver);

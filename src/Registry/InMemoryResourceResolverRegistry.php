@@ -7,7 +7,7 @@ namespace CoderSapient\JsonApi\Registry;
 use CoderSapient\JsonApi\Exception\ResourceResolverNotFoundException;
 use CoderSapient\JsonApi\Resolver\ResourceResolver;
 
-final class InMemoryResourceResolverRegistry implements ResourceResolverRegistry
+class InMemoryResourceResolverRegistry implements ResourceResolverRegistry
 {
     /** @var ResourceResolver[] */
     private array $resolvers = [];

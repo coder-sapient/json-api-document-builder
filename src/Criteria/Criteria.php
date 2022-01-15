@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi\Criteria;
 
-final class Criteria
+class Criteria
 {
     public function __construct(
         private Filters $filters,
-        private Orders $ordering,
+        private Orders $orders,
         private Chunk $chunk,
     ) {
     }
@@ -20,7 +20,7 @@ final class Criteria
 
     public function orders(): Orders
     {
-        return $this->ordering;
+        return $this->orders;
     }
 
     public function chunk(): Chunk

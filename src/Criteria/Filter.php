@@ -6,7 +6,7 @@ namespace CoderSapient\JsonApi\Criteria;
 
 use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 
-final class Filter
+class Filter
 {
     public function __construct(private string $field, private FilterOperator $operator, private mixed $value)
     {

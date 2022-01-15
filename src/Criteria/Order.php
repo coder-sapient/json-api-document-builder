@@ -6,7 +6,7 @@ namespace CoderSapient\JsonApi\Criteria;
 
 use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 
-final class Order
+class Order
 {
     public function __construct(private string $by, private OrderType $orderType)
     {

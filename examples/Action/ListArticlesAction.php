@@ -7,11 +7,13 @@ namespace CoderSapient\JsonApi\Examples\Action;
 use CoderSapient\JsonApi\Document\Builder\DocumentsBuilder;
 use CoderSapient\JsonApi\Examples\Request\ListArticlesRequest;
 use CoderSapient\JsonApi\Exception\JsonApiException;
+use JsonApiPhp\JsonApi\JsonApi;
 
 final class ListArticlesAction
 {
     public function __construct(private DocumentsBuilder $builder)
     {
+        $builder->withJsonApi(new JsonApi());
     }
 
     public function __invoke(ListArticlesRequest $request): string

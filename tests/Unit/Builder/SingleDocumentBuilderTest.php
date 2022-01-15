@@ -25,8 +25,9 @@ final class SingleDocumentBuilderTest extends TestCase
     /** @test */
     public function it_should_build_single_document(): void
     {
-        $query = DocumentQueryMother::single('articles', '1', ['author']);
-        $article1 = ResourceMother::create('1', 'articles', [['author', 'users', ['10', '11']]]);
+        $query = DocumentQueryMother::single('articles', '1', ['authors']);
+
+        $article1 = ResourceMother::create('1', 'articles', [['authors', 'users', ['10', '11']]]);
         $user10 = ResourceMother::create('10', 'users');
         $user11 = ResourceMother::create('11', 'users');
 
@@ -55,7 +56,7 @@ final class SingleDocumentBuilderTest extends TestCase
                     "id": "1",
                     "type": "articles",
                     "relationships": {
-                        "author": {
+                        "authors": {
                             "data": [
                                 {
                                     "type": "users",
@@ -87,8 +88,9 @@ final class SingleDocumentBuilderTest extends TestCase
     /** @test */
     public function it_should_only_use_cache(): void
     {
-        $query = DocumentQueryMother::single('articles', '1', ['author']);
-        $article1 = ResourceMother::create('1', 'articles', [['author', 'users', '10']]);
+        $query = DocumentQueryMother::single('articles', '1', ['authors']);
+
+        $article1 = ResourceMother::create('1', 'articles', [['authors', 'users', '10']]);
         $user10 = ResourceMother::create('10', 'users');
 
         $cache = new InMemoryResourceCache();
@@ -106,7 +108,7 @@ final class SingleDocumentBuilderTest extends TestCase
                     "id": "1",
                     "type": "articles",
                     "relationships": {
-                        "author": {
+                        "authors": {
                             "data":
                                 {
                                     "type": "users",

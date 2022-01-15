@@ -26,7 +26,7 @@ class DocumentsBuilder extends Builder
         $members = $this->members();
 
         if ($resolver instanceof PaginationResolver) {
-            $response = $resolver->resolve($criteria);
+            $response = $resolver->paginate($criteria);
 
             $resources = new PaginatedCollection(
                 $response->pagination(),

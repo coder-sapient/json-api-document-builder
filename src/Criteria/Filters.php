@@ -8,7 +8,7 @@ use ArrayIterator;
 use Countable;
 use IteratorAggregate;
 
-final class Filters implements IteratorAggregate, Countable
+class Filters implements IteratorAggregate, Countable
 {
     /** @var Filter[] */
     private array $filters = [];
