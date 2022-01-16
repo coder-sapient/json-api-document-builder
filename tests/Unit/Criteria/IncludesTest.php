@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 final class IncludesTest extends TestCase
 {
     /** @test */
-    public function it_should_create_includes(): void
+    public function it_should_create_a_includes(): void
     {
         $includes = new Includes([
             'articles',

@@ -1,7 +1,7 @@
 {
     "name": "coder-sapient/json-api-document-builder",
     "description": "Json Api Document Builder",
-    "keywords": ["json-api"],
+    "keywords": ["json-api", "api"],
     "type": "library",
     "license": "MIT",
     "authors": [

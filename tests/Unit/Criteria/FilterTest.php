@@ -7,6 +7,7 @@ namespace CoderSapient\JsonApi\Tests\Unit\Criteria;
 use CoderSapient\JsonApi\Criteria\Filter;
 use CoderSapient\JsonApi\Criteria\FilterOperator;
 use CoderSapient\JsonApi\Criteria\Filters;
+use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 final class FilterTest extends TestCase
@@ -15,7 +16,7 @@ final class FilterTest extends TestCase
      * @test
      * @dataProvider operators
      */
-    public function it_should_create_filter(string $field, string $operator, mixed $value): void
+    public function it_should_create_a_filter(string $field, string $operator, mixed $value): void
     {
         $filter = new Filter($field, new FilterOperator($operator), $value);
 
@@ -46,6 +47,14 @@ final class FilterTest extends TestCase
         self::assertSame('field', $field->field());
         self::assertSame(1, $field->value());
         self::assertTrue($field->operator()->isEqual(FilterOperator::EQUAL));
+    }
+
+    /** @test */
+    public function it_should_throw_an_exception_when_filter_operator_invalid(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new FilterOperator('invalid');
     }
 
     public function operators(): array

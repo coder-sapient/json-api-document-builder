@@ -10,20 +10,24 @@ use JsonApiPhp\JsonApi\ToOne;
 
 final class ResourceMother
 {
-    public static function create(?string $id = null, ?string $type = null, array $relations = []): ResourceObject
+    public static function create(
+        ?string $id = null,
+        ?string $type = null,
+        array $relationships = [],
+    ): ResourceObject
     {
         return new ResourceObject(
             $type ?? 'articles',
             $id ?? '1',
-            ...self::relations($relations),
+            ...self::relationships($relationships),
         );
     }
 
-    public static function relations(array $relations): array
+    public static function relationships(array $relationships): array
     {
         $members = [];
 
-        foreach ($relations as [$relationName, $resourceType, $resourceIds]) {
+        foreach ($relationships as [$relationName, $resourceType, $resourceIds]) {
             if (is_array($resourceIds)) {
                 $members[] = new ToMany(
                     $relationName,

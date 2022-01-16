@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi\Tests\Assert;
 
-use JsonApiPhp\JsonApi\CompoundDocument;
-
 trait AssertDocumentEquals
 {
-    public static function assertEncodesTo(string $expected, CompoundDocument $document): void
+    public static function assertEncodesTo(string $expected, $document): void
     {
         self::assertEquals(
             json_decode($expected),
