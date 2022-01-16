@@ -7,6 +7,7 @@ namespace CoderSapient\JsonApi\Tests\Unit\Criteria;
 use CoderSapient\JsonApi\Criteria\Order;
 use CoderSapient\JsonApi\Criteria\Orders;
 use CoderSapient\JsonApi\Criteria\OrderType;
+use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 final class OrderTest extends TestCase
@@ -44,6 +45,15 @@ final class OrderTest extends TestCase
 
         self::assertSame('id', $orderById->by());
         self::assertSame(OrderType::ASC, $orderById->type()->value());
+    }
+
+
+    /** @test */
+    public function it_should_throw_an_exception_when_order_type_invalid(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new OrderType('invalid');
     }
 
     public function orderTypes(): array
