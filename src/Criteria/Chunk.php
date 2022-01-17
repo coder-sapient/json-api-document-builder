@@ -10,11 +10,8 @@ class Chunk
 {
     public function __construct(private int $page, private int $perPage)
     {
-        if ($page < 0) {
-            throw new InvalidArgumentException('Page must be a non-negative integer');
-        }
-        if ($perPage < 1) {
-            throw new InvalidArgumentException('PerPage must be a positive integer');
+        if ($page < 1 || $perPage < 1) {
+            throw new InvalidArgumentException('Page and perPage must be a positive integer');
         }
     }
 
@@ -30,6 +27,6 @@ class Chunk
 
     public function offset(): int
     {
-        return max(0, $this->page() - 1) * $this->perPage();
+        return ($this->page() - 1) * $this->perPage();
     }
 }

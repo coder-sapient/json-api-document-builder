@@ -14,8 +14,7 @@ final class ResourceMother
         ?string $id = null,
         ?string $type = null,
         array $relationships = [],
-    ): ResourceObject
-    {
+    ): ResourceObject {
         return new ResourceObject(
             $type ?? 'articles',
             $id ?? '1',

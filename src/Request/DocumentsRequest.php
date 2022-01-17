@@ -73,7 +73,7 @@ trait DocumentsRequest
     {
         $page = $this->queryParam($this->queryPage, DocumentsQuery::DEFAULT_PAGE);
 
-        $this->ensurePageIsValid($page);
+        $this->ensureQueryParamIsPositiveInt($this->queryPage, $page);
 
         return (int) $page;
     }
@@ -82,7 +82,7 @@ trait DocumentsRequest
     {
         $perPage = $this->queryParam($this->queryPerPage, DocumentsQuery::DEFAULT_PER_PAGE);
 
-        $this->ensurePerPageIsValid($perPage);
+        $this->ensureQueryParamIsPositiveInt($this->queryPerPage, $perPage);
 
         return (int) $perPage;
     }
@@ -120,26 +120,6 @@ trait DocumentsRequest
         }
 
         return $collect;
-    }
-
-    protected function ensurePageIsValid(mixed $page): void
-    {
-        if (! is_numeric($page) || (int) $page < 0) {
-            $this->throwBadRequestException(
-                sprintf('%s must be a non-negative integer', $this->queryPage),
-                $this->queryPage,
-            );
-        }
-    }
-
-    protected function ensurePerPageIsValid(mixed $perPage): void
-    {
-        if (! is_numeric($perPage) || (int) $perPage < 1) {
-            $this->throwBadRequestException(
-                sprintf('%s must be a positive integer', $this->queryPerPage),
-                $this->queryPerPage,
-            );
-        }
     }
 
     protected function ensureFilterIsValid(mixed $filter): void

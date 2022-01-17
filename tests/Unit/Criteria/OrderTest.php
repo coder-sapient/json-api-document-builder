@@ -39,14 +39,13 @@ final class OrderTest extends TestCase
     }
 
     /** @test */
-    public function it_should_create_order_through_the_factory_methods(): void
+    public function it_should_create_order_through_the_factory_method(): void
     {
         $orderById = Order::fromValues('id', OrderType::ASC);
 
         self::assertSame('id', $orderById->by());
         self::assertSame(OrderType::ASC, $orderById->type()->value());
     }
-
 
     /** @test */
     public function it_should_throw_an_exception_when_order_type_invalid(): void
