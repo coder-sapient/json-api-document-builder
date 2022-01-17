@@ -31,7 +31,7 @@ final class CountableMemberTest extends TestCase
                }
             }
             ',
-            new MetaDocument(...$member1)
+            new MetaDocument(...$member1),
         );
         self::assertEncodesTo(
             '
@@ -44,7 +44,7 @@ final class CountableMemberTest extends TestCase
                }
             }
             ',
-            new MetaDocument(...$member2)
+            new MetaDocument(...$member2),
         );
     }
 }
