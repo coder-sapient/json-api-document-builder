@@ -192,7 +192,7 @@ interface ResourceResolver
 }
 ```
 
-When resolving a collection of top-level resources, it will provide a [Criteria](/src/Criteria/Criteria.php), consisting of filters, sorting, pagination.
+When resolving a collection of top-level resources, it will provide a [Criteria](/src/Criteria/Criteria.php), consisting of filters, orders, pagination.
 You need to match `Criteria` with your query builder (Doctrine, Eloquent, etc.).
 
 The `Builder` can accept Guzzle Promises when trying to include related resources and load them async.

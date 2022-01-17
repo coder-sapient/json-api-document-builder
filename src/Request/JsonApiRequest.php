@@ -13,6 +13,7 @@ trait JsonApiRequest
     protected string $queryInclude = 'include';
 
     protected string $includeDelimiter = ',';
+    protected string $includeRelationsDelimiter = '.';
 
     abstract protected function queryParams(): array;
 
@@ -42,7 +43,10 @@ trait JsonApiRequest
 
         $this->ensureIncludeIsValid($includes);
 
-        return new Includes(Utils::explodeIfNotEmpty($includes), $this->includeDelimiter);
+        return new Includes(
+            Utils::explodeIfNotEmpty($includes, $this->includeDelimiter),
+            $this->includeRelationsDelimiter,
+        );
     }
 
     protected function ensureIncludeIsValid(mixed $include): void
@@ -57,10 +61,7 @@ trait JsonApiRequest
     protected function ensureQueryParamsIsValid(): void
     {
         foreach ($this->queryParams() as $param => $value) {
-            if (
-                ! preg_match('/^[a-z_]+$/', $param)
-                || ! in_array($param, $this->supportedQueryParams(), true)
-            ) {
+            if (! in_array($param, $this->supportedQueryParams(), true)) {
                 $this->throwBadRequestException(
                     sprintf('Invalid query parameter [%s]', $param),
                     $param,
@@ -84,6 +85,16 @@ trait JsonApiRequest
         if (! is_array($value)) {
             $this->throwBadRequestException(
                 sprintf('%s must be a compound [%s[field]=value]', $param, $param),
+                $param,
+            );
+        }
+    }
+
+    protected function ensureQueryParamIsPositiveInt(string $param, mixed $value): void
+    {
+        if (! is_numeric($value) || (int) $value < 1) {
+            $this->throwBadRequestException(
+                sprintf('%s must be a positive integer', $param),
                 $param,
             );
         }

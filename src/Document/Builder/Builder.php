@@ -248,10 +248,7 @@ class Builder
 
     protected function members(): array
     {
-        return array_filter([
-            $this->jsonApi, $this->selfLink,
-            $this->relatedLink, $this->meta,
-        ]);
+        return array_filter([$this->jsonApi, $this->selfLink, $this->relatedLink, $this->meta]);
     }
 
     protected function reset(): void

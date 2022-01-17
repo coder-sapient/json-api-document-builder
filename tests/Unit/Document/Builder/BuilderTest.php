@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace CoderSapient\JsonApi\Tests\Unit\Builder;
+namespace CoderSapient\JsonApi\Tests\Unit\Document\Builder;
 
 use CoderSapient\JsonApi\Cache\InMemoryResourceCache;
 use CoderSapient\JsonApi\Criteria\Includes;

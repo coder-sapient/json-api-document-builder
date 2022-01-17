@@ -40,7 +40,7 @@ final class FilterTest extends TestCase
     }
 
     /** @test */
-    public function it_should_create_filter_through_the_factory_methods(): void
+    public function it_should_create_filter_through_the_factory_method(): void
     {
         $field = Filter::fromValues('field', FilterOperator::EQUAL, 1);
 

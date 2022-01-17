@@ -35,11 +35,7 @@ class DocumentsBuilder extends Builder
 
             $members = array_merge(
                 $members,
-                CountableMember::members(
-                    $response->total(),
-                    $criteria->chunk()->page(),
-                    $criteria->chunk()->perPage(),
-                ),
+                CountableMember::members($response->total(), $criteria->chunk()),
             );
         }
 
