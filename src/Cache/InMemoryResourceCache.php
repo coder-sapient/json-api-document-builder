@@ -11,7 +11,7 @@ class InMemoryResourceCache implements ResourceCache
 {
     private array $cache = [];
 
-    public function getOne(string $key): ?ResourceObject
+    public function getByKey(string $key): ?ResourceObject
     {
         return $this->cache['keys'][$key] ?? null;
     }
@@ -19,7 +19,7 @@ class InMemoryResourceCache implements ResourceCache
     /**
      * @return ResourceObject[]
      */
-    public function getMany(string ...$keys): array
+    public function getByKeys(string ...$keys): array
     {
         $resources = [];
 
@@ -40,7 +40,7 @@ class InMemoryResourceCache implements ResourceCache
         return $this->cache['criteria'][$resourceType][$criteria->key()] ?? [];
     }
 
-    public function set(ResourceObject ...$resources): void
+    public function setByKeys(ResourceObject ...$resources): void
     {
         foreach ($resources as $resource) {
             $this->cache['keys'][$resource->key()] = $resource;
@@ -52,7 +52,7 @@ class InMemoryResourceCache implements ResourceCache
         $this->cache['criteria'][$resourceType][$criteria->key()] = $resources;
     }
 
-    public function remove(string ...$keys): void
+    public function removeByKeys(string ...$keys): void
     {
         foreach ($keys as $key) {
             unset($this->cache['keys'][$key]);

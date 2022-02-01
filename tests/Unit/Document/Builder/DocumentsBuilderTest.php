@@ -127,7 +127,7 @@ final class DocumentsBuilderTest extends TestCase
         $user11 = ResourceMother::create('11', 'users');
 
         $cache = new InMemoryResourceCache();
-        $cache->set($user10, $user11);
+        $cache->setByKeys($user10, $user11);
         $cache->setByCriteria('articles', $query->toCriteria(), $article1, $article2);
 
         $articlesResolver = $this->createMock(ResourceResolver::class);
