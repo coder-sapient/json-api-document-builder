@@ -117,7 +117,7 @@ class Builder
     {
         $keys = $this->pluckKeys($includeMap);
 
-        $resolved = $this->findInCache(...$keys);
+        $resolved = $this->findByKeys(...$keys);
 
         $missed = $this->toIdentifiers(array_diff($keys, array_keys($resolved)));
 
@@ -128,7 +128,7 @@ class Builder
         return $resolved;
     }
 
-    protected function findInCache(string ...$keys): array
+    protected function findByKeys(string ...$keys): array
     {
         $resources = [];
 
