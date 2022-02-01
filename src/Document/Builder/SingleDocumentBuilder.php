@@ -36,7 +36,7 @@ class SingleDocumentBuilder extends Builder
     {
         $key = $this->compositeKey($resourceId, $resourceType);
 
-        if (null !== $resource = $this->cache->getOne($key)) {
+        if (null !== $resource = $this->cache->getByKey($key)) {
             return $resource;
         }
 
@@ -46,7 +46,7 @@ class SingleDocumentBuilder extends Builder
             throw new ResourceNotFoundException($key);
         }
 
-        $this->cache->set($resource);
+        $this->cache->setByKeys($resource);
 
         return $resource;
     }

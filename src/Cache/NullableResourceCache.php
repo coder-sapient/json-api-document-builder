@@ -9,12 +9,12 @@ use JsonApiPhp\JsonApi\ResourceObject;
 
 class NullableResourceCache implements ResourceCache
 {
-    public function getOne(string $key): ?ResourceObject
+    public function getByKey(string $key): ?ResourceObject
     {
         return null;
     }
 
-    public function getMany(string ...$keys): array
+    public function getByKeys(string ...$keys): array
     {
         return [];
     }
@@ -24,7 +24,7 @@ class NullableResourceCache implements ResourceCache
         return [];
     }
 
-    public function set(ResourceObject ...$resources): void
+    public function setByKeys(ResourceObject ...$resources): void
     {
     }
 
@@ -32,7 +32,7 @@ class NullableResourceCache implements ResourceCache
     {
     }
 
-    public function remove(string ...$keys): void
+    public function removeByKeys(string ...$keys): void
     {
     }
 

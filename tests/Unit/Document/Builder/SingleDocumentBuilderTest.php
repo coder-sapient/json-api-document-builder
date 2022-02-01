@@ -91,7 +91,7 @@ final class SingleDocumentBuilderTest extends TestCase
         $user10 = ResourceMother::create('10', 'users');
 
         $cache = new InMemoryResourceCache();
-        $cache->set($article1, $user10);
+        $cache->setByKeys($article1, $user10);
 
         $registry = $this->createMock(ResourceResolverRegistry::class);
         $registry->expects(self::never())->method('get');

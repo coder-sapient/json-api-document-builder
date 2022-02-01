@@ -22,29 +22,29 @@ final class ResourceCacheTest extends TestCase
 
         $cache = new InMemoryResourceCache();
 
-        self::assertNull($cache->getOne($resource1->key()));
-        self::assertEmpty($cache->getMany($resource1->key()));
+        self::assertNull($cache->getByKey($resource1->key()));
+        self::assertEmpty($cache->getByKeys($resource1->key()));
         self::assertEmpty($cache->getByCriteria('articles', $criteria));
 
-        $cache->set($resource1);
-        $cache->set($resource2);
+        $cache->setByKeys($resource1);
+        $cache->setByKeys($resource2);
         $cache->setByCriteria('articles', $criteria, $resource3);
 
-        self::assertSame($resource1, $cache->getOne($resource1->key()));
-        self::assertSame($resource2, $cache->getOne($resource2->key()));
-        self::assertSame([$resource1, $resource2], $cache->getMany($resource1->key(), $resource2->key()));
+        self::assertSame($resource1, $cache->getByKey($resource1->key()));
+        self::assertSame($resource2, $cache->getByKey($resource2->key()));
+        self::assertSame([$resource1, $resource2], $cache->getByKeys($resource1->key(), $resource2->key()));
         self::assertSame([$resource3], $cache->getByCriteria('articles', $criteria));
 
-        $cache->remove($resource1->key());
-        $cache->remove($resource2->key());
+        $cache->removeByKeys($resource1->key());
+        $cache->removeByKeys($resource2->key());
         $cache->removeByCriteria('articles', $criteria);
 
-        self::assertNull($cache->getOne($resource1->key()));
-        self::assertNull($cache->getOne($resource2->key()));
-        self::assertEmpty($cache->getMany($resource1->key(), $resource2->key()));
+        self::assertNull($cache->getByKey($resource1->key()));
+        self::assertNull($cache->getByKey($resource2->key()));
+        self::assertEmpty($cache->getByKeys($resource1->key(), $resource2->key()));
         self::assertEmpty($cache->getByCriteria('articles', $criteria));
 
-        $cache->set($resource1, $resource2, $resource3);
+        $cache->setByKeys($resource1, $resource2, $resource3);
 
         self::assertSame(
             [
@@ -52,7 +52,7 @@ final class ResourceCacheTest extends TestCase
                 $resource2,
                 $resource3,
             ],
-            $cache->getMany(
+            $cache->getByKeys(
                 $resource1->key(),
                 $resource2->key(),
                 $resource3->key(),
@@ -62,6 +62,6 @@ final class ResourceCacheTest extends TestCase
 
         $cache->flush();
 
-        self::assertEmpty($cache->getMany($resource1->key(), $resource2->key(), $resource3->key()));
+        self::assertEmpty($cache->getByKeys($resource1->key(), $resource2->key(), $resource3->key()));
     }
 }

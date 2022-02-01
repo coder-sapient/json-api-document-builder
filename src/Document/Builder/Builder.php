@@ -24,7 +24,9 @@ class Builder
     private ?JsonApi $jsonApi = null;
     private ?SelfLink $selfLink = null;
     private ?RelatedLink $relatedLink = null;
-    private ?Meta $meta = null;
+
+    /** @var Meta[] */
+    private array $meta = [];
 
     public function __construct(
         protected ResourceResolverRegistry $registry,
@@ -53,7 +55,7 @@ class Builder
         return $this;
     }
 
-    public function withMeta(Meta $meta): self
+    public function withMeta(Meta ...$meta): self
     {
         $this->meta = $meta;
 
@@ -117,12 +119,9 @@ class Builder
 
         $resolved = $this->findInCache(...$keys);
 
-        $missed = $this->toIdentifiers(
-            array_diff($keys, array_keys($resolved)),
-        );
-        $resolved = array_merge(
-            $resolved, $this->findByIdentifiers($missed),
-        );
+        $missed = $this->toIdentifiers(array_diff($keys, array_keys($resolved)));
+
+        $resolved = array_merge($resolved, $this->findByIdentifiers($missed));
 
         $this->ensureAllResourcesAreFound($includeMap, ...$resolved);
 
@@ -133,7 +132,7 @@ class Builder
     {
         $resources = [];
 
-        foreach ($this->cache->getMany(...$keys) as $resource) {
+        foreach ($this->cache->getByKeys(...$keys) as $resource) {
             $resources[$resource->key()] = $resource;
         }
 
@@ -161,7 +160,7 @@ class Builder
             }
         }
 
-        $this->cache->set(...$resources);
+        $this->cache->setByKeys(...$resources);
 
         return $resources;
     }
@@ -184,11 +183,6 @@ class Builder
         );
 
         return new ResourceCollection(...$partition);
-    }
-
-    protected function searchByKey(ResourceObject ...$resources): callable
-    {
-        return static fn (string $key) => $resources[$key] ?? throw new ResourceNotFoundException($key);
     }
 
     protected function pluckKeys(array $includeMap): array
@@ -231,9 +225,22 @@ class Builder
         return $identifiers;
     }
 
-    protected function toArray(ResourceCollection $resources): array
+    protected function members(): array
     {
-        return json_decode(json_encode(combine($resources)->data), true);
+        return array_merge(
+            array_filter([
+                $this->jsonApi,
+                $this->selfLink,
+                $this->relatedLink,
+            ]),
+            $this->meta,
+        );
+    }
+
+    protected function reset(): void
+    {
+        $this->meta = [];
+        $this->jsonApi = $this->selfLink = $this->relatedLink = null;
     }
 
     protected function splitKey(string $key, string $delimiter = ':'): array
@@ -246,13 +253,13 @@ class Builder
         return compositeKey($resourceType, $resourceId);
     }
 
-    protected function members(): array
+    protected function searchByKey(ResourceObject ...$resources): callable
     {
-        return array_filter([$this->jsonApi, $this->selfLink, $this->relatedLink, $this->meta]);
+        return static fn (string $key) => $resources[$key] ?? throw new ResourceNotFoundException($key);
     }
 
-    protected function reset(): void
+    protected function toArray(ResourceCollection $resources): array
     {
-        $this->jsonApi = $this->selfLink = $this->relatedLink = $this->meta = null;
+        return json_decode(json_encode(combine($resources)->data), true);
     }
 }
