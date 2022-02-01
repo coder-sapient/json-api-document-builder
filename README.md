@@ -141,7 +141,7 @@ To initialize [Builder](/src/Document/Builder/Builder.php), you need to provide 
 
 ### SingleDocumentBuilder
 
-The [SingleDocumentBuilder](/src/Document/Builder/SingleDocumentBuilder.php) extends `Builder::class`:
+The [SingleDocumentBuilder](/src/Document/Builder/SingleDocumentBuilder.php) extends `Builder`:
 
 | Method                              | Description                                       |
 |-------------------------------------|---------------------------------------------------|
@@ -150,7 +150,7 @@ The [SingleDocumentBuilder](/src/Document/Builder/SingleDocumentBuilder.php) ext
 
 ### DocumentsBuilder
 
-The [DocumentsBuilder](/src/Document/Builder/DocumentsBuilder.php) extends `Builder::class`:
+The [DocumentsBuilder](/src/Document/Builder/DocumentsBuilder.php) extends `Builder`:
 
 | Method                         | Description                                 |
 |--------------------------------|---------------------------------------------|
@@ -160,7 +160,7 @@ The [DocumentsBuilder](/src/Document/Builder/DocumentsBuilder.php) extends `Buil
 
 ### Registry
 
-The registry is a container that return a [ResourceResolver](#ResourceResolver) by resource type.
+The [ResourceResolverRegistry](/src/Registry/ResourceResolverRegistry.php) is a container that return a [ResourceResolver](#ResourceResolver) by resource type.
 
 ```php
 interface ResourceResolverRegistry
