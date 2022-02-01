@@ -31,13 +31,13 @@ final class DocumentsBuilderTest extends TestCase
 
         $articlesResolver = $this->createMock(ResourceResolver::class);
         $articlesResolver->expects(self::once())
-            ->method('matching')
+            ->method('resolveByCriteria')
             ->with(self::equalTo($query->toCriteria()))
             ->willReturn([$article1, $article2]);
 
         $usersResolver = $this->createMock(ResourceResolver::class);
         $usersResolver->expects(self::once())
-            ->method('getByIds')
+            ->method('resolveByIds')
             ->with(
                 self::equalTo('10'),
                 self::equalTo('11'),
@@ -131,12 +131,12 @@ final class DocumentsBuilderTest extends TestCase
         $cache->setByCriteria('articles', $query->toCriteria(), $article1, $article2);
 
         $articlesResolver = $this->createMock(ResourceResolver::class);
-        $articlesResolver->expects(self::never())->method('matching');
-        $articlesResolver->expects(self::never())->method('getByIds');
+        $articlesResolver->expects(self::never())->method('resolveByCriteria');
+        $articlesResolver->expects(self::never())->method('resolveByIds');
 
         $usersResolver = $this->createMock(ResourceResolver::class);
-        $usersResolver->expects(self::never())->method('matching');
-        $usersResolver->expects(self::never())->method('getByIds');
+        $usersResolver->expects(self::never())->method('resolveByCriteria');
+        $usersResolver->expects(self::never())->method('resolveByIds');
 
         $registry = new InMemoryResourceResolverRegistry();
         $registry->add('articles', $articlesResolver);

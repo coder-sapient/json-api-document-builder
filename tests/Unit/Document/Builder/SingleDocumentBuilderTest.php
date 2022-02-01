@@ -30,13 +30,13 @@ final class SingleDocumentBuilderTest extends TestCase
 
         $articlesResolver = $this->createMock(ResourceResolver::class);
         $articlesResolver->expects(self::once())
-            ->method('getById')
+            ->method('resolveById')
             ->with(self::equalTo('1'))
             ->willReturn($article1);
 
         $usersResolver = $this->createMock(ResourceResolver::class);
         $usersResolver->expects(self::once())
-            ->method('getByIds')
+            ->method('resolveByIds')
             ->with(self::equalTo('10'), self::equalTo('11'))
             ->willReturn([$user10, $user11]);
 
@@ -132,7 +132,7 @@ final class SingleDocumentBuilderTest extends TestCase
 
         $articlesResolver = $this->createMock(ResourceResolver::class);
         $articlesResolver->expects(self::once())
-            ->method('getById')
+            ->method('resolveById')
             ->with(self::equalTo('1'))
             ->willReturn(null);
 

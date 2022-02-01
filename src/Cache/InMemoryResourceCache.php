@@ -63,4 +63,9 @@ class InMemoryResourceCache implements ResourceCache
     {
         unset($this->cache['criteria'][$resourceType][$criteria->key()]);
     }
+
+    public function flush(): void
+    {
+        $this->cache = [];
+    }
 }

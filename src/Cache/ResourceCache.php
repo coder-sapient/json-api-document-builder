@@ -7,6 +7,9 @@ namespace CoderSapient\JsonApi\Cache;
 use CoderSapient\JsonApi\Criteria\Criteria;
 use JsonApiPhp\JsonApi\ResourceObject;
 
+/**
+ * @see ResourceObject::key()
+ */
 interface ResourceCache
 {
     public function getOne(string $key): ?ResourceObject;
@@ -28,4 +31,6 @@ interface ResourceCache
     public function remove(string ...$keys): void;
 
     public function removeByCriteria(string $resourceType, Criteria $criteria): void;
+
+    public function flush(): void;
 }

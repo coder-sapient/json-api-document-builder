@@ -10,15 +10,15 @@ use JsonApiPhp\JsonApi\ResourceObject;
 
 interface ResourceResolver
 {
-    public function getById(string $resourceId): ?ResourceObject;
+    public function resolveById(string $resourceId): ?ResourceObject;
 
     /**
      * @return ResourceObject[]|PromiseInterface
      */
-    public function getByIds(string ...$resourceIds): array|PromiseInterface;
+    public function resolveByIds(string ...$resourceIds): array|PromiseInterface;
 
     /**
      * @return ResourceObject[]
      */
-    public function matching(Criteria $criteria): array;
+    public function resolveByCriteria(Criteria $criteria): array;
 }

@@ -42,7 +42,7 @@ class SingleDocumentBuilder extends Builder
 
         $resolver = $this->registry->get($resourceType);
 
-        if (null === $resource = $resolver->getById($resourceId)) {
+        if (null === $resource = $resolver->resolveById($resourceId)) {
             throw new ResourceNotFoundException($key);
         }
 

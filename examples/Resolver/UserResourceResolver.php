@@ -18,24 +18,30 @@ final class UserResourceResolver implements ResourceResolver
     ) {
     }
 
-    public function getById(string $resourceId): ?ResourceObject
+    public function resolveById(string $resourceId): ?ResourceObject
     {
-        return $this->assembler->toResource($this->repository->findById($resourceId));
+        return $this->assembler->toResource(
+            $this->repository->findById($resourceId),
+        );
     }
 
     /**
      * @return ResourceObject[]
      */
-    public function getByIds(string ...$resourceIds): array
+    public function resolveByIds(string ...$resourceIds): array
     {
-        return $this->assembler->toResources(...$this->repository->findByIds(...$resourceIds));
+        return $this->assembler->toResources(
+            ...$this->repository->findByIds(...$resourceIds),
+        );
     }
 
     /**
      * @return ResourceObject[]
      */
-    public function matching(Criteria $criteria): array
+    public function resolveByCriteria(Criteria $criteria): array
     {
-        return $this->assembler->toResources(...$this->repository->match($criteria));
+        return $this->assembler->toResources(
+            ...$this->repository->match($criteria),
+        );
     }
 }

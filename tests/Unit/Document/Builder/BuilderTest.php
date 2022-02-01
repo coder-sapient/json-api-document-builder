@@ -49,7 +49,7 @@ final class BuilderTest extends TestCase
 
         $usersResolver = $this->createMock(ResourceResolver::class);
         $usersResolver->expects(self::once())
-            ->method('getByIds')
+            ->method('resolveByIds')
             ->with(
                 self::equalTo('10'),
                 self::equalTo('11'),
@@ -58,7 +58,7 @@ final class BuilderTest extends TestCase
 
         $tagsResolver = $this->createMock(ResourceResolver::class);
         $tagsResolver->expects(self::once())
-            ->method('getByIds')
+            ->method('resolveByIds')
             ->with(
                 self::equalTo('20'),
                 self::equalTo('21'),
@@ -177,7 +177,7 @@ final class BuilderTest extends TestCase
 
         $tagsResolver = $this->createMock(ResourceResolver::class);
         $tagsResolver->expects(self::exactly(2))
-            ->method('getByIds')
+            ->method('resolveByIds')
             ->withConsecutive(['20', '21'], ['22', '23'])
             ->willReturnOnConsecutiveCalls([$tag20, $tag21], [$tag22, $tag23]);
 
@@ -286,7 +286,7 @@ final class BuilderTest extends TestCase
 
         $tagsResolver = $this->createMock(ResourceResolver::class);
         $tagsResolver->expects(self::once())
-            ->method('getByIds')
+            ->method('resolveByIds')
             ->with(
                 self::equalTo('20'),
                 self::equalTo('21'),
