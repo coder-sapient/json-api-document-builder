@@ -30,8 +30,9 @@ final class ListArticlesRequest extends Request
     protected function supportedFilters(): array
     {
         return [
-            'title' => [FilterOperator::EQUAL, FilterOperator::LIKE],
+
             'author_id' => [FilterOperator::EQUAL],
+            'title' => [FilterOperator::EQUAL, FilterOperator::LIKE],
         ];
     }
 }

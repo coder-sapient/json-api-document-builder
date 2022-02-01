@@ -84,12 +84,12 @@ final class ShowArticleRequest extends Request
 }
 ```
 
-| Method                | Description                                                                                                                                                                             |
-|-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `resourceId()`        | Returns the resource id, which should be taken from the URL, for example.                                                                                                               |
-| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](/src/Resolver/ResourceResolver.php)                                                                                       |
-| `supportedIncludes()` | Returns a list of supported relationship names to include                                                                                                                               |
-| `toQuery()`           | Returns the [SingleDocumentQuery](/src/Document/Builder/SingleDocumentQuery.php) object that can be handled by [SingleDocumentBuilder](/src/Document/Builder/SingleDocumentBuilder.php) |
+| Method                | Description                                                                                                                                                    |
+|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `resourceId()`        | Returns the resource id, which should be taken from the URL, for example.                                                                                      |
+| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](#ResourceResolver)                                                                               |
+| `supportedIncludes()` | Returns a list of supported relationship names to include                                                                                                      |
+| `toQuery()`           | Returns the [SingleDocumentQuery](/src/Document/Builder/SingleDocumentQuery.php) object that can be handled by [SingleDocumentBuilder](#SingleDocumentBuilder) |
 
 ### DocumentsRequest
 
@@ -102,34 +102,34 @@ final class ListArticlesRequest extends Request
     {
         return 'articles';
     }
-
+    
+    protected function supportedSorting(): array
+    {
+        return ['title'];
+    }
+    
     protected function supportedIncludes(): array
     {
         return ['author', 'comments', 'comments.user'];
     }
 
-    protected function supportedSorting(): array
-    {
-        return ['title'];
-    }
-
     protected function supportedFilters(): array
     {
         return [
-            'title' => [FilterOperator::EQUAL, FilterOperator::LIKE],
             'author_id' => [FilterOperator::EQUAL],
+            'title' => [FilterOperator::EQUAL, FilterOperator::LIKE],
         ];
     }
 }
 ```
 
-| Method                | Description                                                                                                                                                          |
-|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](/src/Resolver/ResourceResolver.php)                                                                    |
-| `supportedIncludes()` | Returns a list of supported relationship names to include                                                                                                            |
-| `supportedSorting()`  | Returns a list of supported rows for sorting                                                                                                                         |
-| `supportedFilters()`  | Returns a list of supported filters that can be applied to resource collection                                                                                       |
-| `toQuery()`           | Returns the [DocumentsQuery](/src/Document/Builder/DocumentsQuery.php) object that can be handled by [DocumentsBuilder](/src/Document/Builder/DocumentsBuilder.php)  |
+| Method                | Description                                                                                                                                |
+|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](#ResourceResolver)                                                           |
+| `supportedIncludes()` | Returns a list of supported relationship names to include                                                                                  |
+| `supportedSorting()`  | Returns a list of supported rows for sorting                                                                                               |
+| `supportedFilters()`  | Returns a list of supported filters that can be applied to resource collection                                                             |
+| `toQuery()`           | Returns the [DocumentsQuery](/src/Document/Builder/DocumentsQuery.php) object that can be handled by [DocumentsBuilder](#DocumentsBuilder) |
 
 ## Builder
 
@@ -139,16 +139,18 @@ To initialize [Builder](/src/Document/Builder/Builder.php), you need to provide 
 |--------------------------------------------------------------------|-----------------------------------------------------|
 | `buildIncludes(Includes $includes, ResourceCollection $resources)` | Returns the included collection of resource objects |
 
-The [SingleDocumentBuilder](/src/Document/Builder/SingleDocumentBuilder.php) extends `Builder`:
+### SingleDocumentBuilder
 
+The [SingleDocumentBuilder](/src/Document/Builder/SingleDocumentBuilder.php) extends `Builder::class`:
 
 | Method                              | Description                                       |
 |-------------------------------------|---------------------------------------------------|
 | `build(SingleDocumentQuery $query)` | Returns a document with single top-level resource |
 
 
-The [DocumentsBuilder](/src/Document/Builder/DocumentsBuilder.php) extends `Builder`:
+### DocumentsBuilder
 
+The [DocumentsBuilder](/src/Document/Builder/DocumentsBuilder.php) extends `Builder::class`:
 
 | Method                         | Description                                 |
 |--------------------------------|---------------------------------------------|
@@ -158,7 +160,7 @@ The [DocumentsBuilder](/src/Document/Builder/DocumentsBuilder.php) extends `Buil
 
 ### Registry
 
-The [ResourceResolverRegistry](/src/Registry/ResourceResolverRegistry.php) is a container that return a [ResourceResolver](#ResourceResolver) by resource type.
+The registry is a container that return a [ResourceResolver](#ResourceResolver) by resource type.
 
 ```php
 interface ResourceResolverRegistry
@@ -180,7 +182,7 @@ $registry->add(
     new ArticleResourceResolver()
 );
 $registry->add(
-    'author', 
+    'users', 
     new AuthorResourceResolver()
 );
 $registry->add(
@@ -254,26 +256,26 @@ If the resource resolver implements [PaginationResolver](/src/Resolver/Paginatio
  */
 interface ResourceCache
 {
-    public function getOne(string $key): ?ResourceObject;
+    public function getByKey(string $key): ?ResourceObject;
 
     /**
      * @return ResourceObject[]
      */
-    public function getMany(string ...$keys): array;
+    public function getByKeys(string ...$keys): array;
 
     /**
      * @return ResourceObject[]
      */
     public function getByCriteria(string $resourceType, Criteria $criteria): array;
 
-    public function set(ResourceObject ...$resources): void;
+    public function setByKeys(ResourceObject ...$resources): void;
 
     public function setByCriteria(string $resourceType, Criteria $criteria, ResourceObject ...$resources): void;
 
-    public function remove(string ...$keys): void;
+    public function removeByKeys(string ...$keys): void;
 
     public function removeByCriteria(string $resourceType, Criteria $criteria): void;
-    
+
     public function flush(): void;
 }
 ```
