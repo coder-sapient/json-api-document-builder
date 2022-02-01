@@ -54,7 +54,7 @@ class DocumentsBuilder extends Builder
         $resources = $this->cache->getByCriteria($resourceType, $criteria);
 
         if ([] === $resources) {
-            $resources = $resolver->matching($criteria);
+            $resources = $resolver->resolveByCriteria($criteria);
 
             $this->cache->setByCriteria($resourceType, $criteria, ...$resources);
         }

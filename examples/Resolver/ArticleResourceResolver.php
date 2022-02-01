@@ -25,7 +25,7 @@ final class ArticleResourceResolver implements ResourceResolver, PaginationResol
     ) {
     }
 
-    public function getById(string $resourceId): ?ResourceObject
+    public function resolveById(string $resourceId): ?ResourceObject
     {
         return $this->assembler->toResource(
             $this->repository->findById($resourceId),
@@ -35,7 +35,7 @@ final class ArticleResourceResolver implements ResourceResolver, PaginationResol
     /**
      * @return ResourceObject[]
      */
-    public function getByIds(string ...$resourceIds): array
+    public function resolveByIds(string ...$resourceIds): array
     {
         return $this->assembler->toResources(
             ...$this->repository->findByIds(...$resourceIds),
@@ -45,7 +45,7 @@ final class ArticleResourceResolver implements ResourceResolver, PaginationResol
     /**
      * @return ResourceObject[]
      */
-    public function matching(Criteria $criteria): array
+    public function resolveByCriteria(Criteria $criteria): array
     {
         return $this->assembler->toResources(
             ...$this->repository->match($criteria),

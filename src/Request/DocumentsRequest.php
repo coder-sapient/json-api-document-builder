@@ -122,15 +122,6 @@ trait DocumentsRequest
         return $collect;
     }
 
-    protected function ensureFilterIsValid(mixed $filter): void
-    {
-        $this->ensureQueryParamIsArray($this->queryFilter, $filter);
-
-        $this->ensureFilterHasAValidStructure($filter);
-
-        $this->ensureFilterIsSupported($filter);
-    }
-
     protected function ensureSortIsValid(mixed $sort): void
     {
         $this->ensureQueryParamIsString($this->querySort, $sort);
@@ -143,11 +134,18 @@ trait DocumentsRequest
         $this->ensureQueryParamIsSupported($this->querySort, $sort, $this->supportedSorting());
     }
 
+    protected function ensureFilterIsValid(mixed $filter): void
+    {
+        $this->ensureQueryParamIsArray($this->queryFilter, $filter);
+        $this->ensureFilterHasAValidStructure($filter);
+        $this->ensureFilterIsSupported($filter);
+    }
+
     protected function ensureFilterHasAValidStructure(array $filter): void
     {
-        foreach ($filter as $value) {
-            foreach ((array) $value as $item) {
-                if (is_array($item)) {
+        foreach ($filter as $condition) {
+            foreach ((array) $condition as $value) {
+                if (is_array($value)) {
                     $this->throwBadRequestException(
                         sprintf(
                             "%s should have the following structure [%s[field][operator]=value]",

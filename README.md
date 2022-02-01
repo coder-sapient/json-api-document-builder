@@ -10,6 +10,15 @@ This framework-agnostic library uses immutable [Resource Objects](https://github
 - Caching resolved resources.
 - Fully Unit tested
 
+Request examples:
+
+```
+GET /api/v1/articles/{id}?include=author
+GET /api/v1/articles?include=author,comments.user&page=1&per_page=15
+GET /api/v1/articles?sort=id,-title // sort id in asc, title in desc 
+GET /api/v1/articles?filter[id]=100,101&filter[title][like]=value
+```
+
 ## Requirements
 
 - PHP version &gt;=8.0
@@ -24,13 +33,26 @@ composer require coder-sapient/json-api-document-builder
 
 ## Basic Usage
 
-Request examples:
+Controller action example:
 
-```
-GET /api/v1/articles/{id}?include=author
-GET /api/v1/articles?include=author,comments.user
-GET /api/v1/articles?sort=id,-title // sort id in asc, title in desc 
-GET /api/v1/articles?filter[id]=100,101&filter[title][like]=value
+```php
+final class ShowArticleAction
+{
+    public function __construct(private SingleDocumentBuilder $builder)
+    {
+    }
+
+    public function __invoke(ShowArticleRequest $request): string
+    {
+        try {
+            $document = $this->builder->build($request->toQuery());
+        } catch (JsonApiException $e) {
+            return json_encode($e->jsonApiErrors());
+        }
+
+        return json_encode($document);
+    }
+}
 ```
 
 You can add the following traits to your request classes:
@@ -62,12 +84,12 @@ final class ShowArticleRequest extends Request
 }
 ```
 
-| Method                | Description                                                                                                                                      |
-|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| `resourceId()`        | Returns the resource id, which should be taken from the URL, for example.                                                                        |
-| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](#Registry)                                                                         |
-| `supportedIncludes()` | Returns a list of supported relationship names to include                                                                                        |
-| `toQuery()`           | Returns the [SingleDocumentQuery](/src/Document/Builder/SingleDocumentQuery.php) object that can be handled by [SingleDocumentBuilder](#Builder) |
+| Method                | Description                                                                                                                                                                             |
+|-----------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `resourceId()`        | Returns the resource id, which should be taken from the URL, for example.                                                                                                               |
+| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](/src/Resolver/ResourceResolver.php)                                                                                       |
+| `supportedIncludes()` | Returns a list of supported relationship names to include                                                                                                                               |
+| `toQuery()`           | Returns the [SingleDocumentQuery](/src/Document/Builder/SingleDocumentQuery.php) object that can be handled by [SingleDocumentBuilder](/src/Document/Builder/SingleDocumentBuilder.php) |
 
 ### DocumentsRequest
 
@@ -101,13 +123,13 @@ final class ListArticlesRequest extends Request
 }
 ```
 
-| Method                | Description                                                                                                                       |
-|-----------------------|-----------------------------------------------------------------------------------------------------------------------------------|
-| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](#Registry)                                                          |
-| `supportedIncludes()` | Returns a list of supported relationship names to include                                                                         |
-| `supportedSorting()`  | Returns a list of supported rows for sorting                                                                                      |
-| `supportedFilters()`  | Returns a list of supported filters that can be applied to resource collection                                                    |
-| `toQuery()`           | Returns the [DocumentsQuery](/src/Document/Builder/DocumentsQuery.php) object that can be handled by [DocumentsBuilder](#Builder) |
+| Method                | Description                                                                                                                                                          |
+|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](/src/Resolver/ResourceResolver.php)                                                                    |
+| `supportedIncludes()` | Returns a list of supported relationship names to include                                                                                                            |
+| `supportedSorting()`  | Returns a list of supported rows for sorting                                                                                                                         |
+| `supportedFilters()`  | Returns a list of supported filters that can be applied to resource collection                                                                                       |
+| `toQuery()`           | Returns the [DocumentsQuery](/src/Document/Builder/DocumentsQuery.php) object that can be handled by [DocumentsBuilder](/src/Document/Builder/DocumentsBuilder.php)  |
 
 ## Builder
 
@@ -120,17 +142,17 @@ To initialize [Builder](/src/Document/Builder/Builder.php), you need to provide 
 The [SingleDocumentBuilder](/src/Document/Builder/SingleDocumentBuilder.php) extends `Builder`:
 
 
-| Method                                | Description                                       |
-|---------------------------------------|---------------------------------------------------|
-| `build(SingleDocumentQuery $query)`   | Returns a document with single top-level resource |
+| Method                              | Description                                       |
+|-------------------------------------|---------------------------------------------------|
+| `build(SingleDocumentQuery $query)` | Returns a document with single top-level resource |
 
 
 The [DocumentsBuilder](/src/Document/Builder/DocumentsBuilder.php) extends `Builder`:
 
 
-| Method                             | Description                                 |
-|------------------------------------|---------------------------------------------|
-| `build(DocumentsQuery $query)`     | Returns a document with top-level resources |
+| Method                         | Description                                 |
+|--------------------------------|---------------------------------------------|
+| `build(DocumentsQuery $query)` | Returns a document with top-level resources |
 
 ## Resolver
 
@@ -166,47 +188,47 @@ $registry->add(
     new CommentResourceResolver()
 );
 
-$builder = new SingleDocumentBuilder($registry,  new InMemoryResourceCache());
+$builder = new SingleDocumentBuilder($registry, new InMemoryResourceCache());
 
 $singleDocument = $builder->build($request->toQuery());
 ```
 
 ### ResourceResolver
  
-The [Builder](#Builder) use instances of [ResourceResolver](/src/Resolver/ResourceResolver.php) to find resources. 
+The builder use instances of [ResourceResolver](/src/Resolver/ResourceResolver.php) to find resources by ids or query criteria. 
 
 ```php
 interface ResourceResolver
 {
-    public function getById(string $resourceId): ?ResourceObject;
+    public function resolveById(string $resourceId): ?ResourceObject;
 
     /**
      * @return ResourceObject[]|PromiseInterface
      */
-    public function getByIds(string ...$resourceIds): array|PromiseInterface;
+    public function resolveByIds(string ...$resourceIds): array|PromiseInterface;
 
     /**
      * @return ResourceObject[]
      */
-    public function matching(Criteria $criteria): array;
+    public function resolveByCriteria(Criteria $criteria): array;
 }
 ```
 
 When resolving a collection of top-level resources, it will provide a [Criteria](/src/Criteria/Criteria.php), consisting of filters, orders, pagination.
 You need to match `Criteria` with your query builder (Doctrine, Eloquent, etc.).
 
-The `Builder` can accept Guzzle Promises when trying to include related resources and load them async.
+The builder can accept Guzzle Promises when trying to include related resources and load them async.
 
 ### PaginationResolver
 
 ```php
 interface PaginationResolver
 {
-    public function pagination(Criteria $criteria): PaginationResponse;
+    public function paginate(Criteria $criteria): PaginationResponse;
 }
 ```
 
-If the `ResourceResolver` implements [PaginationResolver](/src/Resolver/PaginationResolver.php), the `Builder` will add top-level `Links` object and `Meta` objects to the resulting document.
+If the resource resolver implements [PaginationResolver](/src/Resolver/PaginationResolver.php), the builder will add top-level `Links` and `Meta` objects to the resulting document.
 
 ```
 {
@@ -226,7 +248,36 @@ If the `ResourceResolver` implements [PaginationResolver](/src/Resolver/Paginati
 ```
 
 ### ResourceCache
-The `Builder` caches all resolved resources using instance of [ResourceCache](/src/Cache/ResourceCache.php)
+```php
+/**
+ * @see ResourceObject::key()
+ */
+interface ResourceCache
+{
+    public function getOne(string $key): ?ResourceObject;
+
+    /**
+     * @return ResourceObject[]
+     */
+    public function getMany(string ...$keys): array;
+
+    /**
+     * @return ResourceObject[]
+     */
+    public function getByCriteria(string $resourceType, Criteria $criteria): array;
+
+    public function set(ResourceObject ...$resources): void;
+
+    public function setByCriteria(string $resourceType, Criteria $criteria, ResourceObject ...$resources): void;
+
+    public function remove(string ...$keys): void;
+
+    public function removeByCriteria(string $resourceType, Criteria $criteria): void;
+    
+    public function flush(): void;
+}
+```
+The builder caches all resolved resources using instance of [ResourceCache](/src/Cache/ResourceCache.php)
 There is a basic implementation [InMemoryResourceCache](/src/Cache/InMemoryResourceCache.php).
 If you don't need caching, use [NullableResourceCache](/src/Cache/NullableResourceCache.php).
 

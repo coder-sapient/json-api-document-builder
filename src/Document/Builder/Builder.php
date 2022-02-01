@@ -148,7 +148,7 @@ class Builder
             $resolver = $this->registry->get($resourceType);
 
             $promises[] = Create::promiseFor(
-                $resolver->getByIds(...$resourceIds),
+                $resolver->resolveByIds(...$resourceIds),
             );
         }
 
