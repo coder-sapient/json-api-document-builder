@@ -37,28 +37,18 @@ final class ResourceCacheTest extends TestCase
 
         $cache->removeByKeys($resource1->key());
         $cache->removeByKeys($resource2->key());
-        $cache->removeByCriteria('articles', $criteria);
 
         self::assertNull($cache->getByKey($resource1->key()));
         self::assertNull($cache->getByKey($resource2->key()));
         self::assertEmpty($cache->getByKeys($resource1->key(), $resource2->key()));
+
+        $cache->setByKeys($resource1);
+        $cache->removeByType('articles');
+
+        self::assertNull($cache->getByKey($resource1->key()));
         self::assertEmpty($cache->getByCriteria('articles', $criteria));
 
         $cache->setByKeys($resource1, $resource2, $resource3);
-
-        self::assertSame(
-            [
-                $resource1,
-                $resource2,
-                $resource3,
-            ],
-            $cache->getByKeys(
-                $resource1->key(),
-                $resource2->key(),
-                $resource3->key(),
-            ),
-        );
-
 
         $cache->flush();
 
