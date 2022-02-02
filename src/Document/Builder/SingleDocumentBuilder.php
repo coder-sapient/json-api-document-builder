@@ -10,6 +10,8 @@ use JsonApiPhp\JsonApi\Included;
 use JsonApiPhp\JsonApi\ResourceCollection;
 use JsonApiPhp\JsonApi\ResourceObject;
 
+use function JsonApiPhp\JsonApi\compositeKey;
+
 class SingleDocumentBuilder extends Builder
 {
     public function build(SingleDocumentQuery $query): CompoundDocument
@@ -34,7 +36,7 @@ class SingleDocumentBuilder extends Builder
 
     protected function getResource(string $resourceId, string $resourceType): ResourceObject
     {
-        $key = $this->compositeKey($resourceId, $resourceType);
+        $key = compositeKey($resourceType, $resourceId);
 
         if (null !== $resource = $this->cache->getByKey($key)) {
             return $resource;

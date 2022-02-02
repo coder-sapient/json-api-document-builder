@@ -59,9 +59,15 @@ class InMemoryResourceCache implements ResourceCache
         }
     }
 
-    public function removeByCriteria(string $resourceType, Criteria $criteria): void
+    public function removeByType(string $resourceType): void
     {
-        unset($this->cache['criteria'][$resourceType][$criteria->key()]);
+        foreach ($this->cache['keys'] as $key => $resource) {
+            if (str_starts_with($key, $resourceType)) {
+                unset($this->cache['keys'][$key]);
+            }
+        }
+
+        unset($this->cache['criteria'][$resourceType]);
     }
 
     public function flush(): void

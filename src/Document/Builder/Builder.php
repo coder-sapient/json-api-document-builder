@@ -206,7 +206,7 @@ class Builder
 
         foreach ($identifiers as $resourceType => $resourceIds) {
             foreach ($resourceIds as $resourceId) {
-                $result[] = $fn($this->compositeKey($resourceId, $resourceType));
+                $result[] = $fn(compositeKey($resourceType, $resourceId));
             }
         }
 
@@ -218,7 +218,7 @@ class Builder
         $identifiers = [];
 
         foreach ($keys as $key) {
-            [$resourceType, $resourceId] = $this->splitKey($key);
+            [$resourceType, $resourceId] = explode(':', $key);
             $identifiers[$resourceType][] = $resourceId;
         }
 
@@ -243,23 +243,13 @@ class Builder
         $this->jsonApi = $this->selfLink = $this->relatedLink = null;
     }
 
-    protected function splitKey(string $key, string $delimiter = ':'): array
+    protected function toArray(ResourceCollection $resources): array
     {
-        return explode($delimiter, $key);
-    }
-
-    protected function compositeKey(string $resourceId, string $resourceType): string
-    {
-        return compositeKey($resourceType, $resourceId);
+        return json_decode(json_encode(combine($resources)->data), true);
     }
 
     protected function searchByKey(ResourceObject ...$resources): callable
     {
         return static fn (string $key) => $resources[$key] ?? throw new ResourceNotFoundException($key);
-    }
-
-    protected function toArray(ResourceCollection $resources): array
-    {
-        return json_decode(json_encode(combine($resources)->data), true);
     }
 }
