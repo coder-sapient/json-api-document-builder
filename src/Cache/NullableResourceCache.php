@@ -36,7 +36,7 @@ class NullableResourceCache implements ResourceCache
     {
     }
 
-    public function removeByType(string $resourceType): void
+    public function removeByTypes(string ...$resourceTypes): void
     {
     }
 

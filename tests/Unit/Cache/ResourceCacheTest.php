@@ -43,7 +43,7 @@ final class ResourceCacheTest extends TestCase
         self::assertEmpty($cache->getByKeys($resource1->key(), $resource2->key()));
 
         $cache->setByKeys($resource1);
-        $cache->removeByType('articles');
+        $cache->removeByTypes('articles');
 
         self::assertNull($cache->getByKey($resource1->key()));
         self::assertEmpty($cache->getByCriteria('articles', $criteria));

@@ -7,6 +7,8 @@ namespace CoderSapient\JsonApi\Tests\Unit;
 use CoderSapient\JsonApi\Utils;
 use PHPUnit\Framework\TestCase;
 
+use function JsonApiPhp\JsonApi\compositeKey;
+
 final class UtilsTest extends TestCase
 {
     /** @test */
@@ -28,5 +30,11 @@ final class UtilsTest extends TestCase
     {
         self::assertSame('', Utils::explodeIfContains('', ','));
         self::assertSame(['foo', 'bar'], Utils::explodeIfContains('foo,bar', ','));
+    }
+
+    /** @test */
+    public function typeOfKey(): void
+    {
+        self::assertSame('articles', Utils::typeFromKey(compositeKey('articles', '1')));
     }
 }

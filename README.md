@@ -274,7 +274,7 @@ interface ResourceCache
 
     public function removeByKeys(string ...$keys): void;
 
-    public function removeByType(string $resourceType): void;
+    public function removeByTypes(string ...$resourceTypes): void;
 
     public function flush(): void;
 }

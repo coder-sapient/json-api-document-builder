@@ -6,6 +6,14 @@ namespace CoderSapient\JsonApi;
 
 final class Utils
 {
+    /**
+     * @see ResourceObject::key()
+     */
+    public static function typeFromKey(string $key): string
+    {
+        return explode(':', $key)[0];
+    }
+
     public static function subStrFirst(string $string, string $needle): string
     {
         return $needle === $string[0] ? mb_substr($string, 1) : $string;
