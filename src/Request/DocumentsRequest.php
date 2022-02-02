@@ -95,8 +95,8 @@ trait DocumentsRequest
 
         $collect = new Filters();
 
-        foreach ($this->normalizeFilter($filter) as $field => $filter) {
-            foreach ($filter as $operator => $value) {
+        foreach ($this->normalizeFilter($filter) as $field => $condition) {
+            foreach ($condition as $operator => $value) {
                 $collect->add(Filter::fromValues($field, $operator, $value));
             }
         }
@@ -161,8 +161,8 @@ trait DocumentsRequest
 
     protected function ensureFilterIsSupported(array $filter): void
     {
-        foreach ($this->normalizeFilter($filter) as $field => $data) {
-            foreach ($data as $operator => $value) {
+        foreach ($this->normalizeFilter($filter) as $field => $condition) {
+            foreach ($condition as $operator => $value) {
                 if (
                     ! isset($this->supportedFilters()[$field])
                     || ! in_array($operator, $this->supportedFilters()[$field], true)
