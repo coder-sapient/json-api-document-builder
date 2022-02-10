@@ -77,9 +77,11 @@ class DocumentsQuery extends JsonApiQuery
      */
     public function setFilters(Filters $filters): self
     {
-        $this->filters = $filters;
+        $self = clone $this;
 
-        return $this;
+        $self->filters = $filters;
+
+        return $self;
     }
 
     /**
@@ -89,9 +91,11 @@ class DocumentsQuery extends JsonApiQuery
      */
     public function setOrders(Orders $orders): self
     {
-        $this->orders = $orders;
+        $self = clone $this;
 
-        return $this;
+        $self->orders = $orders;
+
+        return $self;
     }
 
     /**
@@ -101,9 +105,11 @@ class DocumentsQuery extends JsonApiQuery
      */
     public function setChunk(Chunk $chunk): self
     {
-        $this->chunk = $chunk;
+        $self = clone $this;
 
-        return $this;
+        $self->chunk = $chunk;
+
+        return $self;
     }
 
     /**

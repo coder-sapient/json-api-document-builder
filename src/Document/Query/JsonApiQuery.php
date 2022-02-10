@@ -44,8 +44,10 @@ abstract class JsonApiQuery
      */
     public function setIncludes(Includes $includes): self
     {
-        $this->includes = $includes;
+        $self = clone $this;
 
-        return $this;
+        $self->includes = $includes;
+
+        return $self;
     }
 }
