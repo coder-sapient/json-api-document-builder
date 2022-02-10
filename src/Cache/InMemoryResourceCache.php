@@ -19,12 +19,12 @@ class InMemoryResourceCache implements ResourceCache
     /**
      * @var array
      */
-    private array $cacheByKey = [];
+    private array $keys = [];
 
     /**
      * @var array
      */
-    private array $cacheByQuery = [];
+    private array $queries = [];
 
     /**
      * @param string $key
@@ -33,7 +33,7 @@ class InMemoryResourceCache implements ResourceCache
      */
     public function getByKey(string $key): ?ResourceObject
     {
-        return $this->cacheByKey[Utils::typeFromKey($key)][$key] ?? null;
+        return $this->keys[Utils::typeOf($key)][$key] ?? null;
     }
 
     /**
@@ -46,10 +46,10 @@ class InMemoryResourceCache implements ResourceCache
         $resources = [];
 
         foreach ($keys as $key) {
-            $resourceType = Utils::typeFromKey($key);
+            $resourceType = Utils::typeOf($key);
 
-            if (isset($this->cacheByKey[$resourceType][$key])) {
-                $resources[] = $this->cacheByKey[$resourceType][$key];
+            if (isset($this->keys[$resourceType][$key])) {
+                $resources[] = $this->keys[$resourceType][$key];
             }
         }
 
@@ -63,7 +63,7 @@ class InMemoryResourceCache implements ResourceCache
      */
     public function getByQuery(JsonApiQuery $query): array
     {
-        return $this->cacheByQuery[$query->resourceType()][$query->serialize()] ?? [];
+        return $this->queries[$query->resourceType()][$query->hash()] ?? [];
     }
 
     /**
@@ -75,7 +75,7 @@ class InMemoryResourceCache implements ResourceCache
     {
         foreach ($resources as $resource) {
             $key = $resource->key();
-            $this->cacheByKey[Utils::typeFromKey($key)][$key] = $resource;
+            $this->keys[Utils::typeOf($key)][$key] = $resource;
         }
     }
 
@@ -87,7 +87,7 @@ class InMemoryResourceCache implements ResourceCache
      */
     public function setByQuery(JsonApiQuery $query, ResourceObject ...$resources): void
     {
-        $this->cacheByQuery[$query->resourceType()][$query->serialize()] = $resources;
+        $this->queries[$query->resourceType()][$query->hash()] = $resources;
     }
 
     /**
@@ -98,7 +98,7 @@ class InMemoryResourceCache implements ResourceCache
     public function removeByKeys(string ...$keys): void
     {
         foreach ($keys as $key) {
-            unset($this->cacheByKey[Utils::typeFromKey($key)][$key]);
+            unset($this->keys[Utils::typeOf($key)][$key]);
         }
     }
 
@@ -110,7 +110,7 @@ class InMemoryResourceCache implements ResourceCache
     public function removeByTypes(string ...$resourceTypes): void
     {
         foreach ($resourceTypes as $resourceType) {
-            unset($this->cacheByKey[$resourceType], $this->cacheByQuery[$resourceType]);
+            unset($this->keys[$resourceType], $this->queries[$resourceType]);
         }
     }
 
@@ -119,6 +119,6 @@ class InMemoryResourceCache implements ResourceCache
      */
     public function flush(): void
     {
-        $this->cacheByKey = $this->cacheByQuery = [];
+        $this->keys = $this->queries = [];
     }
 }
