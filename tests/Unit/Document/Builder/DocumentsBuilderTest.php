@@ -2,12 +2,18 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Tests\Unit\Document\Builder;
 
 use CoderSapient\JsonApi\Cache\InMemoryResourceCache;
 use CoderSapient\JsonApi\Document\Builder\DocumentsBuilder;
+use CoderSapient\JsonApi\Document\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Registry\InMemoryResourceResolverRegistry;
-use CoderSapient\JsonApi\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Tests\Assert\AssertDocumentEquals;
 use CoderSapient\JsonApi\Tests\Mother\Builder\DocumentQueryMother;
 use CoderSapient\JsonApi\Tests\Mother\Resource\ResourceMother;
@@ -31,8 +37,8 @@ final class DocumentsBuilderTest extends TestCase
 
         $articlesResolver = $this->createMock(ResourceResolver::class);
         $articlesResolver->expects(self::once())
-            ->method('resolveByCriteria')
-            ->with(self::equalTo($query->toCriteria()))
+            ->method('resolveMany')
+            ->with(self::equalTo($query))
             ->willReturn([$article1, $article2]);
 
         $usersResolver = $this->createMock(ResourceResolver::class);
@@ -128,14 +134,14 @@ final class DocumentsBuilderTest extends TestCase
 
         $cache = new InMemoryResourceCache();
         $cache->setByKeys($user10, $user11);
-        $cache->setByCriteria('articles', $query->toCriteria(), $article1, $article2);
+        $cache->setByQuery($query, $article1, $article2);
 
         $articlesResolver = $this->createMock(ResourceResolver::class);
-        $articlesResolver->expects(self::never())->method('resolveByCriteria');
+        $articlesResolver->expects(self::never())->method('resolveMany');
         $articlesResolver->expects(self::never())->method('resolveByIds');
 
         $usersResolver = $this->createMock(ResourceResolver::class);
-        $usersResolver->expects(self::never())->method('resolveByCriteria');
+        $usersResolver->expects(self::never())->method('resolveMany');
         $usersResolver->expects(self::never())->method('resolveByIds');
 
         $registry = new InMemoryResourceResolverRegistry();

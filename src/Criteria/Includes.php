@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Criteria;
 
 use CoderSapient\JsonApi\Exception\InvalidArgumentException;
@@ -9,6 +15,12 @@ use Countable;
 
 class Includes implements Countable
 {
+    /**
+     * @param array $includes
+     * @param string $delimiter
+     *
+     * @throws InvalidArgumentException
+     */
     public function __construct(private array $includes = [], private string $delimiter = '.')
     {
         if (empty($delimiter)) {
@@ -16,6 +28,13 @@ class Includes implements Countable
         }
     }
 
+    /**
+     * @param string $name
+     *
+     * @return Includes
+     *
+     * @throws InvalidArgumentException
+     */
     public function partOf(string $name): self
     {
         $includes = array_map(
@@ -29,6 +48,11 @@ class Includes implements Countable
         return new self(array_values($includes));
     }
 
+    /**
+     * @param string $name
+     *
+     * @return bool
+     */
     public function hasInclude(string $name): bool
     {
         foreach ($this->includes as $include) {
@@ -45,16 +69,25 @@ class Includes implements Countable
         return false;
     }
 
+    /**
+     * @return bool
+     */
     public function isEmpty(): bool
     {
         return 0 === $this->count();
     }
 
+    /**
+     * @return int
+     */
     public function count(): int
     {
         return count($this->includes);
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return $this->includes;

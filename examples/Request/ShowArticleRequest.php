@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Examples\Request;
 
 use CoderSapient\JsonApi\Examples\ResourceTypes;
@@ -11,17 +17,17 @@ final class ShowArticleRequest extends Request
 {
     use SingleDocumentRequest;
 
-    protected function resourceId(): string
+    public function resourceId(): string
     {
         return '1'; // ~/articles/{resourceId}
     }
 
-    protected function resourceType(): string
+    public function resourceType(): string
     {
         return ResourceTypes::ARTICLES;
     }
 
-    protected function supportedIncludes(): array
+    public function supportedIncludes(): array
     {
         return ['author'];
     }

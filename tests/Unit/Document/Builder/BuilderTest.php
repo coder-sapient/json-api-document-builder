@@ -2,14 +2,20 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Tests\Unit\Document\Builder;
 
 use CoderSapient\JsonApi\Cache\InMemoryResourceCache;
 use CoderSapient\JsonApi\Criteria\Includes;
 use CoderSapient\JsonApi\Document\Builder\Builder;
+use CoderSapient\JsonApi\Document\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Exception\ResourceNotFoundException;
 use CoderSapient\JsonApi\Registry\InMemoryResourceResolverRegistry;
-use CoderSapient\JsonApi\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Tests\Assert\AssertDocumentEquals;
 use CoderSapient\JsonApi\Tests\Mother\Resource\ResourceMother;
 use JsonApiPhp\JsonApi\CompoundDocument;

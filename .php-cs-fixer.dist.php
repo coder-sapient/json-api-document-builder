@@ -1,19 +1,21 @@
 <?php
 
-declare(strict_types=1);
+$header = <<<EOF
+(c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com> 
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+EOF;
 
 $finder = \PhpCsFixer\Finder::create()
     ->in([
         __DIR__ . '/src',
         __DIR__ . '/tests',
         __DIR__ . '/examples',
-    ])
-    ->append([
-        __FILE__,
     ]);
 
 $rules = [
     '@PSR12' => true,
+    'header_comment' => ['header' => $header],
     'binary_operator_spaces' => true,
     'blank_line_before_statement' => [
         'statements' => [
@@ -32,7 +34,6 @@ $rules = [
     'method_argument_space' => ['on_multiline' => 'ignore'],
     'concat_space' => ['spacing' => 'one'],
     'global_namespace_import' => true,
-    'no_superfluous_phpdoc_tags' => ['allow_mixed' => false, 'allow_unused_params' => true, 'remove_inheritdoc' => true],
     'not_operator_with_successor_space' => true,
     'nullable_type_declaration_for_default_null_value' => true,
     'multiline_whitespace_before_semicolons' => ['strategy' => 'no_multi_line'],
@@ -56,8 +57,8 @@ $rules = [
             'method_protected_abstract_static',
             'method_protected_static',
             'method_private_static',
-            'method_public',
             'method_public_abstract',
+            'method_public',
             'method_protected_abstract',
             'method_protected',
             'method_private',

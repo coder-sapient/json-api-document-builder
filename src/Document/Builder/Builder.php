@@ -2,11 +2,19 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Document\Builder;
 
 use CoderSapient\JsonApi\Cache\ResourceCache;
 use CoderSapient\JsonApi\Criteria\Includes;
+use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 use CoderSapient\JsonApi\Exception\ResourceNotFoundException;
+use CoderSapient\JsonApi\Exception\ResourceResolverNotFoundException;
 use CoderSapient\JsonApi\Registry\ResourceResolverRegistry;
 use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Promise\Utils;
@@ -16,24 +24,49 @@ use JsonApiPhp\JsonApi\Link\SelfLink;
 use JsonApiPhp\JsonApi\Meta;
 use JsonApiPhp\JsonApi\ResourceCollection;
 use JsonApiPhp\JsonApi\ResourceObject;
+
 use function JsonApiPhp\JsonApi\combine;
 use function JsonApiPhp\JsonApi\compositeKey;
 
 class Builder
 {
-    private ?JsonApi $jsonApi = null;
-    private ?SelfLink $selfLink = null;
-    private ?RelatedLink $relatedLink = null;
-
-    /** @var Meta[] */
+    /**
+     * @var array
+     */
     private array $meta = [];
 
+    /**
+     * @var JsonApi|null
+     */
+    private ?JsonApi $jsonApi = null;
+
+    /**
+     * @var SelfLink|null
+     */
+    private ?SelfLink $selfLink = null;
+
+    /**
+     * @var RelatedLink|null
+     */
+    private ?RelatedLink $relatedLink = null;
+
+    /**
+     * @param ResourceResolverRegistry $registry
+     * @param ResourceCache $cache
+     */
     public function __construct(
         protected ResourceResolverRegistry $registry,
         protected ResourceCache $cache,
     ) {
     }
 
+    /**
+     * Set top-level 'jsonapi' document member.
+     *
+     * @param JsonApi $jsonApi
+     *
+     * @return Builder
+     */
     public function withJsonApi(JsonApi $jsonApi): self
     {
         $this->jsonApi = $jsonApi;
@@ -41,20 +74,13 @@ class Builder
         return $this;
     }
 
-    public function withSelfLink(SelfLink $selfLink): self
-    {
-        $this->selfLink = $selfLink;
-
-        return $this;
-    }
-
-    public function withRelatedLink(RelatedLink $relatedLink): self
-    {
-        $this->relatedLink = $relatedLink;
-
-        return $this;
-    }
-
+    /**
+     * Set top-level 'meta' document member.
+     *
+     * @param Meta ...$meta
+     *
+     * @return Builder
+     */
     public function withMeta(Meta ...$meta): self
     {
         $this->meta = $meta;
@@ -63,14 +89,55 @@ class Builder
     }
 
     /**
+     * Set top-level 'self' link document member.
+     *
+     * @param SelfLink $selfLink
+     *
+     * @return Builder
+     */
+    public function withSelfLink(SelfLink $selfLink): self
+    {
+        $this->selfLink = $selfLink;
+
+        return $this;
+    }
+
+    /**
+     * Set top-level 'related' link document member.
+     *
+     * @param RelatedLink $relatedLink
+     *
+     * @return Builder
+     */
+    public function withRelatedLink(RelatedLink $relatedLink): self
+    {
+        $this->relatedLink = $relatedLink;
+
+        return $this;
+    }
+
+    /**
+     * Get the included resources relationships.
+     *
+     * @param Includes $includes
+     * @param ResourceCollection $resources
+     *
      * @return ResourceObject[]
+     *
+     * @throws InvalidArgumentException
+     * @throws ResourceResolverNotFoundException
      */
     public function buildIncludes(Includes $includes, ResourceCollection $resources): array
     {
-        $includeMap = $this->prepareIncludeMap($includes, $resources);
-        $resolved = $this->resolveIncludes($includeMap);
+        $relationships = $this->prepareRelationships($includes, $resources);
 
-        foreach ($includeMap as $name => $identifiers) {
+        if ([] === $relationships) {
+            return [];
+        }
+
+        $resolved = $this->resolveRelationships($relationships);
+
+        foreach ($relationships as $name => $identifiers) {
             if ($includes->partOf($name)->isEmpty()) {
                 continue;
             }
@@ -88,34 +155,52 @@ class Builder
         return $resolved;
     }
 
-    protected function prepareIncludeMap(Includes $includes, ResourceCollection $resources): array
+    /**
+     * Get a set with relationship identifiers to include.
+     *
+     * @param Includes $includes
+     * @param ResourceCollection $resources
+     *
+     * @return array
+     */
+    protected function prepareRelationships(Includes $includes, ResourceCollection $resources): array
     {
-        $includeMap = [];
+        $relationships = [];
 
         foreach ($this->toArray($resources) as $resource) {
-            foreach ($resource['relationships'] as $name => $rel) {
-                if (empty($rel['data']) || ! $includes->hasInclude($name)) {
+            foreach ($resource['relationships'] as $name => $relation) {
+                if (empty($relation['data']) || ! $includes->hasInclude($name)) {
                     continue;
                 }
-                if (isset($rel['data'][0])) {
-                    foreach ($rel['data'] as $data) {
-                        $includeMap[$name][$data['type']][$data['id']] = $data['id'];
+                if (isset($relation['data'][0])) {
+                    foreach ($relation['data'] as $data) {
+                        $relationships[$name]
+                        [$data['type']]
+                        [$data['id']] = $data['id'];
                     }
                 } else {
-                    $includeMap[$name][$rel['data']['type']][$rel['data']['id']] = $rel['data']['id'];
+                    $relationships[$name]
+                    [$relation['data']['type']]
+                    [$relation['data']['id']] = $relation['data']['id'];
                 }
             }
         }
 
-        return $includeMap;
+        return $relationships;
     }
 
     /**
+     * Get resources by relationship identifiers.
+     *
+     * @param array $relationships
+     *
      * @return ResourceObject[]
+     *
+     * @throws ResourceResolverNotFoundException
      */
-    protected function resolveIncludes(array $includeMap): array
+    protected function resolveRelationships(array $relationships): array
     {
-        $keys = $this->pluckKeys($includeMap);
+        $keys = $this->pluckKeys($relationships);
 
         $resolved = $this->findByKeys(...$keys);
 
@@ -123,11 +208,18 @@ class Builder
 
         $resolved = array_merge($resolved, $this->findByIdentifiers($missed));
 
-        $this->ensureAllResourcesAreFound($includeMap, ...$resolved);
+        $this->ensureAllRelationsAreFound($relationships, ...$resolved);
 
         return $resolved;
     }
 
+    /**
+     * Get resources from the cache by composite keys.
+     *
+     * @param string ...$keys
+     *
+     * @return ResourceObject[]
+     */
     protected function findByKeys(string ...$keys): array
     {
         $resources = [];
@@ -139,6 +231,15 @@ class Builder
         return $resources;
     }
 
+    /**
+     * Get resources from the resolver by relationship identifiers.
+     *
+     * @param array $identifiers
+     *
+     * @return ResourceObject[]
+     *
+     * @throws ResourceResolverNotFoundException
+     */
     protected function findByIdentifiers(array $identifiers): array
     {
         $promises = [];
@@ -165,19 +266,35 @@ class Builder
         return $resources;
     }
 
-    protected function ensureAllResourcesAreFound(array $includeMap, ResourceObject ...$resources): void
+    /**
+     * Ensure that all requested relationships are found.
+     *
+     * @param array $relationships
+     * @param ResourceObject ...$resources
+     *
+     * @return void
+     */
+    protected function ensureAllRelationsAreFound(array $relationships, ResourceObject ...$resources): void
     {
-        foreach ($includeMap as $identifiers) {
-            $this->applyToIdentifiers(
+        foreach ($relationships as $identifiers) {
+            $this->applyTo(
                 $identifiers,
                 $this->searchByKey(...$resources),
             );
         }
     }
 
+    /**
+     * Get part of the resource collection by relationship identifiers.
+     *
+     * @param array $identifiers
+     * @param ResourceObject ...$resources
+     *
+     * @return ResourceCollection
+     */
     protected function partOf(array $identifiers, ResourceObject ...$resources): ResourceCollection
     {
-        $partition = $this->applyToIdentifiers(
+        $partition = $this->applyTo(
             $identifiers,
             $this->searchByKey(...$resources),
         );
@@ -185,12 +302,19 @@ class Builder
         return new ResourceCollection(...$partition);
     }
 
-    protected function pluckKeys(array $includeMap): array
+    /**
+     * Get composite keys from relationship identifiers.
+     *
+     * @param array $relationships
+     *
+     * @return array
+     */
+    protected function pluckKeys(array $relationships): array
     {
         $result = [];
 
-        foreach ($includeMap as $identifiers) {
-            $keys = $this->applyToIdentifiers($identifiers, static fn (string $key) => $key);
+        foreach ($relationships as $identifiers) {
+            $keys = $this->applyTo($identifiers, static fn (string $key) => $key);
 
             foreach ($keys as $key) {
                 $result[$key] = $key;
@@ -200,7 +324,15 @@ class Builder
         return $result;
     }
 
-    protected function applyToIdentifiers(array $identifiers, callable $fn): array
+    /**
+     * Apply function to relationship identifiers.
+     *
+     * @param array $identifiers
+     * @param callable $fn
+     *
+     * @return array
+     */
+    protected function applyTo(array $identifiers, callable $fn): array
     {
         $result = [];
 
@@ -213,6 +345,13 @@ class Builder
         return $result;
     }
 
+    /**
+     * Group resource ids from composite keys by resource type.
+     *
+     * @param array $keys
+     *
+     * @return array
+     */
     protected function toIdentifiers(array $keys): array
     {
         $identifiers = [];
@@ -225,6 +364,11 @@ class Builder
         return $identifiers;
     }
 
+    /**
+     * Get top-level document members.
+     *
+     * @return array
+     */
     protected function members(): array
     {
         return array_merge(
@@ -237,17 +381,36 @@ class Builder
         );
     }
 
+    /**
+     * Reset builder state.
+     *
+     * @return void
+     */
     protected function reset(): void
     {
         $this->meta = [];
         $this->jsonApi = $this->selfLink = $this->relatedLink = null;
     }
 
+    /**
+     * Get array representation of JSON:API resources.
+     *
+     * @param ResourceCollection $resources
+     *
+     * @return array
+     */
     protected function toArray(ResourceCollection $resources): array
     {
         return json_decode(json_encode(combine($resources)->data), true);
     }
 
+    /**
+     * Search resource by composite key.
+     *
+     * @param ResourceObject ...$resources
+     *
+     * @return callable
+     */
     protected function searchByKey(ResourceObject ...$resources): callable
     {
         return static fn (string $key) => $resources[$key] ?? throw new ResourceNotFoundException($key);

@@ -2,42 +2,82 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Request;
 
 use CoderSapient\JsonApi\Criteria\Includes;
 use CoderSapient\JsonApi\Exception\BadRequestException;
+use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 use CoderSapient\JsonApi\Utils;
 
 trait JsonApiRequest
 {
+    /**
+     * @var string
+     */
     protected string $queryInclude = 'include';
 
+    /**
+     * @var string
+     */
     protected string $includeDelimiter = ',';
-    protected string $includeRelationsDelimiter = '.';
 
-    abstract protected function queryParams(): array;
+    /**
+     * @var string
+     */
+    protected string $includeRelationDelimiter = '.';
 
-    abstract protected function resourceType(): string;
+    /**
+     * @return array
+     */
+    abstract public function queryParams(): array;
 
-    protected function queryParam(string $name, mixed $default = null): mixed
+    /**
+     * @return string
+     */
+    abstract public function resourceType(): string;
+
+    /**
+     * @param string $name
+     * @param mixed|null $default
+     *
+     * @return mixed
+     */
+    public function queryParam(string $name, mixed $default = null): mixed
     {
         return $this->queryParams()[$name] ?? $default;
     }
 
-    protected function supportedQueryParams(): array
+    /**
+     * @return array
+     */
+    public function supportedQueryParams(): array
     {
         return [];
     }
 
     /**
-     *  ['foo', 'bar', 'foo.bar'].
+     * Example: ['comments', 'comments.user'].
+     *
+     * @return array
      */
-    protected function supportedIncludes(): array
+    public function supportedIncludes(): array
     {
         return [];
     }
 
-    protected function includes(): Includes
+    /**
+     * @return Includes
+     *
+     * @throws BadRequestException
+     * @throws InvalidArgumentException
+     */
+    public function includes(): Includes
     {
         $includes = $this->queryParam($this->queryInclude, '');
 
@@ -45,19 +85,15 @@ trait JsonApiRequest
 
         return new Includes(
             Utils::explodeIfNotEmpty($includes, $this->includeDelimiter),
-            $this->includeRelationsDelimiter,
+            $this->includeRelationDelimiter,
         );
     }
 
-    protected function ensureIncludeIsValid(mixed $include): void
-    {
-        $this->ensureQueryParamIsString($this->queryInclude, $include);
-
-        $include = Utils::explodeIfNotEmpty($include, $this->includeDelimiter);
-
-        $this->ensureQueryParamIsSupported($this->queryInclude, $include, $this->supportedIncludes());
-    }
-
+    /**
+     * @return void
+     *
+     * @throws BadRequestException
+     */
     protected function ensureQueryParamsIsValid(): void
     {
         foreach ($this->queryParams() as $param => $value) {
@@ -70,6 +106,30 @@ trait JsonApiRequest
         }
     }
 
+    /**
+     * @param mixed $include
+     *
+     * @return void
+     *
+     * @throws BadRequestException
+     */
+    protected function ensureIncludeIsValid(mixed $include): void
+    {
+        $this->ensureQueryParamIsString($this->queryInclude, $include);
+
+        $include = Utils::explodeIfNotEmpty($include, $this->includeDelimiter);
+
+        $this->ensureQueryParamIsSupported($this->queryInclude, $include, $this->supportedIncludes());
+    }
+
+    /**
+     * @param string $param
+     * @param mixed $value
+     *
+     * @return void
+     *
+     * @throws BadRequestException
+     */
     protected function ensureQueryParamIsString(string $param, mixed $value): void
     {
         if (! is_string($value)) {
@@ -80,16 +140,32 @@ trait JsonApiRequest
         }
     }
 
+    /**
+     * @param string $param
+     * @param mixed $value
+     *
+     * @return void
+     *
+     * @throws BadRequestException
+     */
     protected function ensureQueryParamIsArray(string $param, mixed $value): void
     {
         if (! is_array($value)) {
             $this->throwBadRequestException(
-                sprintf('%s must be a compound [%s[field]=value]', $param, $param),
+                sprintf('%s must be a compound [%s[key]=value]', $param, $param),
                 $param,
             );
         }
     }
 
+    /**
+     * @param string $param
+     * @param mixed $value
+     *
+     * @return void
+     *
+     * @throws BadRequestException
+     */
     protected function ensureQueryParamIsPositiveInt(string $param, mixed $value): void
     {
         if (! is_numeric($value) || (int) $value < 1) {
@@ -100,6 +176,15 @@ trait JsonApiRequest
         }
     }
 
+    /**
+     * @param string $param
+     * @param array $given
+     * @param array $allowed
+     *
+     * @return void
+     *
+     * @throws BadRequestException
+     */
     protected function ensureQueryParamIsSupported(string $param, array $given, array $allowed): void
     {
         if ([] !== $diff = array_diff($given, $allowed)) {
@@ -110,6 +195,14 @@ trait JsonApiRequest
         }
     }
 
+    /**
+     * @param string $message
+     * @param string $parameter
+     *
+     * @return void
+     *
+     * @throws BadRequestException
+     */
     protected function throwBadRequestException(string $message, string $parameter): void
     {
         throw new BadRequestException($message, $parameter);

@@ -2,27 +2,46 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Request;
 
-use CoderSapient\JsonApi\Document\Builder\SingleDocumentQuery;
+use CoderSapient\JsonApi\Document\Query\SingleDocumentQuery;
+use CoderSapient\JsonApi\Exception\BadRequestException;
+use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 
 trait SingleDocumentRequest
 {
     use JsonApiRequest;
 
+    /**
+     * @return string
+     */
+    abstract public function resourceId(): string;
+
+    /**
+     * @return SingleDocumentQuery
+     *
+     * @throws BadRequestException
+     * @throws InvalidArgumentException
+     */
     public function toQuery(): SingleDocumentQuery
     {
         $this->ensureQueryParamsIsValid();
 
-        return (new SingleDocumentQuery(
-            $this->resourceId(),
-            $this->resourceType(),
-        ))->setIncludes($this->includes());
+        $query = new SingleDocumentQuery($this->resourceId(), $this->resourceType());
+
+        return $query->setIncludes($this->includes());
     }
 
-    abstract protected function resourceId(): string;
-
-    protected function supportedQueryParams(): array
+    /**
+     * @return array
+     */
+    public function supportedQueryParams(): array
     {
         return [$this->queryInclude];
     }

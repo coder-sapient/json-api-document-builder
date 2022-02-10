@@ -84,12 +84,12 @@ final class ShowArticleRequest extends Request
 }
 ```
 
-| Method                | Description                                                                                                                                                    |
-|-----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `resourceId()`        | Returns the resource id, which should be taken from the URL, for example.                                                                                      |
-| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](#ResourceResolver)                                                                               |
-| `supportedIncludes()` | Returns a list of supported relationship names to include                                                                                                      |
-| `toQuery()`           | Returns the [SingleDocumentQuery](/src/Document/Builder/SingleDocumentQuery.php) object that can be handled by [SingleDocumentBuilder](#SingleDocumentBuilder) |
+| Method                | Description                                                                                                                                                  |
+|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `resourceId()`        | Returns the resource id, which should be taken from the URL, for example.                                                                                    |
+| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](#ResourceResolver)                                                                             |
+| `supportedIncludes()` | Returns a list of supported relationship names to include                                                                                                    |
+| `toQuery()`           | Returns the [SingleDocumentQuery](/src/Document/Query/SingleDocumentQuery.php) object that can be handled by [SingleDocumentBuilder](#SingleDocumentBuilder) |
 
 ### DocumentsRequest
 
@@ -129,7 +129,7 @@ final class ListArticlesRequest extends Request
 | `supportedIncludes()` | Returns a list of supported relationship names to include                                                                                  |
 | `supportedSorting()`  | Returns a list of supported rows for sorting                                                                                               |
 | `supportedFilters()`  | Returns a list of supported filters that can be applied to resource collection                                                             |
-| `toQuery()`           | Returns the [DocumentsQuery](/src/Document/Builder/DocumentsQuery.php) object that can be handled by [DocumentsBuilder](#DocumentsBuilder) |
+| `toQuery()`           | Returns the [DocumentsQuery](/src/Document/Query/DocumentsQuery.php) object that can be handled by [DocumentsBuilder](#DocumentsBuilder)   |
 
 ## Builder
 
@@ -197,27 +197,36 @@ $singleDocument = $builder->build($request->toQuery());
 
 ### ResourceResolver
  
-The builder use instances of [ResourceResolver](/src/Resolver/ResourceResolver.php) to find resources by ids or query criteria. 
+The builder use instances of [ResourceResolver](/src/Document/Resolver/ResourceResolver.php) to find resources by ids or query criteria. 
 
 ```php
 interface ResourceResolver
 {
-    public function resolveById(string $resourceId): ?ResourceObject;
+    /**
+     * @param DocumentsQuery $query
+     *
+     * @return ResourceObject[]
+     */
+    public function resolveMany(DocumentsQuery $query): array;
 
     /**
+     * @param SingleDocumentQuery $query
+     *
+     * @return ResourceObject|null
+     */
+    public function resolveOne(SingleDocumentQuery $query): ?ResourceObject;
+
+    /**
+     * @param string ...$resourceIds
+     *
      * @return ResourceObject[]|PromiseInterface
      */
     public function resolveByIds(string ...$resourceIds): array|PromiseInterface;
-
-    /**
-     * @return ResourceObject[]
-     */
-    public function resolveByCriteria(Criteria $criteria): array;
 }
 ```
 
-When resolving a collection of top-level resources, it will provide a [Criteria](/src/Criteria/Criteria.php), consisting of filters, orders, pagination.
-You need to match `Criteria` with your query builder (Doctrine, Eloquent, etc.).
+When resolving a collection of top-level resources, it will provide a query criteria consisting of filters, orders, pagination.
+You need to match criteria with your query builder (Doctrine, Eloquent, etc.).
 
 The builder can accept Guzzle Promises when trying to include related resources and load them async.
 
@@ -226,11 +235,16 @@ The builder can accept Guzzle Promises when trying to include related resources 
 ```php
 interface PaginationResolver
 {
-    public function paginate(Criteria $criteria): PaginationResponse;
+    /**
+     * @param DocumentsQuery $query
+     *
+     * @return PaginationResponse
+     */
+    public function paginate(DocumentsQuery $query): PaginationResponse;
 }
 ```
 
-If the resource resolver implements [PaginationResolver](/src/Resolver/PaginationResolver.php), the builder will add top-level `Links` and `Meta` objects to the resulting document.
+If the resource resolver implements [PaginationResolver](/src/Document/Resolver/PaginationResolver.php), the builder will add top-level `Links` and `Meta` objects to the resulting document.
 
 ```
 {
@@ -250,12 +264,15 @@ If the resource resolver implements [PaginationResolver](/src/Resolver/Paginatio
 ```
 
 ### ResourceCache
+The builder caches all resolved resources using instance of [ResourceCache](/src/Cache/ResourceCache.php).
 ```php
-/**
- * @see ResourceObject::key()
- */
 interface ResourceCache
 {
+    /**
+     * @param string $key
+     *
+     * @return ResourceObject|null
+     */
     public function getByKey(string $key): ?ResourceObject;
 
     /**
@@ -264,22 +281,47 @@ interface ResourceCache
     public function getByKeys(string ...$keys): array;
 
     /**
+     * @param JsonApiQuery $query
+     *
      * @return ResourceObject[]
      */
-    public function getByCriteria(string $resourceType, Criteria $criteria): array;
+    public function getByQuery(JsonApiQuery $query): array;
 
+    /**
+     * @param ResourceObject ...$resources
+     *
+     * @return void
+     */
     public function setByKeys(ResourceObject ...$resources): void;
 
-    public function setByCriteria(string $resourceType, Criteria $criteria, ResourceObject ...$resources): void;
+    /**
+     * @param JsonApiQuery $query
+     * @param ResourceObject ...$resources
+     *
+     * @return void
+     */
+    public function setByQuery(JsonApiQuery $query, ResourceObject ...$resources): void;
 
+    /**
+     * @param string ...$keys
+     *
+     * @return void
+     */
     public function removeByKeys(string ...$keys): void;
 
+    /**
+     * @param string ...$resourceTypes
+     *
+     * @return void
+     */
     public function removeByTypes(string ...$resourceTypes): void;
 
+    /**
+     * @return void
+     */
     public function flush(): void;
 }
 ```
-The builder caches all resolved resources using instance of [ResourceCache](/src/Cache/ResourceCache.php)
 There is a basic implementation [InMemoryResourceCache](/src/Cache/InMemoryResourceCache.php).
 If you don't need caching, use [NullableResourceCache](/src/Cache/NullableResourceCache.php).
 

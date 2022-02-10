@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Tests\Unit\Request;
 
 use CoderSapient\JsonApi\Criteria\Filter;
@@ -34,8 +40,8 @@ final class DocumentsRequestTest extends TestCase
         $query = $request->toQuery();
 
         self::assertSame('articles', $query->resourceType());
-        self::assertSame(2, $query->page());
-        self::assertSame(20, $query->perPage());
+        self::assertSame(2, $query->chunk()->page());
+        self::assertSame(20, $query->chunk()->perPage());
 
         self::assertTrue($query->includes()->hasInclude('author'));
         self::assertTrue($query->includes()->hasInclude('comments'));

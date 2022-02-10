@@ -2,12 +2,20 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Document\Builder;
 
-use CoderSapient\JsonApi\Criteria\Criteria;
 use CoderSapient\JsonApi\Document\Member\CountableMember;
-use CoderSapient\JsonApi\Resolver\PaginationResolver;
-use CoderSapient\JsonApi\Resolver\ResourceResolver;
+use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
+use CoderSapient\JsonApi\Document\Resolver\PaginationResolver;
+use CoderSapient\JsonApi\Document\Resolver\ResourceResolver;
+use CoderSapient\JsonApi\Exception\InvalidArgumentException;
+use CoderSapient\JsonApi\Exception\ResourceResolverNotFoundException;
 use JsonApiPhp\JsonApi\CompoundDocument;
 use JsonApiPhp\JsonApi\Included;
 use JsonApiPhp\JsonApi\PaginatedCollection;
@@ -15,28 +23,32 @@ use JsonApiPhp\JsonApi\ResourceCollection;
 
 class DocumentsBuilder extends Builder
 {
+    /**
+     * Get a document with top-level resources.
+     *
+     * @param DocumentsQuery $query
+     *
+     * @return CompoundDocument
+     *
+     * @throws InvalidArgumentException
+     * @throws ResourceResolverNotFoundException
+     */
     public function build(DocumentsQuery $query): CompoundDocument
     {
         $resolver = $this->registry->get($query->resourceType());
-        $criteria = $query->toCriteria();
 
-        $resources = $this->getResources($query->resourceType(), $resolver, $criteria);
+        $resources = $this->getResources($resolver, $query);
+
         $includes = $this->buildIncludes($query->includes(), $resources);
 
         $members = $this->members();
 
         if ($resolver instanceof PaginationResolver) {
-            $response = $resolver->paginate($criteria);
+            $response = $resolver->paginate($query);
 
-            $resources = new PaginatedCollection(
-                $response->pagination(),
-                $resources,
-            );
+            $resources = new PaginatedCollection($response->pagination(), $resources);
 
-            $members = array_merge(
-                $members,
-                CountableMember::members($response->total(), $criteria->chunk()),
-            );
+            $members = array_merge($members, CountableMember::members($response->total(), $query->chunk()));
         }
 
         $document = new CompoundDocument($resources, new Included(...$includes), ...$members);
@@ -46,17 +58,22 @@ class DocumentsBuilder extends Builder
         return $document;
     }
 
-    protected function getResources(
-        string $resourceType,
-        ResourceResolver $resolver,
-        Criteria $criteria,
-    ): ResourceCollection {
-        $resources = $this->cache->getByCriteria($resourceType, $criteria);
+    /**
+     * Get and cache resources by query.
+     *
+     * @param ResourceResolver $resolver
+     * @param DocumentsQuery $query
+     *
+     * @return ResourceCollection
+     */
+    protected function getResources(ResourceResolver $resolver, DocumentsQuery $query): ResourceCollection
+    {
+        $resources = $this->cache->getByQuery($query);
 
         if ([] === $resources) {
-            $resources = $resolver->resolveByCriteria($criteria);
+            $resources = $resolver->resolveMany($query);
 
-            $this->cache->setByCriteria($resourceType, $criteria, ...$resources);
+            $this->cache->setByQuery($query, ...$resources);
         }
 
         return new ResourceCollection(...$resources);

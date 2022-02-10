@@ -2,13 +2,20 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Tests\Mother\Builder;
 
+use CoderSapient\JsonApi\Criteria\Chunk;
 use CoderSapient\JsonApi\Criteria\Filters;
 use CoderSapient\JsonApi\Criteria\Includes;
 use CoderSapient\JsonApi\Criteria\Orders;
-use CoderSapient\JsonApi\Document\Builder\DocumentsQuery;
-use CoderSapient\JsonApi\Document\Builder\SingleDocumentQuery;
+use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
+use CoderSapient\JsonApi\Document\Query\SingleDocumentQuery;
 
 final class DocumentQueryMother
 {
@@ -19,7 +26,7 @@ final class DocumentQueryMother
     ): SingleDocumentQuery {
         return (new SingleDocumentQuery(
             $resourceId ?? '1',
-            $resourceType ?? 'article',
+            $resourceType ?? 'articles',
         ))->setIncludes(new Includes($includes));
     }
 
@@ -31,11 +38,10 @@ final class DocumentQueryMother
         ?int $page = null,
         ?int $perPage = null,
     ): DocumentsQuery {
-        return (new DocumentsQuery($resourceType ?? 'article'))
+        return (new DocumentsQuery($resourceType ?? 'articles'))
             ->setFilters($filters ?? new Filters())
             ->setOrders($orders ?? new Orders())
             ->setIncludes(new Includes($includes))
-            ->setPage($page ?? 1)
-            ->setPerPage($perPage ?? 15);
+            ->setChunk(new Chunk($page ?? 1, $perPage ?? 15));
     }
 }

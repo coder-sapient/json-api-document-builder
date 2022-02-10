@@ -2,7 +2,13 @@
 
 declare(strict_types=1);
 
-namespace CoderSapient\JsonApi\Resolver\Response;
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace CoderSapient\JsonApi\Document\Resolver\Response;
 
 use JsonApiPhp\JsonApi\Pagination;
 
