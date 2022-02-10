@@ -73,7 +73,7 @@ class DocumentsQuery extends JsonApiQuery
     /**
      * @param Filters $filters
      *
-     * @return DocumentsQuery
+     * @return $this
      */
     public function setFilters(Filters $filters): self
     {
@@ -85,7 +85,7 @@ class DocumentsQuery extends JsonApiQuery
     /**
      * @param Orders $orders
      *
-     * @return DocumentsQuery
+     * @return $this
      */
     public function setOrders(Orders $orders): self
     {
@@ -97,7 +97,7 @@ class DocumentsQuery extends JsonApiQuery
     /**
      * @param Chunk $chunk
      *
-     * @return DocumentsQuery
+     * @return $this
      */
     public function setChunk(Chunk $chunk): self
     {
