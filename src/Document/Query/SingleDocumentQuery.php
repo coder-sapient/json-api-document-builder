@@ -41,8 +41,8 @@ class SingleDocumentQuery extends JsonApiQuery
     /**
      * @return string
      */
-    public function key(): string
+    public function serialize(): string
     {
-        return compositeKey($this->resourceType(), $this->resourceId());
+        return md5(compositeKey($this->resourceType(), $this->resourceId()));
     }
 }

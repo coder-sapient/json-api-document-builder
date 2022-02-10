@@ -109,7 +109,7 @@ class DocumentsQuery extends JsonApiQuery
     /**
      * @return string
      */
-    public function key(): string
+    public function serialize(): string
     {
         return md5(serialize([$this->resourceType(), $this->filters(), $this->orders(), $this->chunk()]));
     }

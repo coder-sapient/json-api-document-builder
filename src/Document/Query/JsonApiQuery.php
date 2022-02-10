@@ -27,7 +27,7 @@ abstract class JsonApiQuery
     /**
      * @return string
      */
-    abstract public function key(): string;
+    abstract public function serialize(): string;
 
     /**
      * @return Includes
