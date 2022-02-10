@@ -2,9 +2,15 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Examples\Repository;
 
-use CoderSapient\JsonApi\Criteria\Criteria;
+use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
 use CoderSapient\JsonApi\Examples\Model\User;
 
 final class UserRepository
@@ -27,7 +33,7 @@ final class UserRepository
      *
      * @return User[]
      */
-    public function match(Criteria $criteria): array
+    public function match(DocumentsQuery $query): array
     {
         return [new User('3', 'Bob')];
     }

@@ -2,6 +2,12 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Tests\Fake\Request;
 
 use CoderSapient\JsonApi\Request\DocumentsRequest;
@@ -14,17 +20,17 @@ final class FakeDocumentsRequest
     {
     }
 
-    protected function queryParams(): array
+    public function queryParams(): array
     {
         return $this->queryParams;
     }
 
-    protected function resourceType(): string
+    public function resourceType(): string
     {
         return 'articles';
     }
 
-    protected function supportedFilters(): array
+    public function supportedFilters(): array
     {
         return [
             'title' => ['like', 'eq'],
@@ -32,12 +38,12 @@ final class FakeDocumentsRequest
         ];
     }
 
-    protected function supportedSorting(): array
+    public function supportedSorting(): array
     {
         return ['title', 'published_at'];
     }
 
-    protected function supportedIncludes(): array
+    public function supportedIncludes(): array
     {
         return ['author', 'comments'];
     }

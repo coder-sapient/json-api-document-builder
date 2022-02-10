@@ -2,44 +2,86 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Request;
 
+use CoderSapient\JsonApi\Criteria\Chunk;
 use CoderSapient\JsonApi\Criteria\Filter;
 use CoderSapient\JsonApi\Criteria\FilterOperator;
 use CoderSapient\JsonApi\Criteria\Filters;
 use CoderSapient\JsonApi\Criteria\Order;
 use CoderSapient\JsonApi\Criteria\Orders;
 use CoderSapient\JsonApi\Criteria\OrderType;
-use CoderSapient\JsonApi\Document\Builder\DocumentsQuery;
+use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
+use CoderSapient\JsonApi\Exception\BadRequestException;
+use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 use CoderSapient\JsonApi\Utils;
 
 trait DocumentsRequest
 {
     use JsonApiRequest;
 
-    protected string $queryPage = 'page';
+    /**
+     * @var string
+     */
     protected string $queryPerPage = 'per_page';
+
+    /**
+     * @var string
+     */
+    protected string $queryPage = 'page';
+
+    /**
+     * @var string
+     */
     protected string $queryFilter = 'filter';
+
+    /**
+     * @var string
+     */
     protected string $querySort = 'sort';
 
+    /**
+     * @var string
+     */
     protected string $filterDelimiter = ',';
+
+    /**
+     * @var string
+     */
     protected string $sortDelimiter = ',';
 
+    /**
+     * @var string
+     */
     protected string $sortPrefix = '-';
 
+    /**
+     * @return DocumentsQuery
+     *
+     * @throws BadRequestException
+     * @throws InvalidArgumentException
+     */
     public function toQuery(): DocumentsQuery
     {
         $this->ensureQueryParamsIsValid();
 
         return (new DocumentsQuery($this->resourceType()))
+            ->setChunk($this->chunk())
             ->setFilters($this->filters())
             ->setOrders($this->orders())
-            ->setIncludes($this->includes())
-            ->setPage($this->page())
-            ->setPerPage($this->perPage());
+            ->setIncludes($this->includes());
     }
 
-    protected function supportedQueryParams(): array
+    /**
+     * @return array
+     */
+    public function supportedQueryParams(): array
     {
         return [
             $this->queryPage,
@@ -51,43 +93,52 @@ trait DocumentsRequest
     }
 
     /**
-     * [
-     *   'foo' => ['eq', 'gt', 'lt'],
-     *   'bar' => ['like', 'lt'],
-     * ].
+     * Example: [
+     *   'created_at' => ['eq', 'gt', 'lt'],
+     *   'title' => ['eq', 'like'],
+     * ]
+     *
+     * @return array
      */
-    protected function supportedFilters(): array
+    public function supportedFilters(): array
     {
         return [];
     }
 
     /**
-     * ['foo', 'bar'].
+     * Example: ['id', 'title'].
+     *
+     * @return array
      */
-    protected function supportedSorting(): array
+    public function supportedSorting(): array
     {
         return [];
     }
 
-    protected function page(): int
+    /**
+     * @return Chunk
+     *
+     * @throws BadRequestException
+     * @throws InvalidArgumentException
+     */
+    public function chunk(): Chunk
     {
-        $page = $this->queryParam($this->queryPage, DocumentsQuery::DEFAULT_PAGE);
+        $page = $this->queryParam($this->queryPage, 1);
+        $perPage = $this->queryParam($this->queryPerPage, 15);
 
         $this->ensureQueryParamIsPositiveInt($this->queryPage, $page);
-
-        return (int) $page;
-    }
-
-    protected function perPage(): int
-    {
-        $perPage = $this->queryParam($this->queryPerPage, DocumentsQuery::DEFAULT_PER_PAGE);
-
         $this->ensureQueryParamIsPositiveInt($this->queryPerPage, $perPage);
 
-        return (int) $perPage;
+        return new Chunk((int) $page, (int) $perPage);
     }
 
-    protected function filters(): Filters
+    /**
+     * @return Filters
+     *
+     * @throws BadRequestException
+     * @throws InvalidArgumentException
+     */
+    public function filters(): Filters
     {
         $filter = $this->queryParam($this->queryFilter, []);
 
@@ -104,7 +155,13 @@ trait DocumentsRequest
         return $collect;
     }
 
-    protected function orders(): Orders
+    /**
+     * @return Orders
+     *
+     * @throws BadRequestException
+     * @throws InvalidArgumentException
+     */
+    public function orders(): Orders
     {
         $sort = $this->queryParam($this->querySort, '');
 
@@ -122,6 +179,13 @@ trait DocumentsRequest
         return $collect;
     }
 
+    /**
+     * @param mixed $sort
+     *
+     * @return void
+     *
+     * @throws BadRequestException
+     */
     protected function ensureSortIsValid(mixed $sort): void
     {
         $this->ensureQueryParamIsString($this->querySort, $sort);
@@ -134,13 +198,29 @@ trait DocumentsRequest
         $this->ensureQueryParamIsSupported($this->querySort, $sort, $this->supportedSorting());
     }
 
+    /**
+     * @param mixed $filter
+     *
+     * @return void
+     *
+     * @throws BadRequestException
+     */
     protected function ensureFilterIsValid(mixed $filter): void
     {
         $this->ensureQueryParamIsArray($this->queryFilter, $filter);
+
         $this->ensureFilterHasAValidStructure($filter);
+
         $this->ensureFilterIsSupported($filter);
     }
 
+    /**
+     * @param array $filter
+     *
+     * @return void
+     *
+     * @throws BadRequestException
+     */
     protected function ensureFilterHasAValidStructure(array $filter): void
     {
         foreach ($filter as $condition) {
@@ -159,6 +239,13 @@ trait DocumentsRequest
         }
     }
 
+    /**
+     * @param array $filter
+     *
+     * @return void
+     *
+     * @throws BadRequestException
+     */
     protected function ensureFilterIsSupported(array $filter): void
     {
         foreach ($this->normalizeFilter($filter) as $field => $condition) {
@@ -181,6 +268,11 @@ trait DocumentsRequest
         }
     }
 
+    /**
+     * @param array $filter
+     *
+     * @return array
+     */
     protected function normalizeFilter(array $filter): array
     {
         $result = [];

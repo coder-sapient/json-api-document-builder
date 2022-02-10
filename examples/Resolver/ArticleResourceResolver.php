@@ -2,14 +2,21 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Examples\Resolver;
 
-use CoderSapient\JsonApi\Criteria\Criteria;
+use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
+use CoderSapient\JsonApi\Document\Query\SingleDocumentQuery;
+use CoderSapient\JsonApi\Document\Resolver\PaginationResolver;
+use CoderSapient\JsonApi\Document\Resolver\ResourceResolver;
+use CoderSapient\JsonApi\Document\Resolver\Response\PaginationResponse;
 use CoderSapient\JsonApi\Examples\Assembler\ArticleResourceAssembler;
 use CoderSapient\JsonApi\Examples\Repository\ArticleRepository;
-use CoderSapient\JsonApi\Resolver\PaginationResolver;
-use CoderSapient\JsonApi\Resolver\ResourceResolver;
-use CoderSapient\JsonApi\Resolver\Response\PaginationResponse;
 use JsonApiPhp\JsonApi\Link\FirstLink;
 use JsonApiPhp\JsonApi\Link\LastLink;
 use JsonApiPhp\JsonApi\Link\NextLink;
@@ -25,10 +32,20 @@ final class ArticleResourceResolver implements ResourceResolver, PaginationResol
     ) {
     }
 
-    public function resolveById(string $resourceId): ?ResourceObject
+    public function resolveOne(SingleDocumentQuery $query): ?ResourceObject
     {
         return $this->assembler->toResource(
-            $this->repository->findById($resourceId),
+            $this->repository->findById($query->resourceId()),
+        );
+    }
+
+    /**
+     * @return ResourceObject[]
+     */
+    public function resolveMany(DocumentsQuery $query): array
+    {
+        return $this->assembler->toResources(
+            ...$this->repository->match($query),
         );
     }
 
@@ -42,17 +59,7 @@ final class ArticleResourceResolver implements ResourceResolver, PaginationResol
         );
     }
 
-    /**
-     * @return ResourceObject[]
-     */
-    public function resolveByCriteria(Criteria $criteria): array
-    {
-        return $this->assembler->toResources(
-            ...$this->repository->match($criteria),
-        );
-    }
-
-    public function paginate(Criteria $criteria): PaginationResponse
+    public function paginate(DocumentsQuery $query): PaginationResponse
     {
         return new PaginationResponse(
             1,

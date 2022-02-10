@@ -2,12 +2,19 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Examples\Resolver;
 
-use CoderSapient\JsonApi\Criteria\Criteria;
+use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
+use CoderSapient\JsonApi\Document\Query\SingleDocumentQuery;
+use CoderSapient\JsonApi\Document\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Examples\Assembler\UserResourceAssembler;
 use CoderSapient\JsonApi\Examples\Repository\UserRepository;
-use CoderSapient\JsonApi\Resolver\ResourceResolver;
 use JsonApiPhp\JsonApi\ResourceObject;
 
 final class UserResourceResolver implements ResourceResolver
@@ -18,10 +25,20 @@ final class UserResourceResolver implements ResourceResolver
     ) {
     }
 
-    public function resolveById(string $resourceId): ?ResourceObject
+    public function resolveOne(SingleDocumentQuery $query): ?ResourceObject
     {
         return $this->assembler->toResource(
-            $this->repository->findById($resourceId),
+            $this->repository->findById($query->resourceId()),
+        );
+    }
+
+    /**
+     * @return ResourceObject[]
+     */
+    public function resolveMany(DocumentsQuery $query): array
+    {
+        return $this->assembler->toResources(
+            ...$this->repository->match($query),
         );
     }
 
@@ -32,16 +49,6 @@ final class UserResourceResolver implements ResourceResolver
     {
         return $this->assembler->toResources(
             ...$this->repository->findByIds(...$resourceIds),
-        );
-    }
-
-    /**
-     * @return ResourceObject[]
-     */
-    public function resolveByCriteria(Criteria $criteria): array
-    {
-        return $this->assembler->toResources(
-            ...$this->repository->match($criteria),
         );
     }
 }

@@ -2,22 +2,43 @@
 
 declare(strict_types=1);
 
+/*
+ * (c) Yaroslav Khalupiak <i.am.khalupiak@gmail.com>
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace CoderSapient\JsonApi\Cache;
 
-use CoderSapient\JsonApi\Criteria\Criteria;
+use CoderSapient\JsonApi\Document\Query\JsonApiQuery;
 use CoderSapient\JsonApi\Utils;
 use JsonApiPhp\JsonApi\ResourceObject;
 
 class InMemoryResourceCache implements ResourceCache
 {
-    private array $cache = [];
+    /**
+     * @var array
+     */
+    private array $cacheByKey = [];
 
+    /**
+     * @var array
+     */
+    private array $cacheByQuery = [];
+
+    /**
+     * @param string $key
+     *
+     * @return ResourceObject|null
+     */
     public function getByKey(string $key): ?ResourceObject
     {
-        return $this->cache[Utils::typeFromKey($key)]['keys'][$key] ?? null;
+        return $this->cacheByKey[Utils::typeFromKey($key)][$key] ?? null;
     }
 
     /**
+     * @param string ...$keys
+     *
      * @return ResourceObject[]
      */
     public function getByKeys(string ...$keys): array
@@ -26,8 +47,9 @@ class InMemoryResourceCache implements ResourceCache
 
         foreach ($keys as $key) {
             $resourceType = Utils::typeFromKey($key);
-            if (isset($this->cache[$resourceType]['keys'][$key])) {
-                $resources[] = $this->cache[$resourceType]['keys'][$key];
+
+            if (isset($this->cacheByKey[$resourceType][$key])) {
+                $resources[] = $this->cacheByKey[$resourceType][$key];
             }
         }
 
@@ -35,42 +57,68 @@ class InMemoryResourceCache implements ResourceCache
     }
 
     /**
+     * @param JsonApiQuery $query
+     *
      * @return ResourceObject[]
      */
-    public function getByCriteria(string $resourceType, Criteria $criteria): array
+    public function getByQuery(JsonApiQuery $query): array
     {
-        return $this->cache[$resourceType]['criteria'][$criteria->key()] ?? [];
+        return $this->cacheByQuery[$query->resourceType()][$query->key()] ?? [];
     }
 
+    /**
+     * @param ResourceObject ...$resources
+     *
+     * @return void
+     */
     public function setByKeys(ResourceObject ...$resources): void
     {
         foreach ($resources as $resource) {
             $key = $resource->key();
-            $this->cache[Utils::typeFromKey($key)]['keys'][$key] = $resource;
+            $this->cacheByKey[Utils::typeFromKey($key)][$key] = $resource;
         }
     }
 
-    public function setByCriteria(string $resourceType, Criteria $criteria, ResourceObject ...$resources): void
+    /**
+     * @param JsonApiQuery $query
+     * @param ResourceObject ...$resources
+     *
+     * @return void
+     */
+    public function setByQuery(JsonApiQuery $query, ResourceObject ...$resources): void
     {
-        $this->cache[$resourceType]['criteria'][$criteria->key()] = $resources;
+        $this->cacheByQuery[$query->resourceType()][$query->key()] = $resources;
     }
 
+    /**
+     * @param string ...$keys
+     *
+     * @return void
+     */
     public function removeByKeys(string ...$keys): void
     {
         foreach ($keys as $key) {
-            unset($this->cache[Utils::typeFromKey($key)]['keys'][$key]);
+            unset($this->cacheByKey[Utils::typeFromKey($key)][$key]);
         }
     }
 
+    /**
+     * @param string ...$resourceTypes
+     *
+     * @return void
+     */
     public function removeByTypes(string ...$resourceTypes): void
     {
         foreach ($resourceTypes as $resourceType) {
-            unset($this->cache[$resourceType]);
+            unset($this->cacheByKey[$resourceType], $this->cacheByQuery[$resourceType]);
         }
     }
 
+    /**
+     * @return void
+     */
     public function flush(): void
     {
-        $this->cache = [];
+        $this->cacheByKey = $this->cacheByQuery = [];
     }
 }
