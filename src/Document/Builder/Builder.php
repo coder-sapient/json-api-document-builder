@@ -65,7 +65,7 @@ class Builder
      *
      * @param JsonApi $jsonApi
      *
-     * @return Builder
+     * @return $this
      */
     public function withJsonApi(JsonApi $jsonApi): self
     {
@@ -79,7 +79,7 @@ class Builder
      *
      * @param Meta ...$meta
      *
-     * @return Builder
+     * @return $this
      */
     public function withMeta(Meta ...$meta): self
     {
@@ -93,7 +93,7 @@ class Builder
      *
      * @param SelfLink $selfLink
      *
-     * @return Builder
+     * @return $this
      */
     public function withSelfLink(SelfLink $selfLink): self
     {
@@ -107,7 +107,7 @@ class Builder
      *
      * @param RelatedLink $relatedLink
      *
-     * @return Builder
+     * @return $this
      */
     public function withRelatedLink(RelatedLink $relatedLink): self
     {

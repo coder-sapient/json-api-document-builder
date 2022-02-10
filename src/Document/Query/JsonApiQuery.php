@@ -40,7 +40,7 @@ abstract class JsonApiQuery
     /**
      * @param Includes $includes
      *
-     * @return JsonApiQuery
+     * @return $this
      */
     public function setIncludes(Includes $includes): self
     {
