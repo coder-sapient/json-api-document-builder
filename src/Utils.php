@@ -19,7 +19,7 @@ final class Utils
      *
      * @see \JsonApiPhp\JsonApi\ResourceObject::key()
      */
-    public static function typeFromKey(string $key): string
+    public static function typeOf(string $key): string
     {
         return explode(':', $key)[0];
     }

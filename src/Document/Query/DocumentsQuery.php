@@ -115,7 +115,7 @@ class DocumentsQuery extends JsonApiQuery
     /**
      * @return string
      */
-    public function serialize(): string
+    public function hash(): string
     {
         return md5(serialize([$this->resourceType(), $this->filters(), $this->orders(), $this->chunk()]));
     }

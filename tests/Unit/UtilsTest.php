@@ -41,6 +41,6 @@ final class UtilsTest extends TestCase
     /** @test */
     public function typeOfKey(): void
     {
-        self::assertSame('articles', Utils::typeFromKey(compositeKey('articles', '1')));
+        self::assertSame('articles', Utils::typeOf(compositeKey('articles', '1')));
     }
 }
