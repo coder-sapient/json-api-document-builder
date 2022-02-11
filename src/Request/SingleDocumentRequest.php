@@ -41,7 +41,7 @@ trait SingleDocumentRequest
     /**
      * @return array
      */
-    public function supportedQueryParams(): array
+    public function acceptableQueryParams(): array
     {
         return [$this->queryInclude];
     }

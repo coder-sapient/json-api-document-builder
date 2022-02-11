@@ -23,17 +23,17 @@ final class ListArticlesRequest extends Request
         return ResourceTypes::ARTICLES;
     }
 
-    public function supportedIncludes(): array
+    public function acceptableIncludes(): array
     {
         return ['author'];
     }
 
-    public function supportedSorting(): array
+    public function acceptableSorting(): array
     {
         return ['title'];
     }
 
-    public function supportedFilters(): array
+    public function acceptableFilters(): array
     {
         return [
 

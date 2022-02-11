@@ -17,19 +17,13 @@ use CoderSapient\JsonApi\Utils;
 
 trait JsonApiRequest
 {
-    /**
-     * @var string
-     */
+    /** @var string  */
     protected string $queryInclude = 'include';
 
-    /**
-     * @var string
-     */
+    /** @var string  */
     protected string $includeDelimiter = ',';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected string $includeRelationDelimiter = '.';
 
     /**
@@ -56,7 +50,7 @@ trait JsonApiRequest
     /**
      * @return array
      */
-    public function supportedQueryParams(): array
+    public function acceptableQueryParams(): array
     {
         return [];
     }
@@ -66,7 +60,7 @@ trait JsonApiRequest
      *
      * @return array
      */
-    public function supportedIncludes(): array
+    public function acceptableIncludes(): array
     {
         return [];
     }
@@ -97,7 +91,7 @@ trait JsonApiRequest
     protected function ensureQueryParamsIsValid(): void
     {
         foreach ($this->queryParams() as $param => $value) {
-            if (! in_array($param, $this->supportedQueryParams(), true)) {
+            if (! in_array($param, $this->acceptableQueryParams(), true)) {
                 $this->throwBadRequestException(
                     sprintf('Invalid query parameter [%s]', $param),
                     $param,
@@ -119,7 +113,7 @@ trait JsonApiRequest
 
         $include = Utils::explodeIfNotEmpty($include, $this->includeDelimiter);
 
-        $this->ensureQueryParamIsSupported($this->queryInclude, $include, $this->supportedIncludes());
+        $this->ensureQueryParamValueIsAcceptable($this->queryInclude, $include, $this->acceptableIncludes());
     }
 
     /**
@@ -185,7 +179,7 @@ trait JsonApiRequest
      *
      * @throws BadRequestException
      */
-    protected function ensureQueryParamIsSupported(string $param, array $given, array $allowed): void
+    protected function ensureQueryParamValueIsAcceptable(string $param, array $given, array $allowed): void
     {
         if ([] !== $diff = array_diff($given, $allowed)) {
             $this->throwBadRequestException(

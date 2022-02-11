@@ -26,39 +26,25 @@ trait DocumentsRequest
 {
     use JsonApiRequest;
 
-    /**
-     * @var string
-     */
-    protected string $queryPerPage = 'per_page';
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected string $queryPage = 'page';
 
-    /**
-     * @var string
-     */
+    /** @var string */
+    protected string $queryPerPage = 'per_page';
+
+    /** @var string */
     protected string $queryFilter = 'filter';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected string $querySort = 'sort';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected string $filterDelimiter = ',';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected string $sortDelimiter = ',';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected string $sortPrefix = '-';
 
     /**
@@ -81,7 +67,7 @@ trait DocumentsRequest
     /**
      * @return array
      */
-    public function supportedQueryParams(): array
+    public function acceptableQueryParams(): array
     {
         return [
             $this->queryPage,
@@ -100,17 +86,17 @@ trait DocumentsRequest
      *
      * @return array
      */
-    public function supportedFilters(): array
+    public function acceptableFilters(): array
     {
         return [];
     }
 
     /**
-     * Example: ['id', 'title'].
+     * Example: ['created_at'].
      *
      * @return array
      */
-    public function supportedSorting(): array
+    public function acceptableSorting(): array
     {
         return [];
     }
@@ -195,7 +181,7 @@ trait DocumentsRequest
             Utils::explodeIfNotEmpty($sort, $this->sortDelimiter),
         );
 
-        $this->ensureQueryParamIsSupported($this->querySort, $sort, $this->supportedSorting());
+        $this->ensureQueryParamValueIsAcceptable($this->querySort, $sort, $this->acceptableSorting());
     }
 
     /**
@@ -211,7 +197,7 @@ trait DocumentsRequest
 
         $this->ensureFilterHasAValidStructure($filter);
 
-        $this->ensureFilterIsSupported($filter);
+        $this->ensureFilterIsAcceptable($filter);
     }
 
     /**
@@ -246,17 +232,17 @@ trait DocumentsRequest
      *
      * @throws BadRequestException
      */
-    protected function ensureFilterIsSupported(array $filter): void
+    protected function ensureFilterIsAcceptable(array $filter): void
     {
         foreach ($this->normalizeFilter($filter) as $field => $condition) {
             foreach ($condition as $operator => $value) {
                 if (
-                    ! isset($this->supportedFilters()[$field])
-                    || ! in_array($operator, $this->supportedFilters()[$field], true)
+                    ! isset($this->acceptableFilters()[$field])
+                    || ! in_array($operator, $this->acceptableFilters()[$field], true)
                 ) {
                     $this->throwBadRequestException(
                         sprintf(
-                            "Not supported %s operator [%s] for field [%s]",
+                            "Not acceptable %s operator [%s] for field [%s]",
                             $this->queryFilter,
                             $operator,
                             $field,

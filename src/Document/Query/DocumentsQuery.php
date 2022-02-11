@@ -16,19 +16,13 @@ use CoderSapient\JsonApi\Criteria\Orders;
 
 class DocumentsQuery extends JsonApiQuery
 {
-    /**
-     * @var Chunk|null
-     */
+    /** @var Chunk|null */
     private ?Chunk $chunk = null;
 
-    /**
-     * @var Orders|null
-     */
+    /** @var Orders|null */
     private ?Orders $orders = null;
 
-    /**
-     * @var Filters|null
-     */
+    /** @var Filters|null */
     private ?Filters $filters = null;
 
     /**
