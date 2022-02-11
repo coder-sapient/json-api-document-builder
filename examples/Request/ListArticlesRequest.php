@@ -36,7 +36,6 @@ final class ListArticlesRequest extends Request
     public function acceptableFilters(): array
     {
         return [
-
             'author_id' => [FilterOperator::EQUAL],
             'title' => [FilterOperator::EQUAL, FilterOperator::LIKE],
         ];
