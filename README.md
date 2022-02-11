@@ -1,6 +1,6 @@
 ## Json Api Document Builder
 
-This framework-agnostic library uses immutable [Resource Objects](https://github.com/json-api-php/json-api) to efficiently build [Json Api Documents](https://jsonapi.org/format/#document-structure).
+This library resolve Query to [JSON:API](https://jsonapi.org/format/#document-structure) document.
 
 ## Features
 
