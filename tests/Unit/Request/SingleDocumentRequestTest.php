@@ -30,11 +30,11 @@ final class SingleDocumentRequestTest extends TestCase
     }
 
     /** @test */
-    public function it_should_throw_an_exception_when_the_include_is_not_supported(): void
+    public function it_should_throw_an_exception_when_the_include_is_not_acceptable(): void
     {
         $this->expectException(BadRequestException::class);
 
-        (new FakeSingleDocumentRequest(['include' => 'it_is_not_supported']))->toQuery();
+        (new FakeSingleDocumentRequest(['include' => 'it_is_not_acceptable']))->toQuery();
     }
 
     /** @test */

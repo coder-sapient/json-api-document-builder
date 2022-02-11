@@ -27,7 +27,7 @@ final class ShowArticleRequest extends Request
         return ResourceTypes::ARTICLES;
     }
 
-    public function supportedIncludes(): array
+    public function acceptableIncludes(): array
     {
         return ['author'];
     }

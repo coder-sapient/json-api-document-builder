@@ -30,24 +30,16 @@ use function JsonApiPhp\JsonApi\compositeKey;
 
 class Builder
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     private array $meta = [];
 
-    /**
-     * @var JsonApi|null
-     */
+    /** @var JsonApi|null */
     private ?JsonApi $jsonApi = null;
 
-    /**
-     * @var SelfLink|null
-     */
+    /** @var SelfLink|null */
     private ?SelfLink $selfLink = null;
 
-    /**
-     * @var RelatedLink|null
-     */
+    /** @var RelatedLink|null */
     private ?RelatedLink $relatedLink = null;
 
     /**
@@ -61,8 +53,6 @@ class Builder
     }
 
     /**
-     * Set top-level 'jsonapi' document member.
-     *
      * @param JsonApi $jsonApi
      *
      * @return $this
@@ -75,8 +65,6 @@ class Builder
     }
 
     /**
-     * Set top-level 'meta' document member.
-     *
      * @param Meta ...$meta
      *
      * @return $this
@@ -89,8 +77,6 @@ class Builder
     }
 
     /**
-     * Set top-level 'self' link document member.
-     *
      * @param SelfLink $selfLink
      *
      * @return $this
@@ -103,8 +89,6 @@ class Builder
     }
 
     /**
-     * Set top-level 'related' link document member.
-     *
      * @param RelatedLink $relatedLink
      *
      * @return $this

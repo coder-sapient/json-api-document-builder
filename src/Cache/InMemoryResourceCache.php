@@ -16,14 +16,10 @@ use JsonApiPhp\JsonApi\ResourceObject;
 
 class InMemoryResourceCache implements ResourceCache
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     private array $keys = [];
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private array $queries = [];
 
     /**

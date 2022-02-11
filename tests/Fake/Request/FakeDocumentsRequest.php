@@ -30,7 +30,7 @@ final class FakeDocumentsRequest
         return 'articles';
     }
 
-    public function supportedFilters(): array
+    public function acceptableFilters(): array
     {
         return [
             'title' => ['like', 'eq'],
@@ -38,12 +38,12 @@ final class FakeDocumentsRequest
         ];
     }
 
-    public function supportedSorting(): array
+    public function acceptableSorting(): array
     {
         return ['title', 'published_at'];
     }
 
-    public function supportedIncludes(): array
+    public function acceptableIncludes(): array
     {
         return ['author', 'comments'];
     }

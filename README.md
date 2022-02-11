@@ -1,6 +1,6 @@
 ## Json Api Document Builder
 
-This library resolve Query to [JSON:API](https://jsonapi.org/format/#document-structure) document.
+This library resolve Query Object to [JSON:API](https://jsonapi.org/format/#document-structure) Documents.
 
 ## Features
 
@@ -77,19 +77,19 @@ final class ShowArticleRequest extends Request
         return 'articles';
     }
 
-    protected function supportedIncludes(): array
+    protected function acceptableIncludes(): array
     {
         return ['author', 'comments', 'comments.user'];
     }
 }
 ```
 
-| Method                | Description                                                                                                                                                  |
-|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `resourceId()`        | Returns the resource id, which should be taken from the URL, for example.                                                                                    |
-| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](#ResourceResolver)                                                                             |
-| `supportedIncludes()` | Returns a list of supported relationship names to include                                                                                                    |
-| `toQuery()`           | Returns the [SingleDocumentQuery](/src/Document/Query/SingleDocumentQuery.php) object that can be handled by [SingleDocumentBuilder](#SingleDocumentBuilder) |
+| Method                 | Description                                                                                                                                                  |
+|------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `resourceId()`         | Returns the resource id, which should be taken from the URL, for example.                                                                                    |
+| `resourceType()`       | Returns the resource type that defines the [ResourceResolver](#ResourceResolver)                                                                             |
+| `acceptableIncludes()` | Returns a list of supported relationship names to include                                                                                                    |
+| `toQuery()`            | Returns the [SingleDocumentQuery](/src/Document/Query/SingleDocumentQuery.php) object that can be handled by [SingleDocumentBuilder](#SingleDocumentBuilder) |
 
 ### DocumentsRequest
 
@@ -103,33 +103,33 @@ final class ListArticlesRequest extends Request
         return 'articles';
     }
     
-    protected function supportedSorting(): array
+    protected function acceptableSorting(): array
     {
-        return ['title'];
+        return ['title', 'created_at'];
     }
     
-    protected function supportedIncludes(): array
+    protected function acceptableIncludes(): array
     {
         return ['author', 'comments', 'comments.user'];
     }
 
-    protected function supportedFilters(): array
+    protected function acceptableFilters(): array
     {
         return [
-            'author_id' => [FilterOperator::EQUAL],
-            'title' => [FilterOperator::EQUAL, FilterOperator::LIKE],
+            'author_id' => ['eq'],
+            'title' => ['eq', 'like'],
         ];
     }
 }
 ```
 
-| Method                | Description                                                                                                                                |
-|-----------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| `resourceType()`      | Returns the resource type that defines the [ResourceResolver](#ResourceResolver)                                                           |
-| `supportedIncludes()` | Returns a list of supported relationship names to include                                                                                  |
-| `supportedSorting()`  | Returns a list of supported rows for sorting                                                                                               |
-| `supportedFilters()`  | Returns a list of supported filters that can be applied to resource collection                                                             |
-| `toQuery()`           | Returns the [DocumentsQuery](/src/Document/Query/DocumentsQuery.php) object that can be handled by [DocumentsBuilder](#DocumentsBuilder)   |
+| Method                 | Description                                                                                                                                |
+|------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| `resourceType()`       | Returns the resource type that defines the [ResourceResolver](#ResourceResolver)                                                           |
+| `acceptableIncludes()` | Returns a list of supported relationship names to include                                                                                  |
+| `acceptableSorting()`  | Returns a list of supported rows for sorting                                                                                               |
+| `acceptableFilters()`  | Returns a list of supported filters that can be applied to resource collection                                                             |
+| `toQuery()`            | Returns the [DocumentsQuery](/src/Document/Query/DocumentsQuery.php) object that can be handled by [DocumentsBuilder](#DocumentsBuilder)   |
 
 ## Builder
 

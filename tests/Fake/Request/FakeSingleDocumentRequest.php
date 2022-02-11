@@ -35,7 +35,7 @@ final class FakeSingleDocumentRequest
         return 'articles';
     }
 
-    public function supportedIncludes(): array
+    public function acceptableIncludes(): array
     {
         return ['author', 'comments'];
     }

@@ -14,9 +14,7 @@ use CoderSapient\JsonApi\Criteria\Includes;
 
 abstract class JsonApiQuery
 {
-    /**
-     * @var Includes|null
-     */
+    /** @var Includes|null */
     private ?Includes $includes = null;
 
     /**

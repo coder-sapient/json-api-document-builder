@@ -89,19 +89,19 @@ final class DocumentsRequestTest extends TestCase
     }
 
     /** @test */
-    public function it_should_throw_an_exception_when_the_query_params_is_not_supported(): void
+    public function it_should_throw_an_exception_when_the_query_params_is_not_acceptable(): void
     {
         $this->expectException(BadRequestException::class);
 
-        (new FakeDocumentsRequest(['it_is_not_supported' => 'foo']))->toQuery();
+        (new FakeDocumentsRequest(['it_is_not_acceptable' => 'foo']))->toQuery();
     }
 
     /** @test */
-    public function it_should_throw_an_exception_when_the_filter_is_not_supported(): void
+    public function it_should_throw_an_exception_when_the_filter_is_not_acceptable(): void
     {
         $this->expectException(BadRequestException::class);
 
-        (new FakeDocumentsRequest(['filter' => ['it_is_not_supported' => ['eq' => 'foo']]]))->toQuery();
+        (new FakeDocumentsRequest(['filter' => ['it_is_not_acceptable' => ['eq' => 'foo']]]))->toQuery();
     }
 
     /** @test */
@@ -113,11 +113,11 @@ final class DocumentsRequestTest extends TestCase
     }
 
     /** @test */
-    public function it_should_throw_an_exception_when_the_sort_is_not_supported(): void
+    public function it_should_throw_an_exception_when_the_sort_is_not_acceptable(): void
     {
         $this->expectException(BadRequestException::class);
 
-        (new FakeDocumentsRequest(['sort' => 'it_is_not_supported']))->toQuery();
+        (new FakeDocumentsRequest(['sort' => 'it_is_not_acceptable']))->toQuery();
     }
 
     /** @test */
@@ -129,11 +129,11 @@ final class DocumentsRequestTest extends TestCase
     }
 
     /** @test */
-    public function it_should_throw_an_exception_when_the_include_is_not_supported(): void
+    public function it_should_throw_an_exception_when_the_include_is_not_acceptable(): void
     {
         $this->expectException(BadRequestException::class);
 
-        (new FakeDocumentsRequest(['include' => 'it_is_not_supported']))->toQuery();
+        (new FakeDocumentsRequest(['include' => 'it_is_not_acceptable']))->toQuery();
     }
 
     /** @test */
