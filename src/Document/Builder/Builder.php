@@ -101,7 +101,7 @@ class Builder
     }
 
     /**
-     * Get the included resources relationships.
+     * Get the included resources.
      *
      * @param Includes $includes
      * @param ResourceCollection $resources
@@ -140,7 +140,7 @@ class Builder
     }
 
     /**
-     * Get a set with relationship identifiers to include.
+     * Get relationship identifiers to include.
      *
      * @param Includes $includes
      * @param ResourceCollection $resources
@@ -184,7 +184,7 @@ class Builder
      */
     protected function resolveRelationships(array $relationships): array
     {
-        $keys = $this->pluckKeys($relationships);
+        $keys = $this->toKeys($relationships);
 
         $resolved = $this->findByKeys(...$keys);
 
@@ -198,7 +198,7 @@ class Builder
     }
 
     /**
-     * Get resources from the cache by composite keys.
+     * Get resources from cache by composite keys.
      *
      * @param string ...$keys
      *
@@ -216,7 +216,7 @@ class Builder
     }
 
     /**
-     * Get resources from the resolver by relationship identifiers.
+     * Get resources from resolver by relationship identifiers.
      *
      * @param array $identifiers
      *
@@ -293,7 +293,7 @@ class Builder
      *
      * @return array
      */
-    protected function pluckKeys(array $relationships): array
+    protected function toKeys(array $relationships): array
     {
         $result = [];
 
@@ -306,6 +306,25 @@ class Builder
         }
 
         return $result;
+    }
+
+    /**
+     * Get relationship identifiers from composite keys.
+     *
+     * @param array $keys
+     *
+     * @return array
+     */
+    protected function toIdentifiers(array $keys): array
+    {
+        $identifiers = [];
+
+        foreach ($keys as $key) {
+            [$resourceType, $resourceId] = explode(':', $key);
+            $identifiers[$resourceType][] = $resourceId;
+        }
+
+        return $identifiers;
     }
 
     /**
@@ -327,25 +346,6 @@ class Builder
         }
 
         return $result;
-    }
-
-    /**
-     * Group resource ids from composite keys by resource type.
-     *
-     * @param array $keys
-     *
-     * @return array
-     */
-    protected function toIdentifiers(array $keys): array
-    {
-        $identifiers = [];
-
-        foreach ($keys as $key) {
-            [$resourceType, $resourceId] = explode(':', $key);
-            $identifiers[$resourceType][] = $resourceId;
-        }
-
-        return $identifiers;
     }
 
     /**
