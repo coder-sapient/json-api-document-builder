@@ -31,16 +31,22 @@ final class OrderTest extends TestCase
     }
 
     /** @test */
-    public function it_should_create_order_collection(): void
+    public function it_should_create_empty_order_collection(): void
     {
         $collect = new Orders();
-        $order = new Order('id', new OrderType());
 
         self::assertSame(0, $collect->count());
         self::assertTrue($collect->isEmpty());
+    }
 
-        $collect->add($order);
+    /** @test */
+    public function it_should_create_not_empty_order_collection(): void
+    {
+        $order = new Order('id', new OrderType());
+        $collect = new Orders($order);
 
+        self::assertSame(1, $collect->count());
+        self::assertFalse($collect->isEmpty());
         self::assertSame($order, $collect->getIterator()->current());
     }
 

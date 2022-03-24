@@ -130,15 +130,15 @@ trait DocumentsRequest
 
         $this->ensureFilterIsValid($filter);
 
-        $collect = new Filters();
+        $filters = [];
 
         foreach ($this->normalizeFilter($filter) as $field => $condition) {
             foreach ($condition as $operator => $value) {
-                $collect->add(Filter::fromValues($field, $operator, $value));
+                $filters[] = Filter::fromValues($field, $operator, $value);
             }
         }
 
-        return $collect;
+        return new Filters(...$filters);
     }
 
     /**
@@ -153,16 +153,16 @@ trait DocumentsRequest
 
         $this->ensureSortIsValid($sort);
 
-        $collect = new Orders();
+        $orders = [];
 
         foreach (Utils::explodeIfNotEmpty($sort, $this->sortDelimiter) as $field) {
             $by = Utils::subStrFirst($field, $this->sortPrefix);
             $type = $by === $field ? OrderType::ASC : OrderType::DESC;
 
-            $collect->add(Order::fromValues($by, $type));
+            $orders[] = Order::fromValues($by, $type);
         }
 
-        return $collect;
+        return new Orders(...$orders);
     }
 
     /**
