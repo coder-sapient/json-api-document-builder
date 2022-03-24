@@ -30,17 +30,6 @@ class Orders implements IteratorAggregate, Countable
     }
 
     /**
-     * @param Order $order
-     * @return void
-     */
-    public function add(Order $order): void
-    {
-        if (! in_array($order, $this->orders, true)) {
-            $this->orders[] = $order;
-        }
-    }
-
-    /**
      * @return bool
      */
     public function isEmpty(): bool
@@ -62,5 +51,16 @@ class Orders implements IteratorAggregate, Countable
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->orders);
+    }
+
+    /**
+     * @param Order $order
+     * @return void
+     */
+    private function add(Order $order): void
+    {
+        if (! in_array($order, $this->orders, true)) {
+            $this->orders[] = $order;
+        }
     }
 }

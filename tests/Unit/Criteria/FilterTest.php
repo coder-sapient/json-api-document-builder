@@ -32,16 +32,22 @@ final class FilterTest extends TestCase
     }
 
     /** @test */
-    public function it_should_create_filter_collection(): void
+    public function it_should_create_empty_filter_collection(): void
     {
         $collect = new Filters();
-        $filter = new Filter('filed', new FilterOperator(FilterOperator::EQUAL), 1);
 
         self::assertSame(0, $collect->count());
         self::assertTrue($collect->isEmpty());
+    }
 
-        $collect->add($filter);
+    /** @test */
+    public function it_should_create_not_empty_filter_collection(): void
+    {
+        $filter = new Filter('filed', new FilterOperator(FilterOperator::EQUAL), 1);
+        $collect = new Filters($filter);
 
+        self::assertSame(1, $collect->count());
+        self::assertFalse($collect->isEmpty());
         self::assertSame($filter, $collect->getIterator()->current());
     }
 

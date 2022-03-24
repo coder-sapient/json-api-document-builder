@@ -30,18 +30,6 @@ class Filters implements IteratorAggregate, Countable
     }
 
     /**
-     * @param Filter $filter
-     *
-     * @return void
-     */
-    public function add(Filter $filter): void
-    {
-        if (! in_array($filter, $this->filters, true)) {
-            $this->filters[] = $filter;
-        }
-    }
-
-    /**
      * @return bool
      */
     public function isEmpty(): bool
@@ -63,5 +51,17 @@ class Filters implements IteratorAggregate, Countable
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->filters);
+    }
+
+    /**
+     * @param Filter $filter
+     *
+     * @return void
+     */
+    private function add(Filter $filter): void
+    {
+        if (! in_array($filter, $this->filters, true)) {
+            $this->filters[] = $filter;
+        }
     }
 }
