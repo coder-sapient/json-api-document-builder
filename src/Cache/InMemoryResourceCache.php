@@ -29,7 +29,7 @@ class InMemoryResourceCache implements ResourceCache
      */
     public function getByKey(string $key): ?ResourceObject
     {
-        return $this->keys[Utils::typeOf($key)][$key] ?? null;
+        return $this->keys[Utils::getType($key)][$key] ?? null;
     }
 
     /**
@@ -42,7 +42,7 @@ class InMemoryResourceCache implements ResourceCache
         $resources = [];
 
         foreach ($keys as $key) {
-            $resourceType = Utils::typeOf($key);
+            $resourceType = Utils::getType($key);
 
             if (isset($this->keys[$resourceType][$key])) {
                 $resources[] = $this->keys[$resourceType][$key];
@@ -71,7 +71,7 @@ class InMemoryResourceCache implements ResourceCache
     {
         foreach ($resources as $resource) {
             $key = $resource->key();
-            $this->keys[Utils::typeOf($key)][$key] = $resource;
+            $this->keys[Utils::getType($key)][$key] = $resource;
         }
     }
 
@@ -94,7 +94,7 @@ class InMemoryResourceCache implements ResourceCache
     public function removeByKeys(string ...$keys): void
     {
         foreach ($keys as $key) {
-            unset($this->keys[Utils::typeOf($key)][$key]);
+            unset($this->keys[Utils::getType($key)][$key]);
         }
     }
 

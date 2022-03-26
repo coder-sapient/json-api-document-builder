@@ -39,8 +39,19 @@ final class UtilsTest extends TestCase
     }
 
     /** @test */
-    public function typeOfKey(): void
+    public function get_resource_type_from_key(): void
     {
-        self::assertSame('articles', Utils::typeOf(compositeKey('articles', '1')));
+        self::assertSame('articles', Utils::getType(compositeKey('articles', '1')));
+    }
+
+    /** @test */
+    public function slip_key_into_resource_type_and_id(): void
+    {
+        $key = compositeKey('articles', '1');
+
+        [$resourceType, $resourceId] = Utils::splitKey($key);
+
+        self::assertSame('1', $resourceId);
+        self::assertSame('articles', $resourceType);
     }
 }
