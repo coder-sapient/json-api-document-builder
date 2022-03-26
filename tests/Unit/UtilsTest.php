@@ -45,7 +45,7 @@ final class UtilsTest extends TestCase
     }
 
     /** @test */
-    public function slip_key_into_resource_type_and_id(): void
+    public function split_key_into_resource_type_and_id(): void
     {
         $key = compositeKey('articles', '1');
 
