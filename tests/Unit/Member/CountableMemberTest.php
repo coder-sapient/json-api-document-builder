@@ -8,7 +8,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace CoderSapient\JsonApi\Tests\Unit\Document\Builder;
+namespace CoderSapient\JsonApi\Tests\Unit\Member;
 
 use CoderSapient\JsonApi\Criteria\Chunk;
 use CoderSapient\JsonApi\Member\CountableMember;
