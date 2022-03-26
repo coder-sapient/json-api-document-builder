@@ -14,12 +14,11 @@ use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 use CoderSapient\JsonApi\Exception\ResourceNotFoundException;
 use CoderSapient\JsonApi\Exception\ResourceResolverNotFoundException;
 use CoderSapient\JsonApi\Query\SingleDocumentQuery;
+use CoderSapient\JsonApi\Utils;
 use JsonApiPhp\JsonApi\CompoundDocument;
 use JsonApiPhp\JsonApi\Included;
 use JsonApiPhp\JsonApi\ResourceCollection;
 use JsonApiPhp\JsonApi\ResourceObject;
-
-use function JsonApiPhp\JsonApi\compositeKey;
 
 class SingleDocumentBuilder extends Builder
 {
@@ -36,7 +35,7 @@ class SingleDocumentBuilder extends Builder
      */
     public function build(SingleDocumentQuery $query): CompoundDocument
     {
-        $resource = $this->getResource($query);
+        $resource = $this->findResource($query);
 
         $includes = $this->buildIncludes($query->includes(), new ResourceCollection($resource));
 
@@ -59,9 +58,9 @@ class SingleDocumentBuilder extends Builder
      * @throws ResourceNotFoundException
      * @throws ResourceResolverNotFoundException
      */
-    protected function getResource(SingleDocumentQuery $query): ResourceObject
+    protected function findResource(SingleDocumentQuery $query): ResourceObject
     {
-        $key = compositeKey($query->resourceType(), $query->resourceId());
+        $key = Utils::compositeKey($query->resourceType(), $query->resourceId());
 
         if (null !== $resource = $this->cache->getByKey($key)) {
             return $resource;

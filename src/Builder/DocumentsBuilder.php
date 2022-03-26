@@ -37,7 +37,7 @@ class DocumentsBuilder extends Builder
     {
         $resolver = $this->registry->get($query->resourceType());
 
-        $resources = $this->getResources($resolver, $query);
+        $resources = $this->findResources($resolver, $query);
 
         $includes = $this->buildIncludes($query->includes(), $resources);
 
@@ -66,7 +66,7 @@ class DocumentsBuilder extends Builder
      *
      * @return ResourceCollection
      */
-    protected function getResources(ResourceResolver $resolver, DocumentsQuery $query): ResourceCollection
+    protected function findResources(ResourceResolver $resolver, DocumentsQuery $query): ResourceCollection
     {
         $resources = $this->cache->getByQuery($query);
 
