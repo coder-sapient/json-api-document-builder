@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi\Examples;
 
+use CoderSapient\JsonApi\Builder\DocumentsBuilder;
+use CoderSapient\JsonApi\Builder\SingleDocumentBuilder;
 use CoderSapient\JsonApi\Cache\InMemoryResourceCache;
-use CoderSapient\JsonApi\Document\Builder\DocumentsBuilder;
-use CoderSapient\JsonApi\Document\Builder\SingleDocumentBuilder;
 use CoderSapient\JsonApi\Examples\Action\ListArticlesAction;
 use CoderSapient\JsonApi\Examples\Action\ShowArticleAction;
 use CoderSapient\JsonApi\Examples\Assembler\ArticleResourceAssembler;

@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi\Cache;
 
-use CoderSapient\JsonApi\Document\Query\JsonApiQuery;
+use CoderSapient\JsonApi\Query\JsonApiQuery;
 use JsonApiPhp\JsonApi\ResourceObject;
 
 class NullableResourceCache implements ResourceCache

@@ -8,14 +8,14 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace CoderSapient\JsonApi\Document\Builder;
+namespace CoderSapient\JsonApi\Builder;
 
-use CoderSapient\JsonApi\Document\Member\CountableMember;
-use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
-use CoderSapient\JsonApi\Document\Resolver\PaginationResolver;
-use CoderSapient\JsonApi\Document\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 use CoderSapient\JsonApi\Exception\ResourceResolverNotFoundException;
+use CoderSapient\JsonApi\Member\CountableMember;
+use CoderSapient\JsonApi\Query\DocumentsQuery;
+use CoderSapient\JsonApi\Resolver\PaginationResolver;
+use CoderSapient\JsonApi\Resolver\ResourceResolver;
 use JsonApiPhp\JsonApi\CompoundDocument;
 use JsonApiPhp\JsonApi\Included;
 use JsonApiPhp\JsonApi\PaginatedCollection;

@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace CoderSapient\JsonApi\Tests\Unit\Document\Builder;
 
 use CoderSapient\JsonApi\Criteria\Chunk;
-use CoderSapient\JsonApi\Document\Member\CountableMember;
+use CoderSapient\JsonApi\Member\CountableMember;
 use CoderSapient\JsonApi\Tests\Assert\AssertDocumentEquals;
 use JsonApiPhp\JsonApi\MetaDocument;
 use PHPUnit\Framework\TestCase;

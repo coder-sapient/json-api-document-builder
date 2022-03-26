@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi\Registry;
 
-use CoderSapient\JsonApi\Document\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Exception\ResourceResolverNotFoundException;
+use CoderSapient\JsonApi\Resolver\ResourceResolver;
 
 class InMemoryResourceResolverRegistry implements ResourceResolverRegistry
 {

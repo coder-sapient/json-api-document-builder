@@ -8,10 +8,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace CoderSapient\JsonApi\Document\Resolver;
+namespace CoderSapient\JsonApi\Resolver;
 
-use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
-use CoderSapient\JsonApi\Document\Query\SingleDocumentQuery;
+use CoderSapient\JsonApi\Query\DocumentsQuery;
+use CoderSapient\JsonApi\Query\SingleDocumentQuery;
 use GuzzleHttp\Promise\PromiseInterface;
 use JsonApiPhp\JsonApi\ResourceObject;
 

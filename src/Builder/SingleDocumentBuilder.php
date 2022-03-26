@@ -8,12 +8,12 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace CoderSapient\JsonApi\Document\Builder;
+namespace CoderSapient\JsonApi\Builder;
 
-use CoderSapient\JsonApi\Document\Query\SingleDocumentQuery;
 use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 use CoderSapient\JsonApi\Exception\ResourceNotFoundException;
 use CoderSapient\JsonApi\Exception\ResourceResolverNotFoundException;
+use CoderSapient\JsonApi\Query\SingleDocumentQuery;
 use JsonApiPhp\JsonApi\CompoundDocument;
 use JsonApiPhp\JsonApi\Included;
 use JsonApiPhp\JsonApi\ResourceCollection;

@@ -10,8 +10,8 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi\Examples\Repository;
 
-use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
 use CoderSapient\JsonApi\Examples\Model\Article;
+use CoderSapient\JsonApi\Query\DocumentsQuery;
 
 final class ArticleRepository
 {

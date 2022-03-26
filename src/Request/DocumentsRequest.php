@@ -17,9 +17,9 @@ use CoderSapient\JsonApi\Criteria\Filters;
 use CoderSapient\JsonApi\Criteria\Order;
 use CoderSapient\JsonApi\Criteria\Orders;
 use CoderSapient\JsonApi\Criteria\OrderType;
-use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
 use CoderSapient\JsonApi\Exception\BadRequestException;
 use CoderSapient\JsonApi\Exception\InvalidArgumentException;
+use CoderSapient\JsonApi\Query\DocumentsQuery;
 use CoderSapient\JsonApi\Utils;
 
 trait DocumentsRequest

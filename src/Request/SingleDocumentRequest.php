@@ -10,9 +10,9 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi\Request;
 
-use CoderSapient\JsonApi\Document\Query\SingleDocumentQuery;
 use CoderSapient\JsonApi\Exception\BadRequestException;
 use CoderSapient\JsonApi\Exception\InvalidArgumentException;
+use CoderSapient\JsonApi\Query\SingleDocumentQuery;
 
 trait SingleDocumentRequest
 {

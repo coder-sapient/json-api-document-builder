@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi\Tests\Unit\Registry;
 
-use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
-use CoderSapient\JsonApi\Document\Query\SingleDocumentQuery;
-use CoderSapient\JsonApi\Document\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Exception\ResourceResolverNotFoundException;
+use CoderSapient\JsonApi\Query\DocumentsQuery;
+use CoderSapient\JsonApi\Query\SingleDocumentQuery;
 use CoderSapient\JsonApi\Registry\InMemoryResourceResolverRegistry;
+use CoderSapient\JsonApi\Resolver\ResourceResolver;
 use GuzzleHttp\Promise\PromiseInterface;
 use JsonApiPhp\JsonApi\ResourceObject;
 use PHPUnit\Framework\TestCase;

@@ -89,7 +89,7 @@ final class ShowArticleRequest extends Request
 | `resourceId()`         | Returns the resource id, which should be taken from the URL, for example.                                                                                    |
 | `resourceType()`       | Returns the resource type that defines the [ResourceResolver](#ResourceResolver)                                                                             |
 | `acceptableIncludes()` | Returns a list of supported relationship names to include                                                                                                    |
-| `toQuery()`            | Returns the [SingleDocumentQuery](/src/Document/Query/SingleDocumentQuery.php) object that can be handled by [SingleDocumentBuilder](#SingleDocumentBuilder) |
+| `toQuery()`            | Returns the [SingleDocumentQuery](/src/Query/SingleDocumentQuery.php) object that can be handled by [SingleDocumentBuilder](#SingleDocumentBuilder) |
 
 ### DocumentsRequest
 
@@ -129,11 +129,11 @@ final class ListArticlesRequest extends Request
 | `acceptableIncludes()` | Returns a list of supported relationship names to include                                                                                  |
 | `acceptableSorting()`  | Returns a list of supported rows for sorting                                                                                               |
 | `acceptableFilters()`  | Returns a list of supported filters that can be applied to resource collection                                                             |
-| `toQuery()`            | Returns the [DocumentsQuery](/src/Document/Query/DocumentsQuery.php) object that can be handled by [DocumentsBuilder](#DocumentsBuilder)   |
+| `toQuery()`            | Returns the [DocumentsQuery](/src/Query/DocumentsQuery.php) object that can be handled by [DocumentsBuilder](#DocumentsBuilder)   |
 
 ## Builder
 
-To initialize [Builder](/src/Document/Builder/Builder.php), you need to provide instances of [ResourceResolverRegistry](#Registry) and [ResourceCache](#ResourceCache):
+To initialize [Builder](/src/Builder/Builder.php), you need to provide instances of [ResourceResolverRegistry](#Registry) and [ResourceCache](#ResourceCache):
 
 | Method                                                             | Description                                         |
 |--------------------------------------------------------------------|-----------------------------------------------------|
@@ -141,7 +141,7 @@ To initialize [Builder](/src/Document/Builder/Builder.php), you need to provide 
 
 ### SingleDocumentBuilder
 
-The [SingleDocumentBuilder](/src/Document/Builder/SingleDocumentBuilder.php) extends `Builder`:
+The [SingleDocumentBuilder](/src/Builder/SingleDocumentBuilder.php) extends `Builder`:
 
 | Method                              | Description                                       |
 |-------------------------------------|---------------------------------------------------|
@@ -150,7 +150,7 @@ The [SingleDocumentBuilder](/src/Document/Builder/SingleDocumentBuilder.php) ext
 
 ### DocumentsBuilder
 
-The [DocumentsBuilder](/src/Document/Builder/DocumentsBuilder.php) extends `Builder`:
+The [DocumentsBuilder](/src/Builder/DocumentsBuilder.php) extends `Builder`:
 
 | Method                         | Description                                 |
 |--------------------------------|---------------------------------------------|
@@ -197,7 +197,7 @@ $singleDocument = $builder->build($request->toQuery());
 
 ### ResourceResolver
  
-The builder use instances of [ResourceResolver](/src/Document/Resolver/ResourceResolver.php) to find resources by ids or query criteria. 
+The builder use instances of [ResourceResolver](/src/Resolver/ResourceResolver.php) to find resources by ids or query criteria. 
 
 ```php
 interface ResourceResolver
@@ -244,7 +244,7 @@ interface PaginationResolver
 }
 ```
 
-If the resource resolver implements [PaginationResolver](/src/Document/Resolver/PaginationResolver.php), the builder will add top-level `Links` and `Meta` objects to the resulting document.
+If the resource resolver implements [PaginationResolver](/src/Resolver/PaginationResolver.php), the builder will add top-level `Links` and `Meta` objects to the resulting document.
 
 ```
 {
