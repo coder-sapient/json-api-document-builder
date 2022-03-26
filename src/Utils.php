@@ -10,6 +10,8 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi;
 
+use function JsonApiPhp\JsonApi\compositeKey;
+
 final class Utils
 {
     /**
@@ -34,6 +36,17 @@ final class Utils
     public static function splitKey(string $key): array
     {
         return explode(':', $key);
+    }
+
+    /**
+     * @param string $resourceType
+     * @param string $resourceId
+     *
+     * @return string 'resourceType:resourceId'
+     */
+    public static function compositeKey(string $resourceType, string $resourceId): string
+    {
+        return compositeKey($resourceType, $resourceId);
     }
 
     /**

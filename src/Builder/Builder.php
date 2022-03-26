@@ -27,11 +27,10 @@ use JsonApiPhp\JsonApi\ResourceCollection;
 use JsonApiPhp\JsonApi\ResourceObject;
 
 use function JsonApiPhp\JsonApi\combine;
-use function JsonApiPhp\JsonApi\compositeKey;
 
 class Builder
 {
-    /** @var array */
+    /** @var Meta[] */
     private array $meta = [];
 
     /** @var JsonApi|null */
@@ -342,7 +341,7 @@ class Builder
 
         foreach ($identifiers as $resourceType => $resourceIds) {
             foreach ($resourceIds as $resourceId) {
-                $result[] = $fn(compositeKey($resourceType, $resourceId));
+                $result[] = $fn(JsonApiUtils::compositeKey($resourceType, $resourceId));
             }
         }
 
@@ -357,12 +356,8 @@ class Builder
     protected function members(): array
     {
         return array_merge(
-            array_filter([
-                $this->jsonApi,
-                $this->selfLink,
-                $this->relatedLink,
-            ]),
             $this->meta,
+            array_filter([$this->jsonApi, $this->selfLink, $this->relatedLink]),
         );
     }
 
@@ -386,7 +381,7 @@ class Builder
      */
     protected function toArray(ResourceCollection $resources): array
     {
-        return json_decode(json_encode(combine($resources)->data), true);
+        return json_decode(json_encode(combine($resources)), true)['data'];
     }
 
     /**

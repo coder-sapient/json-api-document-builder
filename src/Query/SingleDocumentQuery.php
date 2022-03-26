@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi\Query;
 
-use function JsonApiPhp\JsonApi\compositeKey;
+use CoderSapient\JsonApi\Utils;
 
 class SingleDocumentQuery extends JsonApiQuery
 {
@@ -43,6 +43,6 @@ class SingleDocumentQuery extends JsonApiQuery
      */
     public function hash(): string
     {
-        return md5(compositeKey($this->resourceType(), $this->resourceId()));
+        return md5(Utils::compositeKey($this->resourceType(), $this->resourceId()));
     }
 }
