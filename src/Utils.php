@@ -19,9 +19,21 @@ final class Utils
      *
      * @see \JsonApiPhp\JsonApi\ResourceObject::key()
      */
-    public static function typeOf(string $key): string
+    public static function getType(string $key): string
     {
-        return explode(':', $key)[0];
+        return self::splitKey($key)[0];
+    }
+
+    /**
+     * @param string $key
+     *
+     * @return array ['type', 'id']
+     *
+     * @see \JsonApiPhp\JsonApi\ResourceObject::key()
+     */
+    public static function splitKey(string $key): array
+    {
+        return explode(':', $key);
     }
 
     /**

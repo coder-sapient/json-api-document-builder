@@ -16,6 +16,7 @@ use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 use CoderSapient\JsonApi\Exception\ResourceNotFoundException;
 use CoderSapient\JsonApi\Exception\ResourceResolverNotFoundException;
 use CoderSapient\JsonApi\Registry\ResourceResolverRegistry;
+use CoderSapient\JsonApi\Utils as JsonApiUtils;
 use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Promise\Utils;
 use JsonApiPhp\JsonApi\JsonApi;
@@ -320,7 +321,7 @@ class Builder
         $identifiers = [];
 
         foreach ($keys as $key) {
-            [$resourceType, $resourceId] = explode(':', $key);
+            [$resourceType, $resourceId] = JsonApiUtils::splitKey($key);
             $identifiers[$resourceType][] = $resourceId;
         }
 
