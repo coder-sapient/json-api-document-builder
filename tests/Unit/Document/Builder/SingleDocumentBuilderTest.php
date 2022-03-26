@@ -10,12 +10,12 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi\Tests\Unit\Document\Builder;
 
+use CoderSapient\JsonApi\Builder\SingleDocumentBuilder;
 use CoderSapient\JsonApi\Cache\InMemoryResourceCache;
-use CoderSapient\JsonApi\Document\Builder\SingleDocumentBuilder;
-use CoderSapient\JsonApi\Document\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Exception\ResourceNotFoundException;
 use CoderSapient\JsonApi\Registry\InMemoryResourceResolverRegistry;
 use CoderSapient\JsonApi\Registry\ResourceResolverRegistry;
+use CoderSapient\JsonApi\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Tests\Assert\AssertDocumentEquals;
 use CoderSapient\JsonApi\Tests\Mother\Builder\DocumentQueryMother;
 use CoderSapient\JsonApi\Tests\Mother\Resource\ResourceMother;

@@ -10,13 +10,13 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi\Examples\Resolver;
 
-use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
-use CoderSapient\JsonApi\Document\Query\SingleDocumentQuery;
-use CoderSapient\JsonApi\Document\Resolver\PaginationResolver;
-use CoderSapient\JsonApi\Document\Resolver\ResourceResolver;
-use CoderSapient\JsonApi\Document\Resolver\Response\PaginationResponse;
 use CoderSapient\JsonApi\Examples\Assembler\ArticleResourceAssembler;
 use CoderSapient\JsonApi\Examples\Repository\ArticleRepository;
+use CoderSapient\JsonApi\Query\DocumentsQuery;
+use CoderSapient\JsonApi\Query\SingleDocumentQuery;
+use CoderSapient\JsonApi\Resolver\PaginationResolver;
+use CoderSapient\JsonApi\Resolver\ResourceResolver;
+use CoderSapient\JsonApi\Resolver\Response\PaginationResponse;
 use JsonApiPhp\JsonApi\Link\FirstLink;
 use JsonApiPhp\JsonApi\Link\LastLink;
 use JsonApiPhp\JsonApi\Link\NextLink;

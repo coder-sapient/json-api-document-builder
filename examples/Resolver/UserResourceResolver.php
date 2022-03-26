@@ -10,11 +10,11 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi\Examples\Resolver;
 
-use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
-use CoderSapient\JsonApi\Document\Query\SingleDocumentQuery;
-use CoderSapient\JsonApi\Document\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Examples\Assembler\UserResourceAssembler;
 use CoderSapient\JsonApi\Examples\Repository\UserRepository;
+use CoderSapient\JsonApi\Query\DocumentsQuery;
+use CoderSapient\JsonApi\Query\SingleDocumentQuery;
+use CoderSapient\JsonApi\Resolver\ResourceResolver;
 use JsonApiPhp\JsonApi\ResourceObject;
 
 final class UserResourceResolver implements ResourceResolver

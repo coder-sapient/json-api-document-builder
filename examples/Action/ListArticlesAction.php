@@ -10,7 +10,7 @@ declare(strict_types=1);
 
 namespace CoderSapient\JsonApi\Examples\Action;
 
-use CoderSapient\JsonApi\Document\Builder\DocumentsBuilder;
+use CoderSapient\JsonApi\Builder\DocumentsBuilder;
 use CoderSapient\JsonApi\Examples\Request\ListArticlesRequest;
 use CoderSapient\JsonApi\Exception\JsonApiException;
 

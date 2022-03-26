@@ -8,7 +8,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace CoderSapient\JsonApi\Document\Builder;
+namespace CoderSapient\JsonApi\Builder;
 
 use CoderSapient\JsonApi\Cache\ResourceCache;
 use CoderSapient\JsonApi\Criteria\Includes;

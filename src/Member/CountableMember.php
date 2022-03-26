@@ -8,7 +8,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace CoderSapient\JsonApi\Document\Member;
+namespace CoderSapient\JsonApi\Member;
 
 use CoderSapient\JsonApi\Criteria\Chunk;
 use JsonApiPhp\JsonApi\Meta;

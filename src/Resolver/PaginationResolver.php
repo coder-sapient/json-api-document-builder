@@ -8,10 +8,10 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace CoderSapient\JsonApi\Document\Resolver;
+namespace CoderSapient\JsonApi\Resolver;
 
-use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
-use CoderSapient\JsonApi\Document\Resolver\Response\PaginationResponse;
+use CoderSapient\JsonApi\Query\DocumentsQuery;
+use CoderSapient\JsonApi\Resolver\Response\PaginationResponse;
 
 interface PaginationResolver
 {

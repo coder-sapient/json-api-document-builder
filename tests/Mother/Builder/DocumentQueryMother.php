@@ -14,8 +14,8 @@ use CoderSapient\JsonApi\Criteria\Chunk;
 use CoderSapient\JsonApi\Criteria\Filters;
 use CoderSapient\JsonApi\Criteria\Includes;
 use CoderSapient\JsonApi\Criteria\Orders;
-use CoderSapient\JsonApi\Document\Query\DocumentsQuery;
-use CoderSapient\JsonApi\Document\Query\SingleDocumentQuery;
+use CoderSapient\JsonApi\Query\DocumentsQuery;
+use CoderSapient\JsonApi\Query\SingleDocumentQuery;
 
 final class DocumentQueryMother
 {

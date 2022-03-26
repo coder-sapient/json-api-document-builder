@@ -8,7 +8,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace CoderSapient\JsonApi\Document\Resolver\Response;
+namespace CoderSapient\JsonApi\Resolver\Response;
 
 use JsonApiPhp\JsonApi\Pagination;
 
