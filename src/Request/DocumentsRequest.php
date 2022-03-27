@@ -115,8 +115,8 @@ trait DocumentsRequest
      */
     public function chunk(): Chunk
     {
-        $page = $this->queryParam($this->queryPage, 1);
-        $perPage = $this->queryParam($this->queryPerPage, 15);
+        $page = $this->queryParam($this->queryPage, $this->defaultPage);
+        $perPage = $this->queryParam($this->queryPerPage, $this->defaultPerPage);
 
         $this->ensureQueryParamIsPositiveInt($this->queryPage, $page);
         $this->ensureQueryParamIsPositiveInt($this->queryPerPage, $perPage);
