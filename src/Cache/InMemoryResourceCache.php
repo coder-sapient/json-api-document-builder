@@ -59,7 +59,7 @@ class InMemoryResourceCache implements ResourceCache
      */
     public function getByQuery(JsonApiQuery $query): array
     {
-        return $this->queries[$query->resourceType()][$query->hash()] ?? [];
+        return $this->queries[$query->resourceType()][$query->toHash()] ?? [];
     }
 
     /**
@@ -83,7 +83,7 @@ class InMemoryResourceCache implements ResourceCache
      */
     public function setByQuery(JsonApiQuery $query, ResourceObject ...$resources): void
     {
-        $this->queries[$query->resourceType()][$query->hash()] = $resources;
+        $this->queries[$query->resourceType()][$query->toHash()] = $resources;
     }
 
     /**

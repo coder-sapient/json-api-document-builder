@@ -35,7 +35,7 @@ class DocumentsBuilder extends Builder
      */
     public function build(DocumentsQuery $query): CompoundDocument
     {
-        $resolver = $this->registry->get($query->resourceType());
+        $resolver = $this->factory->make($query->resourceType());
 
         $resources = $this->findResources($resolver, $query);
 

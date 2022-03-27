@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace CoderSapient\JsonApi\Tests\Unit\Criteria;
 
 use CoderSapient\JsonApi\Criteria\Includes;
+use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 final class IncludesTest extends TestCase
@@ -27,6 +28,14 @@ final class IncludesTest extends TestCase
         self::assertFalse($includes->isEmpty());
         self::assertFalse($includes->hasInclude('users'));
         self::assertTrue($includes->hasInclude('articles'));
-        self::assertSame(['comments', 'comments.users'], $includes->partOf('articles')->toArray());
+        self::assertSame(['comments', 'comments.users'], $includes->getPartBy('articles')->toArray());
+    }
+
+    /** @test */
+    public function it_should_throw_an_exception_when_includes_delimiter_is_empty(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new Includes([], '');
     }
 }

@@ -25,7 +25,7 @@ abstract class JsonApiQuery
     /**
      * @return string
      */
-    abstract public function hash(): string;
+    abstract public function toHash(): string;
 
     /**
      * @return Includes

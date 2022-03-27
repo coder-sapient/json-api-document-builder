@@ -13,11 +13,11 @@ namespace CoderSapient\JsonApi\Tests\Unit\Builder;
 use CoderSapient\JsonApi\Builder\SingleDocumentBuilder;
 use CoderSapient\JsonApi\Cache\InMemoryResourceCache;
 use CoderSapient\JsonApi\Exception\ResourceNotFoundException;
-use CoderSapient\JsonApi\Registry\InMemoryResourceResolverRegistry;
-use CoderSapient\JsonApi\Registry\ResourceResolverRegistry;
+use CoderSapient\JsonApi\Factory\InMemoryResourceResolverFactory;
+use CoderSapient\JsonApi\Factory\ResourceResolverFactory;
 use CoderSapient\JsonApi\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Tests\Assert\AssertDocumentEquals;
-use CoderSapient\JsonApi\Tests\Mother\Builder\DocumentQueryMother;
+use CoderSapient\JsonApi\Tests\Mother\Query\DocumentQueryMother;
 use CoderSapient\JsonApi\Tests\Mother\Resource\ResourceMother;
 use PHPUnit\Framework\TestCase;
 
@@ -46,11 +46,11 @@ final class SingleDocumentBuilderTest extends TestCase
             ->with(self::equalTo('10'), self::equalTo('11'))
             ->willReturn([$user10, $user11]);
 
-        $registry = new InMemoryResourceResolverRegistry();
-        $registry->add('articles', $articlesResolver);
-        $registry->add('users', $usersResolver);
+        $factory = new InMemoryResourceResolverFactory();
+        $factory->add('articles', $articlesResolver);
+        $factory->add('users', $usersResolver);
 
-        $builder = new SingleDocumentBuilder($registry, new InMemoryResourceCache());
+        $builder = new SingleDocumentBuilder($factory, new InMemoryResourceCache());
 
         self::assertEncodesTo(
             '
@@ -99,10 +99,10 @@ final class SingleDocumentBuilderTest extends TestCase
         $cache = new InMemoryResourceCache();
         $cache->setByKeys($article1, $user10);
 
-        $registry = $this->createMock(ResourceResolverRegistry::class);
-        $registry->expects(self::never())->method('get');
+        $factory = $this->createMock(ResourceResolverFactory::class);
+        $factory->expects(self::never())->method('make');
 
-        $builder = new SingleDocumentBuilder($registry, $cache);
+        $builder = new SingleDocumentBuilder($factory, $cache);
 
         self::assertEncodesTo(
             '
@@ -142,12 +142,12 @@ final class SingleDocumentBuilderTest extends TestCase
             ->with(self::equalTo($query))
             ->willReturn(null);
 
-        $registry = new InMemoryResourceResolverRegistry();
-        $registry->add('articles', $articlesResolver);
+        $factory = new InMemoryResourceResolverFactory();
+        $factory->add('articles', $articlesResolver);
 
         $this->expectException(ResourceNotFoundException::class);
 
-        $builder = new SingleDocumentBuilder($registry, new InMemoryResourceCache());
+        $builder = new SingleDocumentBuilder($factory, new InMemoryResourceCache());
 
         $builder->build($query);
     }

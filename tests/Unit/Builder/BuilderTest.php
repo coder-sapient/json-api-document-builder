@@ -14,7 +14,7 @@ use CoderSapient\JsonApi\Builder\Builder;
 use CoderSapient\JsonApi\Cache\InMemoryResourceCache;
 use CoderSapient\JsonApi\Criteria\Includes;
 use CoderSapient\JsonApi\Exception\ResourceNotFoundException;
-use CoderSapient\JsonApi\Registry\InMemoryResourceResolverRegistry;
+use CoderSapient\JsonApi\Factory\InMemoryResourceResolverFactory;
 use CoderSapient\JsonApi\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Tests\Assert\AssertDocumentEquals;
 use CoderSapient\JsonApi\Tests\Mother\Resource\ResourceMother;
@@ -71,11 +71,11 @@ final class BuilderTest extends TestCase
             )
             ->willReturn([$tass20, $tags21]);
 
-        $registry = new InMemoryResourceResolverRegistry();
-        $registry->add('users', $usersResolver);
-        $registry->add('tags', $tagsResolver);
+        $factory = new InMemoryResourceResolverFactory();
+        $factory->add('users', $usersResolver);
+        $factory->add('tags', $tagsResolver);
 
-        $builder = new Builder($registry, new InMemoryResourceCache());
+        $builder = new Builder($factory, new InMemoryResourceCache());
 
         $includes = $builder->buildIncludes(new Includes(['authors', 'tags']), $resources);
 
@@ -187,10 +187,10 @@ final class BuilderTest extends TestCase
             ->withConsecutive(['20', '21'], ['22', '23'])
             ->willReturnOnConsecutiveCalls([$tag20, $tag21], [$tag22, $tag23]);
 
-        $registry = new InMemoryResourceResolverRegistry();
-        $registry->add('tags', $tagsResolver);
+        $factory = new InMemoryResourceResolverFactory();
+        $factory->add('tags', $tagsResolver);
 
-        $builder = new Builder($registry, new InMemoryResourceCache());
+        $builder = new Builder($factory, new InMemoryResourceCache());
 
         $includes = $builder->buildIncludes(new Includes(['tags.related_tags']), $resources);
 
@@ -299,10 +299,10 @@ final class BuilderTest extends TestCase
             )
             ->willReturn([$tag20, $tagDummy]);
 
-        $registry = new InMemoryResourceResolverRegistry();
-        $registry->add('tags', $tagsResolver);
+        $factory = new InMemoryResourceResolverFactory();
+        $factory->add('tags', $tagsResolver);
 
-        $builder = new Builder($registry, new InMemoryResourceCache());
+        $builder = new Builder($factory, new InMemoryResourceCache());
 
         $this->expectException(ResourceNotFoundException::class);
 

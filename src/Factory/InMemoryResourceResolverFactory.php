@@ -8,12 +8,12 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace CoderSapient\JsonApi\Registry;
+namespace CoderSapient\JsonApi\Factory;
 
 use CoderSapient\JsonApi\Exception\ResourceResolverNotFoundException;
 use CoderSapient\JsonApi\Resolver\ResourceResolver;
 
-class InMemoryResourceResolverRegistry implements ResourceResolverRegistry
+class InMemoryResourceResolverFactory implements ResourceResolverFactory
 {
     /** @var ResourceResolver[] */
     private array $resolvers = [];
@@ -25,7 +25,7 @@ class InMemoryResourceResolverRegistry implements ResourceResolverRegistry
      *
      * @throws ResourceResolverNotFoundException
      */
-    public function get(string $resourceType): ResourceResolver
+    public function make(string $resourceType): ResourceResolver
     {
         if ($this->has($resourceType)) {
             return $this->resolvers[$resourceType];

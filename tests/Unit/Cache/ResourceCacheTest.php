@@ -11,14 +11,14 @@ declare(strict_types=1);
 namespace CoderSapient\JsonApi\Tests\Unit\Cache;
 
 use CoderSapient\JsonApi\Cache\InMemoryResourceCache;
-use CoderSapient\JsonApi\Tests\Mother\Builder\DocumentQueryMother;
+use CoderSapient\JsonApi\Tests\Mother\Query\DocumentQueryMother;
 use CoderSapient\JsonApi\Tests\Mother\Resource\ResourceMother;
 use PHPUnit\Framework\TestCase;
 
 final class ResourceCacheTest extends TestCase
 {
     /** @test */
-    public function in_memory_resource_cache(): void
+    public function it_should_create_a_valid_in_memory_resource_cache(): void
     {
         $resource1 = ResourceMother::create('1', 'articles');
         $resource2 = ResourceMother::create('2', 'articles');

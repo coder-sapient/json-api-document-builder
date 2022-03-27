@@ -17,22 +17,18 @@ use PHPUnit\Framework\TestCase;
 final class ChunkTest extends TestCase
 {
     /** @test */
-    public function it_should_create_a_chunk(): void
+    public function it_should_create_a_valid_chunk(): void
     {
-        $chunk = new Chunk(3, 15);
+        $chunk1 = new Chunk(3, 15);
+        $chunk2 = new Chunk(1, 20);
 
-        self::assertSame(3, $chunk->page());
-        self::assertSame(15, $chunk->perPage());
-    }
+        self::assertSame(3, $chunk1->page());
+        self::assertSame(15, $chunk1->perPage());
+        self::assertSame(30, $chunk1->offset());
 
-    /** @test */
-    public function it_should_create_a_valid_offset(): void
-    {
-        $chunk2 = new Chunk(1, 15);
-        $chunk3 = new Chunk(3, 15);
-
+        self::assertSame(1, $chunk2->page());
+        self::assertSame(20, $chunk2->perPage());
         self::assertSame(0, $chunk2->offset());
-        self::assertSame(30, $chunk3->offset());
     }
 
     /** @test */

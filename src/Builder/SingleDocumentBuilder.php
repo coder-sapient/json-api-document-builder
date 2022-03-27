@@ -39,9 +39,7 @@ class SingleDocumentBuilder extends Builder
 
         $includes = $this->buildIncludes($query->includes(), new ResourceCollection($resource));
 
-        $document = new CompoundDocument(
-            $resource, new Included(...$includes), ...$this->members(),
-        );
+        $document = new CompoundDocument($resource, new Included(...$includes), ...$this->members());
 
         $this->reset();
 
@@ -66,7 +64,7 @@ class SingleDocumentBuilder extends Builder
             return $resource;
         }
 
-        $resolver = $this->registry->get($query->resourceType());
+        $resolver = $this->factory->make($query->resourceType());
 
         if (null !== $resource = $resolver->resolveOne($query)) {
             $this->cache->setByKeys($resource);

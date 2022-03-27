@@ -22,7 +22,7 @@ final class ExceptionsTest extends TestCase
     use AssertDocumentEquals;
 
     /** @test */
-    public function bad_request_exception(): void
+    public function it_should_create_a_valid_bad_request_exception(): void
     {
         $exception = new BadRequestException('Filter is invalid', 'filter');
 
@@ -47,7 +47,7 @@ final class ExceptionsTest extends TestCase
     }
 
     /** @test */
-    public function resource_not_found_exception(): void
+    public function it_should_create_a_valid_resource_not_found_exception(): void
     {
         $exception = new ResourceNotFoundException('articles:42');
 
@@ -70,7 +70,7 @@ final class ExceptionsTest extends TestCase
     }
 
     /** @test */
-    public function resource_resolver_not_found_exception(): void
+    public function it_should_create_a_valid_resource_resolver_not_found_exception(): void
     {
         $exception = new ResourceResolverNotFoundException('articles');
 
@@ -93,7 +93,7 @@ final class ExceptionsTest extends TestCase
     }
 
     /** @test */
-    public function internal_exception(): void
+    public function it_should_create_a_valid_internal_exception(): void
     {
         $exception = new InternalException('Exception detail...');
 

@@ -18,8 +18,6 @@ final class Utils
      * @param string $key
      *
      * @return string
-     *
-     * @see \JsonApiPhp\JsonApi\ResourceObject::key()
      */
     public static function getType(string $key): string
     {

@@ -21,8 +21,8 @@ use CoderSapient\JsonApi\Examples\Repository\ArticleRepository;
 use CoderSapient\JsonApi\Examples\Repository\UserRepository;
 use CoderSapient\JsonApi\Examples\Resolver\ArticleResourceResolver;
 use CoderSapient\JsonApi\Examples\Resolver\UserResourceResolver;
-use CoderSapient\JsonApi\Registry\InMemoryResourceResolverRegistry;
-use CoderSapient\JsonApi\Registry\ResourceResolverRegistry;
+use CoderSapient\JsonApi\Factory\InMemoryResourceResolverFactory;
+use CoderSapient\JsonApi\Factory\ResourceResolverFactory;
 
 class ServiceLocator
 {
@@ -36,20 +36,20 @@ class ServiceLocator
         return new ListArticlesAction(self::documentsBuilder());
     }
 
-    public static function resourceResolverRegistry(): ResourceResolverRegistry
+    public static function resourceResolverFactory(): ResourceResolverFactory
     {
-        $registry = new InMemoryResourceResolverRegistry();
+        $factory = new InMemoryResourceResolverFactory();
 
-        $registry->add(
+        $factory->add(
             ResourceTypes::ARTICLES,
             self::articleResourceResolver(),
         );
-        $registry->add(
+        $factory->add(
             ResourceTypes::USERS,
             self::userResourceResolver(),
         );
 
-        return $registry;
+        return $factory;
     }
 
     public static function articleResourceResolver(): ArticleResourceResolver
@@ -71,7 +71,7 @@ class ServiceLocator
     public static function singleDocumentBuilder(): SingleDocumentBuilder
     {
         return new SingleDocumentBuilder(
-            self::resourceResolverRegistry(),
+            self::resourceResolverFactory(),
             new InMemoryResourceCache(),
         );
     }
@@ -79,7 +79,7 @@ class ServiceLocator
     public static function documentsBuilder(): DocumentsBuilder
     {
         return new DocumentsBuilder(
-            self::resourceResolverRegistry(),
+            self::resourceResolverFactory(),
             new InMemoryResourceCache(),
         );
     }

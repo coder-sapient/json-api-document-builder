@@ -12,10 +12,10 @@ namespace CoderSapient\JsonApi\Tests\Unit\Builder;
 
 use CoderSapient\JsonApi\Builder\DocumentsBuilder;
 use CoderSapient\JsonApi\Cache\InMemoryResourceCache;
-use CoderSapient\JsonApi\Registry\InMemoryResourceResolverRegistry;
+use CoderSapient\JsonApi\Factory\InMemoryResourceResolverFactory;
 use CoderSapient\JsonApi\Resolver\ResourceResolver;
 use CoderSapient\JsonApi\Tests\Assert\AssertDocumentEquals;
-use CoderSapient\JsonApi\Tests\Mother\Builder\DocumentQueryMother;
+use CoderSapient\JsonApi\Tests\Mother\Query\DocumentQueryMother;
 use CoderSapient\JsonApi\Tests\Mother\Resource\ResourceMother;
 use PHPUnit\Framework\TestCase;
 
@@ -52,11 +52,11 @@ final class DocumentsBuilderTest extends TestCase
             )
             ->willReturn([$user10, $user11, $user12, $user13]);
 
-        $registry = new InMemoryResourceResolverRegistry();
-        $registry->add('articles', $articlesResolver);
-        $registry->add('users', $usersResolver);
+        $factory = new InMemoryResourceResolverFactory();
+        $factory->add('articles', $articlesResolver);
+        $factory->add('users', $usersResolver);
 
-        $builder = new DocumentsBuilder($registry, new InMemoryResourceCache());
+        $builder = new DocumentsBuilder($factory, new InMemoryResourceCache());
 
         self::assertEncodesTo(
             '
@@ -144,11 +144,11 @@ final class DocumentsBuilderTest extends TestCase
         $usersResolver->expects(self::never())->method('resolveMany');
         $usersResolver->expects(self::never())->method('resolveByIds');
 
-        $registry = new InMemoryResourceResolverRegistry();
-        $registry->add('articles', $articlesResolver);
-        $registry->add('users', $usersResolver);
+        $factory = new InMemoryResourceResolverFactory();
+        $factory->add('articles', $articlesResolver);
+        $factory->add('users', $usersResolver);
 
-        $builder = new DocumentsBuilder($registry, $cache);
+        $builder = new DocumentsBuilder($factory, $cache);
 
         self::assertEncodesTo(
             '
