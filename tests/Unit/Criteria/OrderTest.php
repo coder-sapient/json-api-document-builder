@@ -20,13 +20,13 @@ final class OrderTest extends TestCase
 {
     /**
      * @test
-     * @dataProvider orderTypes
+     * @dataProvider orders
      */
-    public function it_should_create_order(string $by, string $type): void
+    public function it_should_create_order(string $field, string $type): void
     {
-        $order = new Order($by, new OrderType($type));
+        $order = new Order($field, new OrderType($type));
 
-        self::assertSame($by, $order->by());
+        self::assertSame($field, $order->field());
         self::assertSame($type, $order->type()->value());
     }
 
@@ -53,10 +53,18 @@ final class OrderTest extends TestCase
     /** @test */
     public function it_should_create_order_through_the_factory_method(): void
     {
-        $orderById = Order::fromValues('id', OrderType::ASC);
+        $order = Order::fromValues('id', OrderType::ASC);
 
-        self::assertSame('id', $orderById->by());
-        self::assertSame(OrderType::ASC, $orderById->type()->value());
+        self::assertSame('id', $order->field());
+        self::assertSame(OrderType::ASC, $order->type()->value());
+    }
+
+    /** @test */
+    public function it_should_throw_an_exception_when_order_field_is_empty(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new Order('', new OrderType(OrderType::DESC));
     }
 
     /** @test */
@@ -67,7 +75,7 @@ final class OrderTest extends TestCase
         new OrderType('invalid');
     }
 
-    public function orderTypes(): array
+    public function orders(): array
     {
         return [['id', OrderType::DESC], ['name', OrderType::ASC]];
     }

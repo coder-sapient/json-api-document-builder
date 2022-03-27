@@ -15,7 +15,7 @@ use CoderSapient\JsonApi\Criteria\Includes;
 use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 use CoderSapient\JsonApi\Exception\ResourceNotFoundException;
 use CoderSapient\JsonApi\Exception\ResourceResolverNotFoundException;
-use CoderSapient\JsonApi\Registry\ResourceResolverRegistry;
+use CoderSapient\JsonApi\Factory\ResourceResolverFactory;
 use CoderSapient\JsonApi\Utils as JsonApiUtils;
 use GuzzleHttp\Promise\Create;
 use GuzzleHttp\Promise\Utils;
@@ -43,11 +43,11 @@ class Builder
     private ?RelatedLink $relatedLink = null;
 
     /**
-     * @param ResourceResolverRegistry $registry
+     * @param ResourceResolverFactory $factory
      * @param ResourceCache $cache
      */
     public function __construct(
-        protected ResourceResolverRegistry $registry,
+        protected ResourceResolverFactory $factory,
         protected ResourceCache $cache,
     ) {
     }
@@ -122,16 +122,16 @@ class Builder
         $resolved = $this->resolveRelationships($relationships);
 
         foreach ($relationships as $name => $identifiers) {
-            if ($includes->partOf($name)->isEmpty()) {
+            if ($includes->getPartBy($name)->isEmpty()) {
                 continue;
             }
 
-            $partition = $this->buildIncludes(
-                $includes->partOf($name),
-                $this->partOf($identifiers, ...$resolved),
+            $part = $this->buildIncludes(
+                $includes->getPartBy($name),
+                $this->getPartBy($identifiers, ...$resolved),
             );
 
-            foreach ($partition as $resource) {
+            foreach ($part as $resource) {
                 $resolved[$resource->key()] = $resource;
             }
         }
@@ -229,7 +229,7 @@ class Builder
         $promises = [];
 
         foreach ($identifiers as $resourceType => $resourceIds) {
-            $resolver = $this->registry->get($resourceType);
+            $resolver = $this->factory->make($resourceType);
 
             $promises[] = Create::promiseFor(
                 $resolver->resolveByIds(...$resourceIds),
@@ -276,7 +276,7 @@ class Builder
      *
      * @return ResourceCollection
      */
-    protected function partOf(array $identifiers, ResourceObject ...$resources): ResourceCollection
+    protected function getPartBy(array $identifiers, ResourceObject ...$resources): ResourceCollection
     {
         $partition = $this->applyTo(
             $identifiers,

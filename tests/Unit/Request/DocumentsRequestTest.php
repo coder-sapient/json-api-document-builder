@@ -53,11 +53,11 @@ final class DocumentsRequestTest extends TestCase
         foreach ($query->orders() as $index => $order) {
             switch ($index) {
                 case 0:
-                    self::assertSame('title', $order->by());
+                    self::assertSame('title', $order->field());
                     self::assertFalse($order->type()->isAsc());
                     break;
                 case 1:
-                    self::assertSame('published_at', $order->by());
+                    self::assertSame('published_at', $order->field());
                     self::assertTrue($order->type()->isAsc());
                     break;
             }

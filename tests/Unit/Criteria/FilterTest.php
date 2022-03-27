@@ -20,7 +20,7 @@ final class FilterTest extends TestCase
 {
     /**
      * @test
-     * @dataProvider operators
+     * @dataProvider filters
      */
     public function it_should_create_a_filter(string $field, string $operator, mixed $value): void
     {
@@ -54,11 +54,19 @@ final class FilterTest extends TestCase
     /** @test */
     public function it_should_create_filter_through_the_factory_method(): void
     {
-        $field = Filter::fromValues('field', FilterOperator::EQUAL, 1);
+        $filter = Filter::fromValues('field', FilterOperator::EQUAL, 1);
 
-        self::assertSame('field', $field->field());
-        self::assertSame(1, $field->value());
-        self::assertTrue($field->operator()->isEqual(FilterOperator::EQUAL));
+        self::assertSame('field', $filter->field());
+        self::assertSame(1, $filter->value());
+        self::assertTrue($filter->operator()->isEqual(FilterOperator::EQUAL));
+    }
+
+    /** @test */
+    public function it_should_throw_an_exception_when_filter_field_is_empty(): void
+    {
+        $this->expectException(InvalidArgumentException::class);
+
+        new Filter('', new FilterOperator(FilterOperator::EQUAL), 1);
     }
 
     /** @test */
@@ -69,13 +77,14 @@ final class FilterTest extends TestCase
         new FilterOperator('invalid');
     }
 
-    public function operators(): array
+    public function filters(): array
     {
         return [
             ['field_1', FilterOperator::EQUAL, 1],
             ['field_1', FilterOperator::NOT_EQUAL, '1'],
             ['field_3', FilterOperator::EQUAL, [1]],
             ['field_4', FilterOperator::NOT_EQUAL, (object) []],
+            ['field_4', FilterOperator::EQUAL, null],
             ['field_5', FilterOperator::GT, '10'],
             ['field_6', FilterOperator::LT, 10],
             ['field_7', FilterOperator::GTE, '100'],

@@ -26,6 +26,12 @@ trait DocumentsRequest
 {
     use JsonApiRequest;
 
+    /** @var int  */
+    protected int $defaultPage = 1;
+
+    /** @var int  */
+    protected int $defaultPerPage = 15;
+
     /** @var string */
     protected string $queryPage = 'page';
 
@@ -156,10 +162,10 @@ trait DocumentsRequest
         $orders = [];
 
         foreach (Utils::explodeIfNotEmpty($sort, $this->sortDelimiter) as $field) {
-            $by = Utils::subStrFirst($field, $this->sortPrefix);
-            $type = $by === $field ? OrderType::ASC : OrderType::DESC;
+            $fieldWithoutPrefix = Utils::subStrFirst($field, $this->sortPrefix);
+            $type = $fieldWithoutPrefix === $field ? OrderType::ASC : OrderType::DESC;
 
-            $orders[] = Order::fromValues($by, $type);
+            $orders[] = Order::fromValues($fieldWithoutPrefix, $type);
         }
 
         return new Orders(...$orders);

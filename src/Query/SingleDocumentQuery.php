@@ -41,7 +41,7 @@ class SingleDocumentQuery extends JsonApiQuery
     /**
      * @return string
      */
-    public function hash(): string
+    public function toHash(): string
     {
         return md5(Utils::compositeKey($this->resourceType(), $this->resourceId()));
     }

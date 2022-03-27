@@ -133,7 +133,7 @@ final class ListArticlesRequest extends Request
 
 ## Builder
 
-To initialize [Builder](/src/Builder/Builder.php), you need to provide instances of [ResourceResolverRegistry](#Registry) and [ResourceCache](#ResourceCache):
+To initialize [Builder](/src/Builder/Builder.php), you need to provide instances of [ResourceResolverFactory](#Factory) and [ResourceCache](#ResourceCache):
 
 | Method                                                             | Description                                         |
 |--------------------------------------------------------------------|-----------------------------------------------------|
@@ -158,39 +158,39 @@ The [DocumentsBuilder](/src/Builder/DocumentsBuilder.php) extends `Builder`:
 
 ## Resolver
 
-### Registry
+### Factory
 
-The [ResourceResolverRegistry](/src/Registry/ResourceResolverRegistry.php) is a container that return a [ResourceResolver](#ResourceResolver) by resource type.
+The [ResourceResolverFactory](/src/Factory/ResourceResolverFactory.php) is a factory that return a [ResourceResolver](#ResourceResolver) by resource type.
 
 ```php
-interface ResourceResolverRegistry
+interface ResourceResolverFactory
 {
     /**
      * @throws ResourceResolverNotFoundException
      */
-    public function get(string $resourceType): ResourceResolver;
+    public function make(string $resourceType): ResourceResolver;
 }
 ```
 
-There is a basic implementation [InMemoryResourceResolverRegistry](/src/Registry/InMemoryResourceResolverRegistry.php):
+There is a basic implementation [InMemoryResourceResolverFactory](/src/Factory/InMemoryResourceResolverFactory.php):
 
 ```php
-$registry = new InMemoryResourceResolverRegistry();
+$factory = new InMemoryResourceResolverFactory();
 
-$registry->add(
+$factory->add(
     'articles', // resource type
     new ArticleResourceResolver()
 );
-$registry->add(
+$factory->add(
     'users', 
     new AuthorResourceResolver()
 );
-$registry->add(
+$factory->add(
     'comments',
     new CommentResourceResolver()
 );
 
-$builder = new SingleDocumentBuilder($registry, new InMemoryResourceCache());
+$builder = new SingleDocumentBuilder($factory, new InMemoryResourceCache());
 
 $singleDocument = $builder->build($request->toQuery());
 ```

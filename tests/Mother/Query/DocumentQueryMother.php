@@ -8,7 +8,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace CoderSapient\JsonApi\Tests\Mother\Builder;
+namespace CoderSapient\JsonApi\Tests\Mother\Query;
 
 use CoderSapient\JsonApi\Criteria\Chunk;
 use CoderSapient\JsonApi\Criteria\Filters;

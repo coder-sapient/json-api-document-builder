@@ -24,7 +24,7 @@ class Filter
     public function __construct(private string $field, private FilterOperator $operator, private mixed $value)
     {
         if (empty($field)) {
-            throw new InvalidArgumentException('`Field` can not be empty');
+            throw new InvalidArgumentException('`field` can not be empty');
         }
     }
 

@@ -15,37 +15,37 @@ use CoderSapient\JsonApi\Exception\InvalidArgumentException;
 class Order
 {
     /**
-     * @param string $by
-     * @param OrderType $orderType
+     * @param string $field
+     * @param OrderType $type
      *
      * @throws InvalidArgumentException
      */
-    public function __construct(private string $by, private OrderType $orderType)
+    public function __construct(private string $field, private OrderType $type)
     {
-        if (empty($by)) {
-            throw new InvalidArgumentException('`Order by` can not be empty');
+        if (empty($field)) {
+            throw new InvalidArgumentException('`field` can not be empty');
         }
     }
 
     /**
-     * @param string $by
+     * @param string $field
      * @param string $type
      *
      * @return Order
      *
      * @throws InvalidArgumentException
      */
-    public static function fromValues(string $by, string $type): self
+    public static function fromValues(string $field, string $type): self
     {
-        return new self($by, new OrderType($type));
+        return new self($field, new OrderType($type));
     }
 
     /**
      * @return string
      */
-    public function by(): string
+    public function field(): string
     {
-        return $this->by;
+        return $this->field;
     }
 
     /**
@@ -53,6 +53,6 @@ class Order
      */
     public function type(): OrderType
     {
-        return $this->orderType;
+        return $this->type;
     }
 }

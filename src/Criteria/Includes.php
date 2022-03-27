@@ -24,7 +24,7 @@ class Includes implements Countable
     public function __construct(private array $includes = [], private string $delimiter = '.')
     {
         if (empty($delimiter)) {
-            throw new InvalidArgumentException('Delimiter can not be empty');
+            throw new InvalidArgumentException('`delimiter` can not be empty');
         }
     }
 
@@ -35,7 +35,7 @@ class Includes implements Countable
      *
      * @throws InvalidArgumentException
      */
-    public function partOf(string $name): self
+    public function getPartBy(string $name): self
     {
         $includes = array_map(
             fn (string $include) => mb_substr($include, mb_strlen($name . $this->delimiter)),
