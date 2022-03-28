@@ -28,7 +28,7 @@ final class IncludesTest extends TestCase
         self::assertFalse($includes->isEmpty());
         self::assertFalse($includes->hasInclude('users'));
         self::assertTrue($includes->hasInclude('articles'));
-        self::assertSame(['comments', 'comments.users'], $includes->getPartBy('articles')->toArray());
+        self::assertSame(['comments', 'comments.users'], $includes->getPart('articles')->toArray());
     }
 
     /** @test */

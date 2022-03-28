@@ -113,30 +113,33 @@ class Builder
      */
     public function buildIncludes(Includes $includes, ResourceCollection $resources): array
     {
-        $relationships = $this->prepareRelationships($includes, $resources);
-
-        if ([] === $relationships) {
+        if (
+            $includes->isEmpty()
+            || [] === $relationships = $this->prepareRelationships($includes, $resources)
+        ) {
             return [];
         }
 
-        $resolved = $this->resolveRelationships($relationships);
+        $includedResources = $this->resolveRelationships($relationships);
 
         foreach ($relationships as $name => $identifiers) {
-            if ($includes->getPartBy($name)->isEmpty()) {
+            $includesPart = $includes->getPart($name);
+
+            if ($includesPart->isEmpty()) {
                 continue;
             }
 
-            $part = $this->buildIncludes(
-                $includes->getPartBy($name),
-                $this->getPartBy($identifiers, ...$resolved),
+            $includedResourcesPart = $this->buildIncludes(
+                $includesPart,
+                $this->getPart($identifiers, ...$includedResources),
             );
 
-            foreach ($part as $resource) {
-                $resolved[$resource->key()] = $resource;
+            foreach ($includedResourcesPart as $resource) {
+                $includedResources[$resource->key()] = $resource;
             }
         }
 
-        return $resolved;
+        return $includedResources;
     }
 
     /**
@@ -190,7 +193,9 @@ class Builder
 
         $missed = $this->toIdentifiers(array_diff($keys, array_keys($resolved)));
 
-        $resolved = array_merge($resolved, $this->findByIdentifiers($missed));
+        if ([] !== $missed) {
+            $resolved = array_merge($resolved, $this->findByIdentifiers($missed));
+        }
 
         $this->ensureAllRelationsAreFound($relationships, ...$resolved);
 
@@ -276,7 +281,7 @@ class Builder
      *
      * @return ResourceCollection
      */
-    protected function getPartBy(array $identifiers, ResourceObject ...$resources): ResourceCollection
+    protected function getPart(array $identifiers, ResourceObject ...$resources): ResourceCollection
     {
         $partition = $this->applyTo(
             $identifiers,
