@@ -173,15 +173,15 @@ trait JsonApiRequest
     /**
      * @param string $param
      * @param array $given
-     * @param array $allowed
+     * @param array $acceptable
      *
      * @return void
      *
      * @throws BadRequestException
      */
-    protected function ensureQueryParamValueIsAcceptable(string $param, array $given, array $allowed): void
+    protected function ensureQueryParamValueIsAcceptable(string $param, array $given, array $acceptable): void
     {
-        if ([] !== $diff = array_diff($given, $allowed)) {
+        if ([] !== $diff = array_diff($given, $acceptable)) {
             $this->throwBadRequestException(
                 sprintf('Not allowed to `%s` [%s]', $param, implode(',', $diff)),
                 $param,

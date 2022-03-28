@@ -35,7 +35,7 @@ class Includes implements Countable
      *
      * @throws InvalidArgumentException
      */
-    public function getPartBy(string $name): self
+    public function getPart(string $name): self
     {
         $includes = array_map(
             fn (string $include) => mb_substr($include, mb_strlen($name . $this->delimiter)),
